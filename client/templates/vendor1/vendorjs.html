@@ -1,0 +1,716 @@
+<script>
+	$(document).ready(function () {
+
+		var elem = document.getElementById("myBar");
+		var width = 0;
+		var id = setInterval(frame, 120);
+		function frame() {
+			if (width >= 100) {
+				clearInterval(id);
+				if (width == 100) {
+					$('.progress_div').css('visibility', 'hidden')
+					$('.main').css('visibility', 'visible')
+				}
+			} else {
+				width++;
+				elem.style.width = width + '%';
+				elem.innerHTML = `<span style="top: 6px;position: absolute;"> ${width}%</span>`;
+			}
+		}
+
+
+		$('.DataTables').DataTable();
+		$("#datatfootfilter").hide();
+		flag_filter_icon = true;
+
+		$("#databtn").click(function () {
+			/* toggle filters shown in datatable columns*/
+			$("#datatfootfilter").toggle();
+
+			if (flag_filter_icon == true) {
+				//alert('removing icon');
+				$('#filter_icon').removeClass('glyphicon-filter');
+				$('#filter_icon').addClass('glyphicon-remove');
+				flag_filter_icon = false;
+			}
+			else {
+				$('#filter_icon').removeClass('glyphicon-remove');
+				$('#filter_icon').addClass('glyphicon-filter');
+
+				flag_filter_icon = true;
+			}
+		});
+		/** /datatable filter toggle close*/
+	});
+
+	// add vendor
+	$("#addvendor").submit(function (e) {
+		var form = $(this);
+		e.preventDefault();
+		$('#loader').show();
+		$(".sub").attr('disabled', true)
+
+		$.ajax({
+			type: "POST",
+			url: '/client/ajax/add-vendor/',
+			data: form.serialize(),
+			success: function (data) {
+				if (data.status == '1') {
+					$('#loader').hide();
+					$(".sub").attr('disabled', false);
+					swal({
+						title: "Vendor Add!",
+						text: data.msg,
+						icon: "success",
+						button: "ok",
+						showConfirmButton: false,
+						// timer: 1500
+					}).then(function () {
+							location.reload();
+						});
+				} else {
+					$('#loader').hide();
+					$(".sub").attr('disabled', false);
+					swal({
+						title: "Vendor Add!",
+						text: data.msg,
+						icon: "error",
+						button: "ok",
+						showConfirmButton: false,
+						// timer: 1500
+					});
+				}
+			}
+		});
+		// avoid to execute the actual submit of the form.
+	});
+
+	//export leads
+	$("#export_lead1").submit(function (e) {
+		var form = $(this);
+		e.preventDefault();
+		$('#loader1').show();
+		$("#sub1").attr('disabled', true)
+
+		$.ajax({
+			type: "POST",
+			url: '/client/leads-export',
+			data: form.serialize(),
+			success: function (data) {
+				if(data.success==1){
+				$('#loader1').hide();
+				$(".sub1").attr('disabled', false);
+				swal({
+					title: "Good job!",
+					text: data.msg,
+					icon: "success",
+					button: "ok",
+					showConfirmButton: false,
+					timer: 3000
+				}).then(function () {
+							location.reload();
+						});
+ 					}else if (data.success==0) {
+					$('#loader1').hide();
+					$(".sub1").attr('disabled', false);
+					swal({
+						title: "Export Error!",
+						text: data.msg,
+						icon: "error",
+						button: "ok",
+						showConfirmButton: false,
+						timer: 1500
+					});
+				}
+			}
+		});
+		// avoid to execute the actual submit of the form.
+	});
+
+
+	$('#vendor_suggest').click(function () {
+		var campaign_id = $(this).attr('camp_id');
+		var someObj = {};
+		someObj.fruitsGranted = [];
+		someObj.fruitsDenied = [];
+		$(".checkbox").each(function () {
+			var $this = $(this);
+			if ($this.is(":checked")) {
+				someObj.fruitsGranted.push($this.attr("id"));
+			} else {
+				someObj.fruitsDenied.push($this.attr("id"));
+			}
+		});
+		var vendor_id = someObj.fruitsGranted;
+		console.log(vendor_id)
+		token = getCookie('csrftoken');
+		if (vendor_id.length != 0) {
+			$.ajax({
+				type: 'POST',
+				url: '/client/ajax/Suggest/',
+				data: { camp_id: campaign_id, id: vendor_id, csrfmiddlewaretoken: token },
+				success: function (data) {
+					if (data.success == 1) {
+						swal({
+							title: "Vendor Suggestion", text: 'Vendors Suggested To Superadmin', type:
+								"success", icon: "success"
+						}).then(function () {
+							window.location.href = $("input[name='url_pending_campaign']").val();
+						});
+						// location.reload();
+
+					}
+				}
+			});
+		} else {
+			swal({
+				title: "Vendor Suggestion", text: 'Please select vendor to suggest', type:
+					"info", icon: "info"
+			})
+		}
+
+	});
+
+	// add group ajax
+	$("#add_group").click(function (e) {
+		var group_name = $('.group_name').val();
+		token = getCookie('csrftoken');
+		if (group_name != '') {
+			$.ajax({
+				type: "POST",
+				url: '/client/ajax/add-group/',
+				data: { 'group': group_name, csrfmiddlewaretoken: token },
+				success: function (data) {
+					if (data.success == 1) {
+						swal({
+							title: "Group Added !",
+							text: 'Group Added successfully.',
+							icon: "success",
+							button: "ok",
+						}).then(function () {
+							location.reload();
+						});
+					}
+				}
+			});
+		} else {
+			swal({
+				title: "Group Add !",
+				text: 'Enter Group Name.',
+				icon: "error",
+				button: "ok",
+			})
+		}
+	});
+
+	//	delete group
+	$(".delete_group").click(function (e) {
+		var group_id = $(this).data('group-id');
+		token = getCookie('csrftoken');
+		swal({
+			title: "Are you sure?",
+			text: "Once deleted, you will not be able to recover !",
+			icon: "warning",
+			buttons: true,
+			dangerMode: true,
+		})
+			.then((willDelete) => {
+				if (willDelete) {
+					$.ajax({
+						type: 'POST',
+						url: '/client/ajax/delete-group/',
+						data: { 'group_id': group_id, csrfmiddlewaretoken: token },
+						success: function (data) {
+							if (data.success == 1) {
+								swal("Poof! Your Record has been deleted!", {
+									icon: "success",
+								}).then(function () {
+									location.reload();
+								});
+							}
+						}
+					});
+				}
+				else {
+					swal("Your data is safe!");
+				}
+			});
+	});
+
+	//edit group
+	$(".edit_group").click(function () {
+		var group_id = $(this).data('group-id');
+		$('#add_group').addClass('hidden')
+		$('#update_group').removeClass('hidden')
+		$('#update_group').attr('data-id', group_id)
+		// var group_name = $('.group_name').val();
+		token = getCookie('csrftoken');
+		$.ajax({
+			type: "GET",
+			url: '/client/ajax/edit-group/',
+			data: { 'group_id': group_id, csrfmiddlewaretoken: token },
+			success: function (data) {
+				console.log(data)
+				if (data.success == 1) {
+					$('.group_name').val(data.group_name)
+				}
+			}
+		});
+	});
+
+	//update group data
+	$("#update_group").click(function () {
+		var group_id = $(this).data('id');
+		var group_name = $('.group_name').val();
+		token = getCookie('csrftoken');
+		$.ajax({
+			type: "post",
+			url: '/client/ajax/edit-group/',
+			data: { 'group_id': group_id, 'group': group_name, csrfmiddlewaretoken: token },
+			success: function (data) {
+				console.log(data)
+				if (data.success == 1) {
+					$('#add_group').removeClass('hidden')
+					$('#update_group').addClass('hidden')
+					swal({
+						title: "Group Updated !",
+						text: 'Group Updated successfully.',
+						icon: "success",
+						button: "ok",
+					}).then(function () {
+						location.reload();
+					});
+				}
+			}
+		});
+	});
+
+	//get group on add user modal
+	$("#add_user").click(function () {
+		token = getCookie('csrftoken');
+		username = $('#username').val()
+		email = $('#email').val()
+		$('#loader1').show();
+		$("#add_user").attr('disabled',true)
+		password = $('#password').val()
+		group = $('#group_selector :selected').val()
+		if (username != '' && email != '' && password != '' && group != 'select_group') {
+			$.ajax({
+				type: "post",
+				url: '/client/ajax/add-user-to-group/',
+				data: { csrfmiddlewaretoken: token, "username": username, "email": email, "password": password, "group": group },
+				success: function (data) {
+					console.log(data)
+					$('#loader1').hide();
+					if (data.success == 1) {
+						$('#add_users_modal').find('.close_modal').trigger('click')
+						swal({
+							title: "User Added !",
+							text: data.msg,
+							icon: "success",
+							button: "OK",
+						}).then(function () {
+							location.reload();
+						});
+					}
+					else if (data.success == 2) {
+						$('#add_users_modal').find('.close_modal').trigger('click')
+						swal({
+							title: "Can't add user !",
+							text: data.msg,
+							icon: "error",
+							button: "close",
+						}).then(function () {
+							location.reload();
+						});
+					} else{
+						$('#add_users_modal').find('.close_modal').trigger('click')
+						swal({
+							title: "Can't add user !",
+							text: data.msg,
+							icon: "error",
+							button: "close",
+						}).then(function () {
+							location.reload();
+						});
+					}
+				}
+			});
+		}
+		else {
+			$('#loader1').hide();
+			$('#add_users_modal').find('.close_modal').trigger('click')
+			swal({
+				title: "Please fill details !",
+				text: 'Invalid data.',
+				icon: "error",
+				button: "close",
+			}).then(function () {
+							location.reload();
+						});
+			$('.user_field').val('')
+			$('#group_selector option:first').prop('selected', true);
+		}
+	});
+
+
+	$('.group_access').click(function () {
+		groupid = $(this).data('group-id')
+		token = getCookie('csrftoken');
+		$.ajax({
+			type: "POST",
+			url: "/client/get_group_access/",
+			data: { 'groupid': groupid, csrfmiddlewaretoken: token },
+			success: function (result) {
+				// console.log(result.user_roles)
+				dataTab = result.user_roles
+				$main_menu = $('<ul />')
+				$(`.group_access_div`).empty()
+				dataTab.forEach(main => {
+					// console.log(main)
+					if (main.parent == null && main.usertype == 1) {
+						$main_menu.append(`<li class="parent_${main.id}" id="${main.id}"> ${set_checkbox(main)}</li>`)
+						$sub_menu = $('<ul class="col-md-12 sub_modules" />')
+						dataTab.forEach(sub => {
+							if (main.id == sub.parent) {
+								child_ids = []
+								$sub_child_list = $('<ul class="grand_module" style=" margin-left: 25px;" />')
+								dataTab.forEach(sub_child => {
+									if (sub.id == sub_child.parent) {
+										$sub_child_list.append(`<li class="sub_child_${sub.id}" data-parent-id="${sub.id}" id="sub_child_id_${sub_child.id}"> ${set_grand_child_checkbox(sub_child)}</li>`)
+										child_ids.push(sub_child.id)
+									}
+								});
+								if (child_ids.includes(sub.id) == false){
+									$sub_menu.append(`<li class="child_${main.id}" id="${sub.id}"> ${set_checkbox(sub)}</li>`)
+								}
+								if ($sub_child_list.find('li').length > 0){
+									$sub_menu.find(`#${sub.id}`).append($sub_child_list)
+									$sub_menu.find(`#${sub.id}`).attr('data-child-id',`${child_ids}`)
+								}
+							}
+						});
+						$main_menu.append($sub_menu)
+					}
+				});
+				$(`.group_access_div`).html($main_menu)
+				$(`.group_access_div`).append(`<label id="groupid" data-id="${groupid}"> `)
+
+			}
+		});
+
+	})
+
+	function set_checkbox(data) {
+		if (data.checked == '1') {
+			if (data.parent == null) {
+				checkbox = `<div class="main_menu">
+                    <label>
+                    <input type="checkbox" class="parent styled"  name="grant_access" id="${data.id}" checked>
+                   ${data.name}</label>
+                </div>`
+			} else {
+				checkbox = `<div class="main_menu">
+                    <label>
+                    <input type="checkbox" class="styled"  name="child_grant_access" id="${data.id}" checked>
+                   ${data.name}</label>
+                </div>`
+			}
+		} else {
+			if (data.parent == null) {
+				checkbox = `<div class="main_menu">
+                    <label>
+                    <input type="checkbox" class="parent styled"  name="grant_access" id="${data.id}">
+                   ${data.name}</label>
+                </div>`
+			} else {
+				checkbox = `<div class="main_menu">
+                    <label>
+                    <input type="checkbox" class="styled"  name="child_grant_access" id="${data.id}">
+                   ${data.name}</label>
+                </div>`
+			}
+		}
+		return checkbox
+	}
+
+
+	function set_grand_child_checkbox(data) {
+		if (data.checked == '1') {
+			if (data.parent == null) {
+				checkbox = `<div class="main_menu">
+                    <label>
+                    <input type="checkbox" class="parent styled"  name="grant_access" id="${data.id}" checked>
+                   ${data.name}</label>
+                </div>`
+			} else {
+				checkbox = `<div class="main_menu">
+                    <label>
+                    <input type="checkbox" class="styled"  name="grand_child_grant_access" data-parent="${data.parent}" id="${data.id}" checked>
+                   ${data.name}</label>
+                </div>`
+			}
+		} else {
+			if (data.parent == null) {
+				checkbox = `<div class="main_menu">
+                    <label>
+                    <input type="checkbox" class="parent styled"  name="grant_access" id="${data.id}">
+                   ${data.name}</label>
+                </div>`
+			} else {
+				checkbox = `<div class="main_menu">
+                    <label>
+                    <input type="checkbox" class="styled"  name="grand_child_grant_access" data-parent="${data.parent}" id="${data.id}">
+                   ${data.name}</label>
+                </div>`
+			}
+		}
+		return checkbox
+	}
+
+	//entire module access
+	$(document).on('change', "input[name='grant_access']", function () {
+		console.log($(this))
+		groupid = $('#groupid').data('id')
+		access_id = []
+
+		if ($(this).hasClass('parent')) {
+			access_id.push($(this).attr('id'))
+			parent_value = $(this).is(':checked')
+			$(`.child_${$(this).attr('id')}`).each(function () {
+				$(this).find('input').prop('checked', parent_value);
+				if($(this).data('child-id') != undefined){
+					if ($(this).data('child-id').length == 1){
+						$(`#${$(this).data('child-id')}`).prop('checked', parent_value)
+					} else{
+						child_ids = $(this).data('child-id').split(',')
+						child_ids.forEach(id =>{
+							$(`#sub_child_id_${id} input`).prop('checked', parent_value)
+							access_id.push(id)
+						})
+					}
+				}
+				access_id.push($(this).attr('id'))
+			})
+			console.log(access_id)
+			Access_call(access_id, parent_value, groupid)
+		}
+	});
+
+	//single access
+	$(document).on('change', "input[name='child_grant_access']", function () {
+		console.log($(this))
+		groupid = $('#groupid').data('id')
+		access_id = []
+		access_id.push($(this).attr('id'))
+		if($(this).data('child-id') != undefined){
+			parent_value = $(this).is(':checked')
+			// $(`.parent_${$(this).parents('li').attr('class').split('_')[1]}`).find('input').prop('checked', parent_value)
+			if ($(this).data('child-id').split(',').length == 1){
+				$(`#${$(this).data('child-id')}`).prop('checked', parent_value)
+			} else{
+				child_ids = $(this).data('child-id').split(',')
+				child_ids.forEach(id =>{
+					$(`#sub_child_id_${id} input`).prop('checked', parent_value)
+					access_id.push(id)
+				})
+			}
+			if ($(this).closest('ul').find('input:checked').length == 0) {
+				$(`.parent_${$(this).parents('li').attr('class').split('_')[1]}`).find('input').prop('checked', false)
+			} else {
+				$(`.parent_${$(this).parents('li').attr('class').split('_')[1]}`).find('input').prop('checked', true)
+			}
+		} else {
+			if ($(this).closest('ul').find('input:checked').length == 0) {
+				$(`.parent_${$(this).parents('li').attr('class').split('_')[1]}`).find('input').prop('checked', false)
+			} else {
+				$(`.parent_${$(this).parents('li').attr('class').split('_')[1]}`).find('input').prop('checked', true)
+			}
+		}
+		access_id.push($(`.parent_${$(this).parents('li').attr('class').split('_')[1]}`).find('input').attr('id'))
+		console.log(access_id)
+		child_access_call(groupid, access_id)
+	});
+
+
+	//grand module child access
+	$(document).on('change', "input[name='grand_child_grant_access']", function () {
+		groupid = $('#groupid').data('id')
+		access_id = []
+		access_id.push($(this).attr('id'))
+		if ($(this).closest('ul').find('input:checked').length == 0) {
+			$(`#${$(this).data('parent')}`).find(`#${$(this).data('parent')}`).prop('checked', false)
+			$(`.parent_${$(`#${$(this).data('parent')}`).attr('class').split('_')[1]}`).find('input').prop('checked',false)
+		} else {
+			$(`#${$(this).data('parent')}`).find(`#${$(this).data('parent')}`).prop('checked',true)
+			$(`.parent_${$(`#${$(this).data('parent')}`).attr('class').split('_')[1]}`).find('input').prop('checked',true)
+		}
+		access_id.push($(`#${$(this).data('parent')}`).find(`#${$(this).data('parent')}`).attr('id'))
+		access_id.push($(`.parent_${$(`#${$(this).data('parent')}`).attr('class').split('_')[1]}`).find('input').attr('id'))
+		console.log(access_id)
+		grand_child_access_call(groupid, access_id)
+	});
+
+
+
+	//Entire module access ajax call
+	function Access_call(access_id, parent_value, groupid) {
+		token = getCookie('csrftoken');
+
+		$.ajax({
+			type: "POST",
+			url: "/client/grant_group_access/",
+			data: { 'access_id': access_id, 'groupid': groupid, 'parent_value': parent_value, csrfmiddlewaretoken: token },
+			success: function (data) {
+				if (data.success == 1) {
+					swal({
+						title: "Access Permission", text: data.msg, icon:
+							"success",
+					});
+				}
+			}
+		});
+	}
+
+	//single access ajax call
+	function child_access_call(groupid, access_id) {
+		token = getCookie('csrftoken');
+
+		$.ajax({
+			type: "POST",
+			url: "/client/grant_child_group_access/",
+			data: { 'groupid': groupid, 'access_id': access_id, csrfmiddlewaretoken: token },
+			success: function (data) {
+				if (data.success == 1) {
+					swal({
+						title: "Access Permission", text: data.msg, icon:
+							"success",
+					});
+				}
+			}
+		});
+	}
+
+	//grand child access ajax call
+	function grand_child_access_call(groupid, access_id) {
+		token = getCookie('csrftoken');
+
+		$.ajax({
+			type: "POST",
+			url: "/client/grant_grand_child_access/",
+			data: { 'groupid': groupid, 'access_id': access_id, csrfmiddlewaretoken: token },
+			success: function (data) {
+				if (data.success == 1) {
+					swal({
+						title: "Access Permission", text: data.msg, icon:
+							"success",
+					});
+				}
+			}
+		});
+	}
+	$('#client_group_table').DataTable({
+		"columnDefs": [
+			{ "width": "20%", "targets": 0 }
+		]
+	})
+
+	let table
+	$('.more').click(function () {
+		if ($(this).parent().find('.more_details').hasClass('hidden')) {
+			$(document).find('.more_details').addClass('hidden')
+			$(this).parent().find('.more_details').removeClass('hidden')
+			table = $(this).parent().find('.more_details').find('#Group_user_' + $(this).data('id'))
+			group_id = $(this).data('id')
+			$.ajax({
+				type: 'get',
+				url: '/client/get_group_users/',
+				data: { group_id: $(this).data('id') },
+				success: function (data) {
+					console.log(data)
+					update_group_users_table(data.group_users, table)
+					$(".div_loader").fadeOut("slow");
+				},
+			})
+		} else {
+			$(this).parent().find('.more_details').addClass('hidden')
+		}
+	})
+
+	$('.close_div').click(function () {
+		$(this).parents('.more_details').addClass('hidden')
+	})
+
+	function update_group_users_table(data, table) {
+		if (data != "[]") {
+			var dataTab = $.parseJSON(JSON.stringify(data));
+			var tabindex
+			outterArray = [];
+
+			$.each(dataTab, function (index, value) {
+				tabindex = tabindex + 1
+				let id = tabindex > 0 ? tabindex : index + 1
+				let name = value.name
+				let email = value.email
+				let status
+				if (value.status == 1) {
+					status = `<i class="status_icon fas fa-check-circle"></i>`
+				} else {
+					status = `<i class="status_icon fas fa-times-circle"></i>`
+				}
+
+				let action = `<div>
+
+                                <button class="btn btn-xs btn-warning remove_user" data-user-id="${value.userid}" onclick="remove_user($(this))">Remove</button>
+                            </div>`
+				let innerArray = [id, name, email, status, action];
+				outterArray.push(innerArray);
+			});
+
+			table.dataTable({
+				"destroy": true,
+				// "bProcessing": true,
+				"aaData": outterArray,
+				"aoColumns": [
+					{ "sTitle": "ID" },
+					{ "sTitle": "Username" },
+					{ "sTitle": "Email" },
+					{ "sTitle": "Status" },
+					{ "sTitle": "Action" },
+				],
+				// "bPaginate": false,
+				"bFilter": false,
+				"bInfo": false,
+				"columnDefs": [
+					{ "width": "5%", "targets": 0 },
+				],
+			})
+		}
+	}
+
+	function remove_user(obj) {
+		user_id = obj.data('user-id')
+		group_id = obj.closest('.more_details').data('group-id')
+		token = getCookie('csrftoken');
+		table = $(this).closest('.more_details').find('#Group_user_' + group_id)
+		$.ajax({
+			type: 'post',
+			url: '/client/remove_group_user/',
+			data: { user_id: user_id, group_id: group_id, csrfmiddlewaretoken: token },
+			success: function (data) {
+				console.log(data)
+				if (data.success == 1) {
+					swal({
+						title: "User Removed !",
+						text: 'User Removed From Group',
+						icon: "success",
+						button: "OK",
+					}).then(function () {
+						location.reload();
+					});
+				}
+
+			},
+		})
+	}
+</script>

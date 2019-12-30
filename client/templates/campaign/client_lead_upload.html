@@ -1,0 +1,529 @@
+{% extends "header/vendor_header.html" %}
+
+{% block scripts %}
+    {% include "campaign/manage_campaignlead.html" %}
+{% endblock %}
+
+{% block scripts1 %}
+    {% include "campaign/manage_campaign.css" %}
+{% endblock %}
+{% block content %}
+<!-- Main sidebar -->
+{% include "side/clientside.html" %}
+{% load static %}
+<style>
+.label-info1 {
+  background: #3f70ba;
+}
+.lbl {
+  font-size: 14px;
+}
+             #campstat1
+          {
+              font-size: 16px;
+          }
+
+</style>
+{% load range %}
+        <!-- Main content -->
+          <div class="content-wrapper">
+              <!-- Content area -->
+              <div class="content">
+                  <div class="row">
+                  <!-- Top Clients List -->
+                  <div class="panel panel-height panel-flat">
+                     <div class="panel-heading">
+                              <h1 class="panel-title">Lead List
+                              <span class="pull-right">
+                                {% if status != 4 %}
+                                <a href="/client/insert_lead/{{campaigns.camp_id}}/{{camp_id}}/" style="margin-left:10px"><button class="btn btn-primary" ><span class="glyphicon glyphicon-plus"></span></button></a>
+                                    <button class="btn btn-primary " data-toggle="modal" data-target="#modal_large"><i class="icon-file-plus"></i>    Upload</button>
+                                    <!-- <button class="btn btn-primary " data-toggle="modal" data-target="#lead_header"> Choose Headers</button> -->
+                                  {% if approve_leads > 0 %}
+                                  <!--<a href="/client/all_lead_display/{{campaigns.camp_id}}/"><button class="btn btn-primary" > All Leads</button></a>-->
+                                  <a href="/client/export_data/{{campaigns.camp_id}}/{{request.session.userid}}/1/"><button class="btn btn-primary" > Export Data</button></a>
+                                  {% endif %}
+                                {% endif %}
+                              </span>
+                          </h1>
+                          <br>
+
+                          <div class="col-md-12">
+                            <div class="col-md-9">
+                              <div class="form-group ">
+                                 <span class="label label-info1 lbl">CID :</span>
+                                 <span class="label label-info lbl">{{campaigns.camp_id}}</span>
+                                 <span class="label label-info1 lbl">Campaign Name:</span>
+                                 <span class="label label-info lbl">{{campaigns.camp_name}}</span>
+                                 <span class="label label-info1 lbl">Client Name:</span>
+                                 <span class="label label-info lbl">{{ campaigns.client_name }}</span><br><br>
+                                 <span class="label label-info1 lbl">CPL :</span>
+                                 <span class="label label-info lbl">${{ campaigns.cpl|floatformat:2 }}</span>
+                                 &nbsp;&nbsp;<span class="label label-info1 lbl">Leads :</span> <span class="label label-info lbl  ">{{campaigns.lead}}</span>
+                                 &nbsp;&nbsp;<span class="label label-info1 lbl">Submitted Leads :</span> <span class="label label-info lbl  ">{{campaigns.submited_lead}}</span>
+                                 &nbsp;&nbsp;&nbsp;<span class="label label-info1 lbl">Returned Leads :</span> <span class="label label-danger lbl  ">{{campaigns.return_lead}}</span>
+                               </div>
+                            </div>
+                            <!-- <div class="col-md-6">
+                              <button type="button" class="databtn btn btn-filter-tb btn-labeled pull-right" >
+                                  <b><span id ="filter_icon" class="glyphicon glyphicon-filter"></span></b>
+                                   Filter
+                              </button>
+                            </div> -->
+
+                          </div>
+
+                      </div>
+
+
+
+
+
+                      <div class="panel-body">
+                               <div class="row">
+                                  <div class="col-lg-12 col-sm-12">
+                                           <div class="row">
+
+                               <div class="table-responsive-sm">
+                                  <table  class="table" id="example" style="width:100%">
+                                      <thead>
+                                          <tr>
+                                              {% for row in all_header %}
+                                              {% if row == 'id' %}
+                                              <th >{{row}}</th>
+                                              {% endif %}
+                                            {%endfor%}
+
+
+                                            {% for row in all_header %}
+                                              {% if row != 'id' and row != 'status' and row !=  'TC_lead_status' %}
+                                              <th>{{row}}</th>
+                                              {% endif %}
+                                            {%endfor%}
+                                            <!-- TC status -->
+                                            {% for row in all_header %}
+                                              {% if row == 'TC_lead_status' %}
+                                              <th>{{row}}</th>
+                                              {% endif %}
+                                            {%endfor%}
+                                            <!-- client status -->
+                                            {% for row in all_header %}
+                                              {% if row == 'status' %}
+                                              <th>{{row}}</th>
+                                              {% endif %}
+                                            {%endfor%}
+                                            <th>Action</th>
+                                          </tr>
+                                      </thead>
+                                      <!-- <tfoot class='datatfootfilter'>
+                                          <tr>
+                                            {% for row in all_header %}
+                                              <th>{{row}}</th>
+                                            {%endfor%}
+                                            <th>Action</th>
+                                          </tr>
+                                      </tfoot> -->
+                                      <tbody>
+                          {% for row in leadlist %}
+                          <tr>
+                            {% for data in all_header %}
+                              {% if data == 'id' %}
+                              <td>{{row.id}}</td>
+                              {% endif %}
+                            {%endfor%}
+
+                            {% for data in all_header %}
+                              {% if data != 'id' and data != 'status' and data != 'TC_lead_status' %}
+                                {% if data == 'Status Code' %}
+                                   <td>{{'reason'|leadlist:row}}</td>
+                                {%else%}
+                                <td>{{data|leadlist:row}}</td>
+                                {% endif %}
+                              {% endif %}
+
+                            {%endfor%}
+                             <!-- start TC Status-->
+                            {% for data in all_header %}
+                              {% if data == 'TC_lead_status' %}
+                              <td style="width:100px;">
+                                {% if row.TC_lead_status == 'valid lead' %}
+                                <span class="label label-success" data-toggle="tooltip" title="Approve Lead From TC"> Approved</span>
+                                {% else %}
+                                <span class="label label-danger" data-toggle="tooltip" title="{{data|leadlist:row}}"> Rejected</span>
+                                {%endif%}
+                              </td>
+                              {% endif %}
+                            {%endfor%}
+                            <!-- End TC Status-->
+                            <!--Client Status-->
+                            {% for data in all_header %}
+                              {% if data == 'status' %}
+                              <td style="width:100px;">
+                                {% if row.status == 0 %}
+                                <span class="label label-info"> Approval Pending</span>
+                                {% elif row.status == 1 %}
+                                <span class="label label-success"> Approved</span>
+                                {% elif row.status == 2 %}
+                                <span class="label label-danger"> Rejected</span>
+                                {% elif row.status == 3 %}
+                                <span class="label label-info" style="background-color:#c14a25;border-color:#c14a25;"> Rectify</span>
+                                {% elif row.status == 4 %}
+                                <span class="label label-info"> Rectify</span>
+                                <!--chages done by vendor on rectify -->
+                                {%endif%}
+                              </td>
+                              {% endif %}
+                            {%endfor%}
+
+
+                            <td style="padding:3px !important;width:100px;">
+                            {% if row.status != 1  %}
+                              {% if row.status != 2  %}
+                                <button type="button" id="{{row.id}}" camp_id="{{campaigns.camp_id}}" camp_alloc_id="{{campaigns.camp_alloc_id}}"  class="btn btn-success btn-icon edit_lead"><i class="far fa-edit"></i></button>
+                              {% endif %}
+                              <button type="button" id="{{row.id}}" camp_alloc_id="{{campaigns.camp_alloc_id}}" class="btn btn-danger btn-icon delete_lead"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                            {%endif%}
+                            </td>
+                          </tr>
+                          {% endfor %}
+
+                                      </tbody>
+
+                                  </table>
+
+
+                      </div>
+
+                                          </div>
+
+
+                                      </div>
+
+                                      </div>
+
+                              </div>
+
+
+                            </div>
+
+                      </div>
+
+
+                      </div>
+                  </div>
+                  <!-- /highlighting rows and columns -->
+                  <!-- Footer -->
+                  <div class="footer text-muted" style="display: none;">
+                      &copy; 2018. <a href="#">Trigensoft</a> by <a href="Trigensoft.com" target="_blank">Eugene Kopyov</a>
+                  </div>
+                  <!-- /footer -->
+              </div>
+               <!-- Button to Open the Modal -->
+              </div>
+              <!-- /content area -->
+          </div>
+          <!-- /main content -->
+      </div>
+      <!-- /page content -->
+  </div>
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content" style="padding: 25px;">
+        <div class="border">
+        <div class="modal-header">
+          <button type="button" onclick="closeModel()"  class="close" >&times;</button>
+          <h4 class="modal-title">Edit Lead</h4>
+        </div>
+          <form  action="#" method="post" id="edit_lead_frm">
+               {% csrf_token %}
+        <div class="modal-body" >
+
+            <div class="row">
+              {% for header in edit_lead_header %}
+
+               <div class="col-sm-12">
+                <div class="form-group">
+                  <label class="control-label col-lg-5 text-semibold">{{header}}</label>
+                  <div class="col-lg-7">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <input type="text" name="{{header}}" id='{{header}}' class="form-control " placeholder="text" required>
+                        <span class="help-block"></span>
+                      </div>
+                    </div>
+                  </div>
+                  </div>
+                  </div>
+                {%endfor%}
+                <input type="hidden" name="camp_id" value="{{campaigns.camp_id}}">
+                <input type="hidden" name="camp_alloc_id" value="{{campaigns.camp_alloc_id}}">
+                <input type="hidden" name="edit_lead_id" id="edit_lead_id"  value="">
+                </div>
+              </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-success" >Update</button>
+                  <button type="button" class="btn btn-link btn-color" data-dismiss="modal">Close</button>
+                </div>
+          </form>
+      </div>
+    </div>
+            </div>
+        </div>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Modal for upload lead -->
+<!-- Large modal -->
+<div id="modal_large" class="modal fade">
+    <div class="modal-dialog modal-full">
+      <div class="modal-content" style="padding: 25px;">
+      <div class="border">
+        <div class="modal-header">
+          <button type="button" class="close refreshPage" data-dismiss="modal">&times;</button>
+          <h5 class="modal-title"><strong>Lead Upload Modal</strong></h5>
+        </div>
+
+        <div class="modal-body">
+          <div id="download_template_div">
+          <h6 class="text-semibold">Download Template</h6>
+            <form method="POST" action="/vendor/download_lead/"><span>
+               {% csrf_token %}
+               <input type="hidden" name='campaign_id' value="{{campaigns.camp_id}}">
+                <div class="row">
+                    <div class="col-md-12">
+                          <p>Don't have Template  <input class="btn bg-teal btcolor legitRipple" type="submit" value="Download Template "></p>
+                    </div>
+                </div>
+           </form>
+          <hr>
+          </div>
+          <h6 class="text-semibold">Upload Template</h6>
+          <form id="lead_upload" action="/vendor/excel_lead/" method="POST" enctype="multipart/form_data">
+            {% csrf_token %}
+               <!--<input type="file" name='file1' value="" required="True">-->
+               <div class="row">
+                 <div class="col-lg-8">
+                     <input type="file" id="file1" name='file1' class="file-input" accept=".csv" required="True" data-show-upload="false" data-show-caption="true" data-show-preview="true">
+                     <span class="help-block">Upload csv file</span>
+                 </div>
+                 <div class="col-lg-2">
+                   <div class="loader_excel" style="margin-top:-56px;display:none">
+                     <img src="{% static '/icons/loading.gif' %}" alt="loading">
+                   </div>
+                   <button type="button" class="btn btn-primary refreshPage"   style="display:none">Load Data</button>
+                   <!--id="check_lead_data"-->
+                    <!-- <button type="button" class="btn btn-primary" id="loadData"  style="display:none">Check Error</button> -->
+                </div>
+                <div class="col-lg-2" style="display:none">
+                    <button type="button" class="btn btn-primary">More Info +</button>
+                </div>
+               </div>
+               <input type="hidden" name="camp_id" id="camp_id" value="{{campaigns.camp_id}}">
+               <input type="hidden" name="camp_alloc_id" id="camp_alloc_id" value="{{campaigns.camp_alloc_id}}">
+               <input type="hidden" name='submited_lead' id="submited_lead" value="{{campaigns.submited_lead}}">
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <!-- Accordion with different panel styling -->
+      <div class="panel-group" id="accordion-styled" style="display:none">
+        <div class="panel">
+          <div class="panel-heading bg-danger">
+            <h6 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion-styled" href="#accordion-styled-group1">Duplicate With self</a>
+            </h6>
+          </div>
+          <div id="accordion-styled-group1" class="panel-collapse collapse in">
+            <div class="panel-body">
+              <div class="col-lg-12 col-sm-12">
+                <div class="row">
+                  <div class="table-responsive-sm">
+                    <table  class="table" id="example2" style="width:100%">
+                      <thead>
+                        <tr>
+                          <th>ID</th>
+                          {% for row in all_header %}
+                            {% if row != 'id' and row != 'reason' and row != 'lead_desc' %}
+                              <th>{{row}}</th>
+                            {%endif%}
+                          {%endfor%}
+                        </tr>
+                      </thead>
+                    </table>
+
+                  </div>
+                </div>
+             </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-heading bg-teal">
+            <h6 class="panel-title">
+              <a class="collapsed" data-toggle="collapse" data-parent="#accordion-styled" href="#accordion-styled-group2">Duplicate Lead With others vendors</a>
+            </h6>
+          </div>
+          <div id="accordion-styled-group2" class="panel-collapse collapse">
+                 <div class="panel-body">
+                   <div class="col-lg-12 col-sm-12">
+                     <div class="row">
+                       <div class="table-responsive-sm">
+                         <table  class="table" id="example1" style="width:100%">
+                           <thead>
+                             <tr>
+                               <th>ID</th>
+                               {% for row in all_header %}
+                                 {% if row != 'id' and row != 'reason' and row != 'lead_desc' %}
+                                   <th>{{row}}</th>
+                                 {%endif%}
+                               {%endfor%}
+                             </tr>
+                           </thead>
+                         </table>
+                       </div>
+                     </div>
+                  </div>
+                </div>
+          </div>
+        </div>
+
+        <div class="panel" style="display:none">
+          <div class="panel-heading bg-primary">
+            <h6 class="panel-title">
+              <a class="collapsed" data-toggle="collapse" data-parent="#accordion-styled" href="#accordion-styled-group3">Accordion Item #3</a>
+            </h6>
+          </div>
+          <div id="accordion-styled-group3" class="panel-collapse collapse">
+            <div class="panel-body">
+              3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it.
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /accordion with different panel styling -->
+      <!--after load file -->
+
+      <!-- end after load file -->
+      <!-- Display message for Successfully uploaded lead -->
+      <div class="alert alert-primary alert-styled-left" id="upload_lead_user" style="display:none" >
+        <button type="button" class="close" data-dismiss="alert"><span>&times;</span><span class="sr-only">Close</span></button>
+        <span id="upload_lead_user_val"></span>
+      </div>
+
+      <div class="alert alert-success alert-styled-left" id="upload_lead" style="display:none">
+        <button type="button" class="close" data-dismiss="alert"><span>&times;</span><span class="sr-only">Close</span></button>
+        <span id="upload_lead_val"></span>
+      </div>
+
+      <div class="alert alert-warning alert-styled-left" id="duplicate_lead_with" style="display:none" >
+        <button type="button" class="close" data-dismiss="alert"><span>&times;</span><span class="sr-only">Close</span></button>
+        <span id="duplicate_lead_with_val"></span>
+      </div>
+
+      <div class="alert alert-warning alert-styled-left" id="duplicate_lead_with_other" style="display:none" >
+        <button type="button" class="close" data-dismiss="alert"><span>&times;</span><span class="sr-only">Close</span></button>
+        <span id="duplicate_lead_with_other_val"></span>
+      </div>
+
+      <div class="alert alert-danger alert-styled-left" id="remove_lead" style="display:none" >
+        <button type="button" class="close" data-dismiss="alert"><span>&times;</span><span class="sr-only">Close</span></button>
+        <span id="remove_lead_val"></span>
+      </div>
+
+      <!-- End Display message -->
+                </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-link btn-color refreshPage" data-dismiss="modal">Close</button>
+          <a href="/client/lead_error_list/{{campaigns.camp_id}}/{{campaigns.camp_alloc_id}}/" id="lead_error_list" style="display:none"><button type="button" class="btn btn-primary" name="button">View More</button></a>
+          <button type="button" id="upload_with_rejected_lead" style="display:none" class="btn btn-primary" name="button"> Upload With Rejected Lead</button>
+          <button type="button" id="upload_without_rejected_lead" style="display:none" class="btn btn-primary" name="button"> Upload Without Rejected Lead</button>
+          <button type="submit" id="fileuploadbtn" class="btn btn-primary" disabled>Upload</button>
+        </div>
+        </form>
+      </div>
+    </div>
+    </div>
+  </div>
+  <!-- /large modal -->
+
+<!-- Modal for select header -->
+<div class="modal fade" id="lead_header" role="dialog">
+  <div class="modal-dialog modal-lg">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Choose Lead Headers:(Which is you want to see) </h4>
+          </div>
+          <div class="modal-body">
+
+            <section>
+                <h2>Sortable List Group Connected</h2>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <ul class="list-group list-group-sortable-connected">
+                          {% for row in all_lead_header %}
+                            {% if row not in header %}
+                            {% if row != 'id' and row != 'lead_desc'%}
+                            <li class="list-group-item list-group-item-info">{{row}}</li>
+                            {%endif%}
+                          {%endif%}
+                          {%endfor%}
+                        </ul>
+                    </div>
+                    <div class="col-sm-6">
+                        <ul class="list-group list-group-sortable-connected" id="selected">
+                          {% for row in header %}
+                            {% if row != 'id' and row != 'reason'%}
+                            <li class="list-group-item list-group-item-info">{{row}}</li>
+                            {%endif%}
+                          {%endfor%}
+                        </ul>
+                    </div>
+                </div>
+                <input type="hidden" id="camp_id_lead" value="{{campaigns.camp_id}}" />
+                </section>
+          </div>
+          <div class="modal-footer">
+              <input class="btn btn-sm btn-primary" type="button" id="submit123" value="submit">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+      </div>
+  </div>
+</div>
+<style type="text/css">
+  .label-info {
+    border-color: #00BCD4;
+    margin-right: 10px!important;
+}
+.btn-success{
+  background: #fff;
+}
+.fa-edit {
+  color: #4caf50;
+  padding: 5px;
+  font-size: 18px!important;
+}
+.btn-danger{
+  background: #fff;
+  color: #ff0000b5;
+  padding: 5px;
+  font-size: 18px;
+}
+.btn-success:focus, .btn-success.focus, .btn-success:hover {
+    background-color: #fff;
+    color: #4caf50;
+}
+.btn-danger:focus, .btn-danger.focus, .btn-danger:hover {
+    background-color: #fff;
+    color: #ff0000b5;
+}
+</style>
+  <!-- /page container -->
+  {% include "leads/leadlistjs.html" %}
+  {% endblock %}

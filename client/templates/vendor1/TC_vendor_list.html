@@ -1,0 +1,120 @@
+{% extends "header/cheader.html" %}
+
+  {% block scripts %}
+      {% include "vendor1/vendor_list_head.html" %}
+  {% endblock %}
+
+  {% block scripts1 %}
+      {% include "campaign/manage_campaign.css" %}
+  {% endblock %}
+{% block content %}
+<!-- Main sidebar -->
+  {% include "side/clientside.html" %}
+  {% load static %}
+          <!-- Main content -->
+            <div class="content-wrapper">
+
+
+
+
+                <!-- Content area -->
+                <div class="content" style="margin-top: 4px;">
+                    <div class="row">
+                    <div class="col-md-12 ">
+                    <!-- Top Clients List -->
+                    <div class="panel panel-height panel-flat">
+                        <div class="panel-heading">
+                                <h1 class="panel-title">TC Vendor List
+                                <button type="button" id="databtn" class="btn btn-filter-tb btn-labeled pull-right" style="display:none" >
+                                    <b><span id ="filter_icon" class="glyphicon glyphicon-filter"></span></b>
+                                     Filter
+                                </button>
+                            </h1><br>
+
+                        </div>
+                             <div class="table-responsive-sm">
+                               <table class="table datatable-column-search-inputs DataTables">
+                                   <thead>
+                                       <tr>
+                                           <th>Username</th>
+                                           <th>Email</th>
+                                          <th>Industry Speciality</th>
+                                           <!-- <th>Avg.launch time</th> -->
+                                           <th>Website</th>
+                                       </tr>
+                                   </thead>
+                                   <tfoot id="datatfootfilter" style="display:none">
+                                       <tr>
+
+                                           <td rowspan="1" colspan="1">
+                                               <input type="text" class="form-control input-sm" placeholder="Search Company">
+                                           </td>
+                                           <td rowspan="1" colspan="1">
+                                               <input type="text" class="form-control input-sm" placeholder="Search Category">
+                                           </td>
+                                           <!--
+                                           <td rowspan="1" colspan="1">
+                                               <input type="text" class="form-control input-sm" placeholder="Search Type">
+                                           </td>
+
+                                           <td rowspan="1" colspan="1">
+                                               <input type="text" class="form-control input-sm" placeholder="Search Billing">
+                                           </td>
+
+                                        <td rowspan="1" colspan="1">
+                                          <input type="text" class="form-control input-sm" placeholder="Status">
+                                        </td>-->
+                                           <td rowspan="1" colspan="1"></td>
+                                       </tr>
+                                   </tfoot>
+                                   <tbody>
+                                     {% for vendor in vendor_list%}
+                                   <tr>
+                                    <td><a href="#">{{ vendor}}</a></td>
+   									<td>{{ vendor.user.email}}</td>
+   									<td><span class="">{{ vendor.industry_speciality.name}}</span></td>
+   									<!-- <td><span class="label label-success">2</span></td> -->
+   									<td><span class="">{{ vendor.website}}</span></td>
+
+
+   								</tr>
+                  {%endfor%}
+                </tbody>
+              </table>
+            </div>
+          </div>
+                    <!-- /highlighting rows and columns -->
+
+
+
+
+
+                    <!-- Footer -->
+                    <div class="footer text-muted" style="display: none;">
+                        &copy; 2018. <a href="#">Trigensoft</a> by <a href="Trigensoft.com" target="_blank">Eugene Kopyov</a>
+                    </div>
+                    <!-- /footer -->
+                </div>
+                </div>
+                <!-- /content area -->
+
+            </div>
+            <!-- /main content -->
+
+        </div>
+        <!-- /page content -->
+
+    </div>
+</div>
+
+
+    <!-- /page container -->
+    {% include "vendor1/vendorjs.html" %}
+    <script>
+        $(function () {
+            $("#explore-vendors").addClass("active");
+            $("#explore-vendors").find("ul").first().css({ 'display': 'block' })
+            $("#TCVendors").addClass("active");
+        });
+    </script>
+    {% endblock %}

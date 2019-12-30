@@ -1,0 +1,721 @@
+{% extends "header/cheader.html" %}
+{% load static %}
+{% block scripts %}
+{% include "campaign/campaign_notebook_head.html" %}
+{% endblock %}
+
+{% block scripts1 %}
+
+{% include "campaign/css/campaign_notebook.css" %}
+{% endblock %}
+
+{% block content %}
+
+<!-- Main sidebar -->
+{% include "side/clientside.html" %}
+<!-- /main sidebar -->
+
+<div class="content-wrapper">
+    <!-- Content area -->
+    <div class="content" style="margin-top: 17px;">
+        <!-- tech connector data-->
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="panel campaign_panel panel-flat first ">
+                    <div class="panel-body">
+                        <div id="centertext" style="padding-bottom: 10px;">
+                            {% if request.session.usertype == 1 %}
+                            <a href="/client/campaign_type/">
+                                <button type="button" class="btn btn-primary btn-raised bt12">Create Campaign</button>
+                            </a>
+                            {% endif %}
+                        </div>
+                        <div class="table-responsive">
+                            <table id="Client_live_campaign_table" class="table campaign_table">
+                                <thead>
+                                    <!--Heading for completed campaign-->
+                                    <tr class="active ">
+                                        <th colspan="1">Completed Campaign</th>
+                                        <th>Description</th>
+                                        <th class=""></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for camp in camps %}
+                                    {% if camp.status == 4 %}
+                                    <!--List of completed campaign-->
+                                    <tr class="shadow ">
+                                        <td class="show_camp" camp_id="{{camp.id}}">
+                                            <div class="media-left">
+                                                <div class=""><a href="#" class="text-default text-semibold show_camp">
+                                                        {{camp.name|truncatechars:20 }}</a></div>
+                                                <div class="text-muted text-size-small" style="display:none">
+                                                    <span class="status-mark border-blue position-left"></span>
+                                                    02:00 - 03:00
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="show_camp" camp_id="{{camp.id}}">
+                                            <div>{{camp.description|truncatechars:150}}</div>
+                                        </td>
+                                        <td class="campagin_icons ">
+
+                                            <ul class="icons-list">
+                                                <li>
+                                                    <a href="/client/campaigndesc/{{camp.id}}"><i
+                                                            class="bqX brq fas fa-clipboard-list"
+                                                            title="Lead Management"></i></a>
+                                                </li>
+                                                <li><a href="/client/clone-campaign/{{camp.id}}"><i
+                                                            class="bqX brq far fa-clone" title="Clone Campaign"></i></a>
+                                                </li>
+
+                                            </ul>
+                                        </td>
+                                    </tr>
+
+                                    {%endif%}
+                                    {%endfor%}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /FULL NOTEBOOK END-->
+        <div class="row">
+            <div class="col-md-12 notebook" style="display: none;">
+                <div class="col-md-7">
+                    <div class="panel campaign_panel1 panel-flat">
+                        <div class="panel-body scroll">
+                            <div id="centertext" style="padding-bottom: 10px;">
+                                <a href="/client/create-campaign/">
+                                    <button type="button" class="btn btn-primary btn-raised bt12">Create
+                                        Campaign</button>
+                                </a>
+                            </div>
+                            <div class="table-responsive">
+                                <table id="side_tabel_campaign_notebook" class="table text-nowrap">
+                                    <thead>
+                                        <!--Heading for Complete campaign-->
+                                        <tr class="active ">
+                                            <th colspan="1">Complete Campaign</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for camp in camps %}
+                                        {% if camp.status == 4 %}
+                                        <tr class="shadow show_camp" id="show_camp{{camp.id}}" camp_id="{{camp.id}}">
+                                            <td>
+                                                <div class="media-left">
+                                                    <div class=""><a href="#" id="{{camp.id}}"
+                                                            class="text-default text-semibold show_camp">{{ camp.name }}</a>
+                                                    </div>
+                                                    <div class="text-muted text-size-small" style="display:none">
+                                                        <span class="status-mark border-blue position-left"></span>
+                                                        02:00 - 03:00
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {%endif%}
+                                        {%endfor%}
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="panel campaign_panel panel-flat ">
+                        <div class="panel-body scroll">
+                            <section onclick="myFunction2()">
+                                <div class="campaign_details">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h5 class="panel-title">
+                                                <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+                                                    Campaign Details</a>
+                                                <span class="icons" style="float:right;">
+                                                    <i class="fas fa-paperclip" id="aggrements" camp_id=""
+                                                        title="aggrements" data-toggle="modal"
+                                                        data-target="#Aggrements_models"></i>
+                                                    <!-- <i class="fas fa-link" title="Contracts"></i> -->
+                                                    <div class="dropdown">
+                                                        <span class="dropdown-toggle" type="text"
+                                                            data-toggle="dropdown"><i
+                                                                class="fas fa-ellipsis-h"></i></span>
+                                                        <ul class="dropdown-menu assets_list">
+                                                            <li><a data-toggle="modal" id="get_scripts"
+                                                                    data-target="#scripts_modal">Scripts</a></li>
+                                                            <li><a data-toggle="modal" id="get_asset"
+                                                                    data-target="#asset_modal">Assests</a></li>
+                                                            <!-- <li><a href="#">Lead Stutas</a></li> -->
+                                                        </ul>
+                                                    </div>
+                                                    <!-- <span> <i class="far fa-thumbs-up"></i></span> -->
+                                                    <span class="fas fa-close" onclick="myFunctionClose()"></span>
+                                                </span>
+                                            </h5>
+                                        </div>
+                                        <div id="collapse1" class="panel-collapse collapse in">
+                                            <div class="panel-body side_tab">
+                                                <div class="panel1 row">
+                                                    <p style="text-transform: capitalize;">Campaign Name : <span
+                                                            style="color: #6d6d70" id="camp_name"></span></p>
+                                                </div>
+                                                <div class="panel1 row">
+                                                    <span><strong>IO Number:</strong><span style="color: #6d6d70"
+                                                            id="camp_io"> </span></span>
+                                                    <span style="padding-left:15px;"><strong>CPL:</strong> <span
+                                                            style="color: #6d6d70" id="camp_cpl"></span></span>
+                                                    <span style="padding-left:15px;"><strong>Volume: </strong><span
+                                                            style="color: #6d6d70" id="camp_volume"></span></span>
+                                                    <span class="agree"><i
+                                                            class="fas fa-check"></i><span>Agree</span></span>
+                                                </div><br>
+
+                                                <div class="panel1 row">
+                                                    <p class="btn-top" style="position:absolute">
+                                                        <a class="btn btn-info btn-collapsible" id="vendor_list_tooltip"
+                                                            data-toggle="tooltip" data-placement="top">
+                                                            <i class="fas fa-user"></i><span>Assigned to <span
+                                                                    id="assigend_vendors">{{user}}</span></span> <span
+                                                                class="Assigned_list tooltiptext"></span>
+                                                        </a>
+                                                        <a class="btn btn-success btn-collapsible"><i
+                                                                class="icon-calendar"></i><input type="text"
+                                                                class="input_date" id="start_date" value=""
+                                                                title="Start Date" disabled></a>
+                                                        <a class="btn btn-success btn-collapsible" s><i
+                                                                class="icon-calendar"></i><input type="text"
+                                                                class="input_date" id="datepicker2" value=""
+                                                                title="End Date" disabled></a>
+                                                        <!-- <a class="btn btn-warning btn-collapsible"><i class="far fa-clock" ></i><span id="expiry_date"></span></a> -->
+
+                                                        <!-- <a class="btn btn-warning btn-collapsible"></a> -->
+                                                        <a class="btn btn-warning " id="specs_data" camp_id=""
+                                                            data-toggle="modal" title="View More"
+                                                            data-target="#modal_large"><i class="fas fa-eye"></i></a>
+                                                    </p><br>
+                                                    <!-- <div class='circle col-md-4 vendor' id="vendor_list_tooltip" data-toggle="tooltip" data-placement="top">
+                                                                    <img style="height:35px;width:30px;margin-top: 7px;" src="http://www.clker.com/cliparts/3/V/U/m/W/U/admin-button-icon-md.png">
+                                                                    <label>Assigned to</label>
+                                                                    <div id="assigend_vendors">{{user}}</div>
+                                                                    <div class="Assigned_list tooltiptext"></div>
+                                                                </div> -->
+                                                    <!-- <div class='circle col-md-4 date_pill'>
+                                                                    <div class="date-icon"><i class="icon-calendar"></i></div>
+                                                                    <span class="date">
+                                                                        <input type="text" id="start_date" placeholder="Due Date" disabled>
+                                                                    </span>
+                                                                </div>
+                                                                <div class='circle col-md-4 date_pill'>
+                                                                    <div class="date-icon"><i class="icon-calendar"></i></div>
+                                                                    <span class="date">
+                                                                        <input type="text" id="datepicker2" placeholder="Due Date">
+                                                                    </span>
+                                                                </div> -->
+                                                </div>
+                                                <div class="panel1 row" style="margin-top: 50px;">
+                                                    <textarea rows="4" cols="4" id="camp_desc" class="form-control"
+                                                        placeholder="Description"></textarea>
+                                                </div>
+                                                <!-- <div class="panel1 row">
+                                                                <p style="text-transform: capitalize;">Instructions : </p>
+                                                                <p id="camp_intructions" class="form-control" style="color: #6d6d70">campaign instructions</p>
+                                                            </div> -->
+                                                <!-- <div class="panel1 view_more row">
+                                                                <!-- <a href="/client/custom_question/"><button class="btn custom_questions"> Custom Question</button></a> -->
+
+                                            </div>
+                                            <div class="panel1 row">
+                                                <ul id="chat_box" class="media-list chat-list content-group">
+
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <!-- <div class="panel panel-default">
+                                                            <div class="panel-heading">
+                                                                <h5 class="panel-title">
+                                                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">
+                                                                        Instructions</a>
+                                                                </h5>
+                                                            </div>
+                                                            <div id="collapse2" class="panel-collapse collapse in">
+                                                                <div class="panel-body side_tab chat_panel">
+                                                                    sdfasfsadfsafsfssgdaffadg
+                                                                </div>
+                                                            </div>
+                                                        </div> -->
+
+                        </div>
+                        </section>
+                    </div>
+                    <div class="chat_bar">
+                        <div class="row">
+                            <form method="post" id="send_msg">
+                                {% csrf_token %}
+                                <div class="col-md-10 text-right">
+                                    <ul class="dropdown-menu1" id="vendor_list">
+                                        <li><a href="#"><input type="checkbox" id="allcheck" class="default"
+                                                    value="0" />All</a></li>
+                                        <!-- {% for vendor in vendor_list %}
+                                                        <li><a href="#"><input type="checkbox" name="vendor_names" class="vendor_names" value="{{vendor.id}}" />
+                                                                {{vendor.vendor_name}}</a></li>
+                                                        {%endfor%} -->
+                                        <li><a href="#"><input type="checkbox" name="vendor_names" class="default"
+                                                    value="3" />Superadmin</a></li>
+                                    </ul>
+                                    <input type="text" name="message" id="message" class="form-control"
+                                        onkeyup=" return key_check(this.value)" required
+                                        placeholder="Enter your message..." />
+                                    <input type="hidden" name="camp_id" id="camp_id" value="{{camp.id}}" />
+                                    <input type="hidden" name="client_id" id="client_id" value="{{client_id}}" />
+                                    <input type="hidden" name="sender_id" id="sender_id" value="{{sender_id}}" />
+
+                                </div>
+                                <div class="col-md-2 text-right">
+                                    <span data-toggle="modal" data-target="#chat_attach_modal"
+                                        style="margin-left:-54px;"><i class="glyphicon glyphicon-paperclip"></i></span>
+                                    <button type="submit" class="btn btn-primary"><b><i
+                                                class="fa fa-paper-plane"></i></b></button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- /content area -->
+</div>
+<!-- aggrements -->
+<div class="modal fade" id="Aggrements_models" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="col-md-12 " style="margin-top:20px;">
+                <div class="modal-header MH">
+                    <h5 class="modal-title h1" id="exampleModalLongTitle">Agreements</h5>
+
+                </div>
+                <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button> -->
+            </div>
+            <div class="modal-body" style="border:0px;">
+                <div class="col-md-6 padd1" style="border-top: 1px solid #afaaaa;padding: 2px;">
+                    <p class='lead nd'><span>NDA Agreement </span></p>
+                </div>
+                <div class="col-md-6 padd" style="border-top: 1px solid #afaaaa;padding: 1px;">
+                    <span id='nda_icon' class="label bg-danger text-semibold">Due<br></span>
+                </div>
+                <div class="col-md-6 padd1">
+                    <p class='lead ms'><span>MSA Agreement </span></p>
+                </div>
+                <div class="col-md-6 padd">
+                    <span id='msa_icon' class="label bg-danger text-semibold">Due</span>
+                </div>
+                <div class="col-md-6 padd1">
+                    <p class='lead gdp'><span>GDPR Agreement </span></p>
+                </div>
+                <div class="col-md-6 padd">
+                    <span id='gdpr_icon' class="label bg-danger text-semibold">Due</span>
+                </div>
+                <div class="col-md-6 padd1">
+                    <p class='lead dp'><span>DPA Agreement </span></p>
+                </div>
+                <div class="col-md-6 padd">
+                    <span id='dpa_icon' class="label bg-danger text-semibold">Due</span>
+                </div>
+                <div class="col-md-6 padd1">
+                    <p class='lead io'><span>IO Agreement </span></p>
+                </div>
+                <div class="col-md-6 padd">
+                    <span id='io_icon' class="label bg-danger text-semibold">Due</span>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+<!--aseets model Start-->
+<div class="modal fade" id="asset_modal" role="dialog">
+    <div class="modal-dialog " style="width:45%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="col-md-12 bgset1">
+
+                    <h1 class="modal-title">Add Assets for <span id="campaign_name"></span></h1>
+                </div>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <form id="asset_form" method="post" enctype="multipart/form-data">
+                <div class="modal-body" style="padding:5%!important;">
+
+                    {% csrf_token %}
+                    <input type="hidden" name="campaign" id="campid">
+                    <label class="label1">Assets Name :</label><input type="text" name="assets_name" id="assets_name"
+                        required=""><br>
+                    <label class="label1">Type of assets:</label>
+                    <div id="assets_holder" name="assets_holder">
+                    </div>
+                    <label class="label1">Sponsers:</label><input type="text" name="sponsers" id="sponsers"><br>
+                    <label class="label1" style="width: 150px;">Asset distributor :</label><input type="text"
+                        name="asset_distributor" id="asset_distributor"><br>
+                    <label class="label1">Add assets link :</label><input type="text" name="add_assetslink"
+                        id="add_assetslink">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary legitRipple pull-right" id="submit_assets">Submit<span
+                            class="legitRipple-ripple"></span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--aseets model end-->
+
+<!-- Specs modal -->
+<div id="modal_large" class="modal fade">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="modal-title">Campaign Specs</h5>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+
+                    <div class="col-md-6">
+
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="control-label col-lg-5 text-semibold">Target Quntity</label>
+                                <div class="col-lg-7">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input type="text" name="target_quantity" id='target_quantity'
+                                                class="form-control " placeholder="text" required>
+                                            <span class="help-block"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="control-label col-lg-5 text-semibold">Campaign Type</label>
+                                <div class="col-lg-7">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input type="text" name="campaign_type" id="campaign_type"
+                                                class="form-control " placeholder="text" required>
+                                            <span class="help-block"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="control-label col-lg-5 text-semibold">Outrich method</label>
+                                <div class="col-lg-7">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input type="text" name="outrich_method" id="outrich_method"
+                                                class="form-control " placeholder="text" required>
+                                            <span class="help-block"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="control-label col-lg-5 text-semibold">Assets</label>
+                                <div class="col-lg-7">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input type="text" name="assets" id="assets" class="form-control "
+                                                placeholder="text" required>
+                                            <span class="help-block"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="control-label col-lg-5 text-semibold">Delivery Methods</label>
+                                <div class="col-lg-7">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input type="text" name="delivery_method" id="delivery_method"
+                                                class="form-control " placeholder="text" required>
+                                            <span class="help-block"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="control-label col-lg-5 text-semibold">Company Size</label>
+                                <div class="col-lg-7">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input type="text" name="company_size" id="company_size"
+                                                class="form-control " placeholder="text" required>
+                                            <span class="help-block"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="control-label col-lg-5 text-semibold">Indursty Type</label>
+                                <div class="col-lg-7">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input type="text" name="indursty_type" id="indursty_type"
+                                                class="form-control " placeholder="text" required>
+                                            <span class="help-block"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="control-label col-lg-5 text-semibold">Job title</label>
+                                <div class="col-lg-7">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input type="text" name="job_title" id="job_title" class="form-control "
+                                                placeholder="text" required>
+                                            <span class="help-block"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="control-label col-lg-5 text-semibold">Job level</label>
+                                <div class="col-lg-7">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input type="text" name="job_level" id="job_level" class="form-control "
+                                                placeholder="text" required>
+                                            <span class="help-block"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="control-label col-lg-5 text-semibold">Country</label>
+                                <div class="col-lg-7">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input type="text" name="country" id="country" class="form-control "
+                                                placeholder="text" required>
+                                            <span class="help-block"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="control-label col-lg-5 text-semibold">Pacing</label>
+                                <div class="col-lg-7">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <input type="text" name="pacing" id="pacing" class="form-control "
+                                                placeholder="text" required>
+                                            <span class="help-block"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="control-label col-lg-5 text-semibold">Data Field</label>
+                                <div class="col-lg-7">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <textarea id="data_field" class="form-control "></textarea>
+
+                                            <span class="help-block"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="control-label col-lg-5 text-semibold">Instructions</label>
+                        <div class="col-lg-12">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <textarea id="instructions" class="form-control "></textarea>
+
+                                    <span class="help-block"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Specs modal -->
+
+<!-- Add scripts modal start -->
+<div class="modal fade" id="scripts_modal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="padding:0px;">
+                <div class="col-md-12 bgset">
+                    <h5 class="modal-title tophead" id="exampleModalLongTitle">Scripts</h5>
+
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <a class="hidden" id="script_link" download><button class="btn btn-primary">View Script</button></a>
+                <form id="script_form" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" name="campaign" id="camp_script_id">
+                    <div class="file-field">
+                        <div class="btn btn-primary btn-sm float-left">
+                            <span>Choose file</span>
+                            <input type="file" name="client_script" id="id_client_script">
+                        </div>
+                        <!-- <div class="file-path-wrapper">
+                    <input class="file-path validate" type="text" placeholder="Upload your file">
+                </div> -->
+                    </div>
+                    <button type="submit" class="btn btn-primary legitRipple pull-right" id="submit_script">Submit<span
+                            class="legitRipple-ripple"></span></button>
+                </form>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Add scripts modal end -->
+<!--attachment to chat -->
+<div class="modal fade" id="chat_attach_modal" role="dialog">
+    <div class="modal-dialog " style="width:45%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h1 class="modal-title">Send Attachment</h1>
+            </div>
+            <form method="post" id="chat_attach_form" enctype="multipart/form-data">
+                <div class="modal-body">
+
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6">
+
+                            <div class="form-group">
+                                <label>Enter Title</label>
+                                <input type="text" name="title" class="form-control" placeholder="Enter Title" />
+                            </div>
+
+                        </div>
+                        <div class="col-md-6">
+
+                            <div class="file-field">
+                                <label>Select Your File</label><br />
+                                <div class="btn btn-primary btn-sm float-left">
+                                    <span id="chat_file_name">Browse</span>
+                                    <input type="file" name="filename" required />
+                                    <input type="hidden" name="camp_id" id="chat_camp_id" value="{{camp.id}}" />
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-12">
+
+                            <div class="form-group">
+                                <label>Select Your Users</label>
+                                <div class="multi-select-full">
+                                    <select class="multiselect-select-all" name="ids[]" id="chat_vendor_list"
+                                        multiple="multiple">
+                                        <option value="3">Superadmin</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary legitRipple pull-right">Send<span
+                                    class="legitRipple-ripple"></span></button>
+                        </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--aseets model Start-->
+
+<!-- /page container -->
+{% include "campaign/js/accountjs.html"%}
+{% include "campaign/js/campaign_notebook.html" %}
+{% include "campaign_chat/js/chatjs.html"%}
+
+<script>
+    $(function () {
+        $("#campaign").addClass("active");
+        $("#campaign").find("ul").first().css({ 'display': 'block' })
+        $("#CompleteCampaign").addClass("active");
+    });
+</script>
+
+{% endblock %}

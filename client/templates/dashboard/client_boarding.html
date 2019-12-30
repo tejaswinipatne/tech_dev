@@ -1,0 +1,981 @@
+{% extends "header/cheader.html" %}
+{% block scripts %}
+{% include "dashboard/client_boarding_head.html" %}
+{% endblock %}
+{% block content %}
+<!-- docusign -->
+{% load static %}
+<!-- /docusign -->
+<!-- Main sidebar -->
+<style>
+  input[type=number]::-webkit-outer-spin-button,
+  input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
+</style>
+<!-- /main sidebar -->
+<!-- Main content -->
+{% load range %}
+<!--<div class="sticky pull-right rotate" id="on_boarding"><span class="btn btn-primary" onclick="openModal()">On Boarding</span></div>-->
+<div class="content-wrapper">
+
+
+
+  <!-- Content area -->
+  <div class="content">
+
+    <!-- tech connector data-->
+    <div class="row">
+      <div class="col-md-12">
+
+        <div>
+
+          <div class="row">
+
+
+            <div class="panel panel-height panel-flat">
+              <div class="panel-body">
+                <div id="welcome">
+                  <h1 id="welcome">
+
+                    Welcome to the TechConnectr Marketplace for B2B Marketers
+
+                  </h1>
+                  <p id="welcome">
+                    TechConnectr is a one-stop marketplace of and for best-of-breed B2B marketers, agencies, publishers,
+                    and b2b lead generation
+                    solution providers
+                  </p>
+
+
+                </div>
+                {% if onBording == 3 %}
+                <div id="centertext">
+                  <a href="/client/create-campaign/">
+                    <button id="bt" type="button" class="btn btn-primary btn-raised"> Create Campaign </button>
+                  </a>
+                </div>
+                {%endif%}
+              </div>
+
+
+              <div class="panel-body">
+
+                <!-- pie charts-->
+                <div class="row" style="margin:10px">
+
+                  <form class="steps-validation" id="onboradingform" action="www.techconnectr" method="post">
+                    {% csrf_token %}
+                    <h6>Company Info</h6>
+                    <fieldset>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label><span style="color:red;">* </span>Company:</label>
+                            <input type="text" value="{{userdetails.user_name}}" id="company_name" name="user_name"
+                              placeholder="Company Name" class="form-control">
+                          </div>
+                          <div class="form-group">
+                            <label><span style="color:red;">* </span>Website:</label>
+                            <input type="text" value="{{client_vendor.website}}" id="website" name="website"
+                              placeholder="https://example.com" class="form-control">
+                          </div>
+                          <div class="form-group">
+                            <label><span style="color:red;">* </span>Address Line 1:</label>
+                            <input type="text" value="{{userdetails.address_line1}}" id="address_line1"
+                              name="address_line1" placeholder="Address Line 1" class="form-control">
+                          </div>
+
+                          <div class="form-group" id="country_error">
+                            <label><span style="color:red;">* </span>Country:</label>
+                            <select name="country" id="country" data-placeholder="Choose a Country..." class="select">
+                              <option value="0">Select Country</option>
+                              <option value="{{ country.id }}" selected>{{ country.name }}</option>
+                              {% for country in countries.all %}
+                              <option value="{{ country.id }}">{{ country.name }}</option>
+                              {% endfor %}
+                            </select>
+                          </div>
+                          <div class="form-group" id="industry_error">
+                            <label><span style="color:red;">* </span>Industry Type:</label>
+                            <select name="industry_type_id" id="industry_type_id"
+                              data-placeholder="Choose a Industry Type..." class="select">
+                              <option value="0">Select Industry Type</option>
+                              <option value="{{ industry.id }}" selected>{{ industry.type }}</option>
+                              {% for inds in industry.all %}
+                              <option value="{{ inds.id }}">{{ inds.type }}</option>
+                              {% endfor %}
+                            </select>
+                          </div>
+
+                        </div>
+
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label><span style="color:red;">* </span>Phone:</label>
+                            <input type="number" value="{{userdetails.contact}}" id="phone" name="contact"
+                              placeholder="Personal Number" class="form-control" required
+                              onkeydown="javascript: return event.keyCode === 8 || event.keyCode === 46 ? true : !isNaN(Number(event.key))">
+                          </div>
+                          <div class="form-group">
+                            <label>Alternate Number:</label>
+                            <input type="number" value="{{userdetails.alternative_contact}}" id="alternate_number"
+                              name="alternate_number" placeholder="Alternate Number" class="form-control"
+                              onkeydown="javascript: return event.keyCode === 8 || event.keyCode === 46 ? true : !isNaN(Number(event.key))">
+                          </div>
+                          <div class="form-group">
+                            <label>Address Line 2:</label>
+                            <input type="text" name="address_line2" id="address_line2"
+                              value="{{userdetails.address_line2}}" placeholder="Address Line 2" class="form-control">
+                          </div>
+
+                          <div class="form-group" id="state_error">
+                            <label><span style="color:red;">* </span>State:</label>
+                            <select id="state" name="state" data-placeholder="Choose a State..." class="select"
+                              required>
+                              <option value="{{ state.id }}" selected>{{ state.name }}</option>
+                            </select>
+                          </div>
+                          <div class="form-group" id="speciality_error">
+                            <label><span style="color:red;">* </span>Speciality:</label>
+                            <select name="industry_speciality_id" id="industry_speciality_id"
+                              data-placeholder="Choose a Speciality..." class="select" required>
+                              <option value="0">Select Speciality </option>
+                              <option value="{{ speciality.id }}" selected>{{ speciality.name }}</option>
+                              {% for exp in expert.all %}
+                              <option value="{{ exp.id }}">{{ exp.name }}</option>
+                              {% endfor %}
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </fieldset>
+
+                    <h6>Business Card Info</h6>
+                    <fieldset>
+                      <!-- primary contact-->
+                      <div class="row">
+                        <div class="col-md-12">
+                          <h6 class="panel-title primary-contact">Primary Contact :</h6>
+                        </div>
+
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label><span style="color:red;">* </span>Full Name:</label>
+                            {% if client_vendor.primary_name is not None %}
+                            <input type="text" name="primary_name" id="primary_name"
+                              value="{{client_vendor.primary_name}}" placeholder="Full Name" class="form-control">
+                            {% else %}
+                            <input type="text" name="primary_name" id="primary_name" value="" placeholder="Full Name"
+                              class="form-control">
+                            {% endif %}
+                          </div>
+
+                          <div class="form-group">
+                            <label><span style="color:red;">* </span>Designation:</label>
+                            {% if client_vendor.primary_designation is not None %}
+                            <input type="text" name="primary_designation" id="primary_designation"
+                              value="{{client_vendor.primary_designation}}" placeholder="Designation"
+                              class="form-control">
+                            {% else %}
+                            <input type="text" name="primary_designation" id="primary_designation" value=""
+                              placeholder="Designation" class="form-control">
+                            {% endif %}
+                          </div>
+
+                        </div>
+
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label><span style="color:red;">* </span>Direct dial:</label>
+                            {% if client_vendor.primary_directdial is not None %}
+                            <input type="number" name="primary_directdial" id="primary_directdial"
+                              value="{{client_vendor.primary_directdial}}" placeholder="Direct Dial"
+                              class="form-control"
+                              onkeydown="javascript: return event.keyCode === 8 || event.keyCode === 46 ? true : !isNaN(Number(event.key))">
+                            {% else %}
+                            <input type="number" name="primary_directdial" id="primary_directdial" value=""
+                              placeholder="Direct Dial" class="form-control"
+                              onkeydown="javascript: return event.keyCode === 8 || event.keyCode === 46 ? true : !isNaN(Number(event.key))">
+                            {% endif %}
+                          </div>
+
+                          <div class="form-group">
+                            <label><span style="color:red;">* </span>Email:</label>
+                            {% if client_vendor.primary_email %}
+                            <input type="email" value="{{client_vendor.primary_email}}" id="primary_email"
+                              name="primary_email" placeholder="Email" class="form-control">
+                            {% else %}
+                            <input type="email" value="" id="primary_email" name="primary_email" placeholder="Email"
+                              class="form-control">
+                            {% endif %}
+                          </div>
+                        </div>
+
+                      </div>
+                      <!-- /primary contact-->
+                      <br>
+                      <!-- Secondary Contact-->
+                      <div class="row">
+                        <div class="col-md-12">
+                          <h6 class="panel-title secondary-contact">Secondary Contact :</h6>
+                        </div>
+
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label><span style="color:red;">* </span>Full Name:</label>
+                            {% if client_vendor.secondary_name is not None %}
+                            <input type="text" name="secondary_name" id="secondary_name"
+                              value="{{client_vendor.secondary_name}}" placeholder="Full Name" class="form-control">
+                            {% else %}
+                            <input type="text" name="secondary_name" id="secondary_name" value=""
+                              placeholder="Full Name" class="form-control">
+                            {% endif %}
+                          </div>
+
+                          <div class="form-group">
+                            <label><span style="color:red;">* </span>Designation:</label>
+                            {% if client_vendor.secondary_designation is not None %}
+                            <input type="text" name="secondary_designation" id="secondary_designation"
+                              value="{{client_vendor.secondary_designation}}" placeholder="Designation"
+                              class="form-control">
+                            {% else %}
+                            <input type="text" name="secondary_designation" id="secondary_designation" value=""
+                              placeholder="Designation" class="form-control">
+                            {% endif %}
+                          </div>
+
+                        </div>
+
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label><span style="color:red;">* </span>Direct dial:</label>
+                            {% if client_vendor.secondary_directdial is not None %}
+                            <input type="number" value="{{client_vendor.secondary_directdial}}"
+                              name="secondary_directdial" id="secondary_directdial" placeholder="Direct Dial"
+                              class="form-control"
+                              onkeydown="javascript: return event.keyCode === 8 || event.keyCode === 46 ? true : !isNaN(Number(event.key))">
+                            {% else %}
+                            <input type="number" value="" name="secondary_directdial" id="secondary_directdial"
+                              placeholder="Direct Dial" class="form-control"
+                              onkeydown="javascript: return event.keyCode === 8 || event.keyCode === 46 ? true : !isNaN(Number(event.key))">
+                            {% endif %}
+                          </div>
+
+                          <div class="form-group">
+                            <label><span style="color:red;">* </span>Email:</label>
+                            {% if client_vendor.secondary_email is not None %}
+                            <input type="email" value="{{client_vendor.secondary_email}}" name="secondary_email"
+                              id="secondary_email" placeholder="Email" class="form-control">
+                            {% else %}
+                            <input type="email" value="" name="secondary_email" id="secondary_email" placeholder="Email"
+                              class="form-control">
+                            {% endif %}
+                          </div>
+                        </div>
+
+                      </div>
+                      <!-- /secondary contact-->
+
+                    </fieldset>
+                    <h6>Agreement</h6>
+                    <fieldset>
+                      <div class="panel-group content-group-lg" id="accordion1">
+
+
+
+
+                        <div class="panel panel-white">
+                          <div class="panel-heading">
+                            <h6 class="panel-title">
+
+                              <label>
+
+                                {% if data_assesment.nda_aggrement %}
+                                <input type="checkbox" class="filled-in docs_check" name="nda_aggrement" value="1"
+                                  checked />
+                                {%else%}
+                                <input type="checkbox" class="filled-in docs_check" name="nda_aggrement" value="1" />
+
+                                {%endif%}
+                                <span style="font-size:.8rem;height:16px"></span>
+                              </label>
+
+                              <a data-toggle="collapse" data-parent="#accordion1" href="#accordion-group1">NDA/MNDA</a>
+                              {% if data_assesment.nda_aggrement %}
+                              {%else%}
+                              <!--  <div class="btn_docsign" data-role="content"
+                                style="background: #2196F3;
+    color: #fff;display: block;padding: 8px 16px; border-radius: 3px;/*text-transform: uppercase;*/font-weight: 500;border: 1px solid transparent;margin-left: 89%; margin-right: 19px; margin-top: -30px;">
+                                <a href="#divPopUpSignContract" style="color: #fff;" data-rel="popup"
+                                  data-position-to="window" data-role="button" data-inline="true">DocuSign</a>
+                              </div> -->
+
+                              <button style="background: #2196F3;" type="button" class="btn btn-info btn-lg pull-right"
+                                data-toggle="modal" data-target="#myModal">DocuSign</button>
+                              {%endif%}
+                            </h6>
+                          </div>
+                          <div id="accordion-group1" class="panel-collapse collapse in">
+                            <div class="panel-body">
+
+                              <!-- <div class="container"> -->
+                              <!-- <h2>Modal Example</h2> -->
+                              {% if docpdf.doc1 != '/media/' %}
+                              <iframe id="ajaxprogres" src="{{docpdf.doc1}}" width="100%" height="200px"
+                                class="pdf1" /></iframe>
+                              {% else %}
+                              <span class="fileError">No data available</span>
+                              {% endif %}
+                              <!-- Trigger the modal with a button -->
+
+
+                              <!-- Modal -->
+                              <div class="modal" id="myModal" role="dialog">
+
+
+                                <div data-role="page" class="doc">
+                                  <div data-role="popup" id="divPopUpSignContract">
+                                    <div data-role="header" data-theme="b">
+                                      <div class="modal-footer">
+                                        <button style="background: #2196F3;" type="button" class="btn btn-default"
+                                          data-dismiss="modal">Close</button>
+                                      </div>
+                                      <!-- 
+            <a data-role="button" data-rel="back" data-transition="slide"
+              class="ui-btn-right" onclick="closePop()"> Close </a> -->
+                                      <p class="popupHeader">Sign Pad</p>
+                                      <iframe class="pdf_file" name="nda_mnda_document" id="" src="{{docpdf.doc1}}"
+                                        width="100%" height="400px" /></iframe>
+                                    </div>
+                                    <div class="ui-content popUpHeight">
+                                      <canvas class="canvas">Canvas is not supported</canvas>
+                                      <div>
+                                        <input id="btnSubmitSign" class="btn_submit" id="frame" type="button"
+                                          data-inline="true" data-mini="true" data-theme="b" value="Submit Sign"
+                                          onclick="fun_submit()" />
+                                        <input id="btnClearSign" type="button" data-inline="true" data-mini="true"
+                                          data-theme="b" value="Clear" onclick="init_Sign_Canvas()" />
+                                      </div>
+                                    </div>
+
+                                  </div>
+                                </div>
+                              </div>
+
+
+
+                              <!-- docusign -->
+                              <!-- <div class="row content">
+                                
+                                <div class="input-group" style="width: 200px;">
+
+                                  <div data-role="page" class="doc">
+                                    <div data-role="popup" id="divPopUpSignContract">
+                                      <div data-role="header" data-theme="b">
+                                        <a data-role="button" data-rel="back" data-transition="slide"
+                                          class="ui-btn-right" onclick="closePop()"> Close </a>
+                                        <p class="popupHeader">Sign Pad</p>
+
+
+                                        <iframe class="pdf_file" name="nda_mnda_document" id="" src="{{docpdf.doc1}}"
+                                          width="100%" height="400px" /></iframe>
+
+
+                                      </div>
+                                      <div class="ui-content popUpHeight">
+                                        <canvas class="canvas">Canvas is not supported</canvas>
+                                        <div>
+                                          <input id="btnSubmitSign" class="btn_submit" id="frame" type="button"
+                                            data-inline="true" data-mini="true" data-theme="b" value="Submit Sign"
+                                            onclick="fun_submit()" />
+                                          <input id="btnClearSign" type="button" data-inline="true" data-mini="true"
+                                            data-theme="b" value="Clear" onclick="init_Sign_Canvas()" />
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div> -->
+                              <!-- end Docusign -->
+
+                              <!-- <embed src="http://www.africau.edu/images/default/sample.pdf#toolbar=0&navpanes=0&scrollbar=0" type="application/pdf" width="100%" height="200px" /> -->
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="panel panel-white">
+                          <div class="panel-heading">
+                            <h6 class="panel-title">
+                              <label>
+                                {% if data_assesment.msa_aggrement %}
+                                <input type="checkbox" class="filled-in docs_check" name="msa_aggrement" value="1"
+                                  checked />
+
+                                {%else%}
+                                <input type="checkbox" class="filled-in docs_check" name="msa_aggrement" value="1" />
+
+                                {%endif%}
+                                <span style="font-size:.8rem;height:16px"></span>
+                              </label>
+                              <a class="collapsed" data-toggle="collapse" data-parent="#accordion1"
+                                href="#accordion-group2">MSA</a>
+                              {% if data_assesment.msa_aggrement %}
+                              {% else %}
+                              <!-- <div class="btn_docsign" data-role="content"
+                                style="background: #2196F3;
+                                  color: #fff;display: block;padding: 8px 16px; border-radius: 3px;/*text-transform: uppercase;*/font-weight: 500;border: 1px solid transparent;margin-left: 89%; margin-right: 19px; margin-top: -30px;">
+                                <a href="#divPopUpSignContract" style="color: #fff;" data-rel="popup"
+                                  data-position-to="window" data-role="button" data-inline="true">DocuSign</a>
+                              </div> -->
+                              {% endif %}
+
+                            </h6>
+                          </div>
+                          <div id="accordion-group2" class="panel-collapse collapse">
+                            <div class="panel-body">
+                              <!-- 
+                                                      <embed src="http://www.africau.edu/images/default/sample.pdf#toolbar=0&navpanes=0&scrollbar=0" type="application/pdf" width="100%" height="200px" /> -->
+
+
+                              <!-- <div class="container"> -->
+                              <!-- <h2>Modal Example</h2> -->
+                              {% if docpdf.doc2 != '/media/' %}
+                              <iframe id="ajaxprogres" src="{{docpdf.doc2}}" width="100%" height="200px"
+                                class="pdf2" /></iframe>
+                              <!-- Trigger the modal with a button -->
+                              {% else %}
+                              <span class="fileError">No data available</span>
+                              {% endif %}
+
+                              <!-- Modal -->
+                              <div class="modal" id="myModal" role="dialog">
+
+
+                                <div data-role="page" class="doc">
+                                  <div data-role="popup" id="divPopUpSignContract">
+                                    <div data-role="header" data-theme="b">
+                                      <div class="modal-footer">
+                                        <button style="background: #2196F3;" type="button" class="btn btn-default"
+                                          data-dismiss="modal">Close</button>
+                                      </div>
+                                      <!-- 
+            <a data-role="button" data-rel="back" data-transition="slide"
+              class="ui-btn-right" onclick="closePop()"> Close </a> -->
+                                      <p class="popupHeader">Sign Pad</p>
+                                      <iframe class="pdfdata" name="nda_mnda_document" id="" src="{{docpdf.doc2}}"
+                                        width="100%" height="400px" /></iframe>
+                                    </div>
+                                    <div class="ui-content popUpHeight">
+                                      <canvas class="canvas">Canvas is not supported</canvas>
+                                      <div>
+                                        <input id="btnSubmitSign" class="btn_submit" id="frame" type="button"
+                                          data-inline="true" data-mini="true" data-theme="b" value="Submit Sign"
+                                          onclick="fun_submit()" />
+                                        <input id="btnClearSign" type="button" data-inline="true" data-mini="true"
+                                          data-theme="b" value="Clear" onclick="init_Sign_Canvas()" />
+                                      </div>
+                                    </div>
+
+                                  </div>
+                                </div>
+                              </div>
+
+
+
+
+
+                              <!-- docusign -->
+                              <!-- <div class="row content">
+
+                                <iframe class="pdf pdf2" src="{{docpdf.doc2}}" width="100%" height="200px" /></iframe>
+                                <div class="input-group" style="width: 200px;">
+
+                                  <div data-role="page" class="doc">
+                                    <div data-role="popup" id="divPopUpSignContract">
+                                      <div data-role="header" data-theme="b">
+                                        <a data-role="button" data-rel="back" data-transition="slide"
+                                          class="ui-btn-right" onclick="closePop()"> Close </a>
+                                        <p class="popupHeader">Sign Pad</p>
+
+
+                                        <iframe class="pdfdata" name="msa_document" id="" src="{{docpdf.doc2}}"
+                                          width="100%" height="400px" /></iframe>
+
+
+                                      </div>
+                                      <div class="ui-content popUpHeight">
+                                        <canvas class="canvas">Canvas is not supported</canvas>
+                                        <div>
+                                          <input id="btnSubmitSign" class="btn_submit" type="button" data-inline="true"
+                                            data-mini="true" data-theme="b" value="Submit Sign"
+                                            onclick="fun_submit()" />
+                                          <input id="btnClearSign" type="button" data-inline="true" data-mini="true"
+                                            data-theme="b" value="Clear" onclick="init_Sign_Canvas()" />
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div> -->
+                              <!-- end Docusign -->
+
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="panel panel-white">
+
+
+                          <div class="panel-heading">
+                            <h6 class="panel-title">
+                              <label>
+                                {% if data_assesment.gdpr_aggrement %}
+                                <input type="checkbox" class="filled-in docs_check" name="gdpr_aggrement" value="1"
+                                  checked />
+                                {%else%}
+                                <input type="checkbox" class="filled-in docs_check" name="gdpr_aggrement" value="1" />
+                                {%endif%}
+                                <span style="font-size:.8rem;height:16px"></span>
+                              </label>
+
+                              <a class="collapsed" data-toggle="collapse" data-parent="#accordion1"
+                                href="#accordion-group3">GDPR</a>
+                              {% if data_assesment.gdpr_aggrement %}
+                              {%else%}
+                              <!-- <div class="btn_docsign" id="page" data-role="content"
+                                style="background: #2196F3;
+    color: #fff;display: block;padding: 8px 16px; border-radius: 3px;/*text-transform: uppercase;*/font-weight: 500;border: 1px solid transparent;margin-left: 89%; margin-right: 19px; margin-top: -30px;">
+                                <a href="#divPopUpSignContract" style="color: #fff;" id="sign_btn" data-rel="popup"
+                                  data-position-to="window" data-role="button" data-inline="true">DocuSign</a>
+                              </div> -->
+                              {%endif%}
+                            </h6>
+                          </div>
+                          <div id="accordion-group3" class="panel-collapse collapse">
+                            <div class="panel-body">
+
+
+                              <!-- <div class="container"> -->
+                              <!-- <h2>Modal Example</h2> -->
+                              {% if docpdf.doc3 != '/media/' %}
+                              <iframe id="ajaxprogres" src="{{docpdf.doc3}}" width="100%" height="200px"
+                                class="pdf3" /></iframe>
+                              <!-- Trigger the modal with a button -->
+                              {% else %}
+                              <span class="fileError">No data available</span>
+                              {% endif %}
+
+                              <!-- Modal -->
+                              <div class="modal" id="myModal" role="dialog">
+
+
+                                <div data-role="page" class="doc">
+                                  <div data-role="popup" id="divPopUpSignContract">
+                                    <div data-role="header" data-theme="b">
+                                      <div class="modal-footer">
+                                        <button style="background: #2196F3;" type="button" class="btn btn-default"
+                                          data-dismiss="modal">Close</button>
+                                      </div>
+                                      <!-- 
+            <a data-role="button" data-rel="back" data-transition="slide"
+              class="ui-btn-right" onclick="closePop()"> Close </a> -->
+                                      <p class="popupHeader">Sign Pad</p>
+                                      <iframe class="pdfdata3" name="nda_mnda_document" id="" src="{{docpdf.doc3}}"
+                                        width="100%" height="400px" /></iframe>
+                                    </div>
+                                    <div class="ui-content popUpHeight">
+                                      <canvas class="canvas">Canvas is not supported</canvas>
+                                      <div>
+                                        <input id="btnSubmitSign" class="btn_submit" id="frame" type="button"
+                                          data-inline="true" data-mini="true" data-theme="b" value="Submit Sign"
+                                          onclick="fun_submit()" />
+                                        <input id="btnClearSign" type="button" data-inline="true" data-mini="true"
+                                          data-theme="b" value="Clear" onclick="init_Sign_Canvas()" />
+                                      </div>
+                                    </div>
+
+                                  </div>
+                                </div>
+                              </div>
+
+
+                              <!-- <embed src="http://www.africau.edu/images/default/sample.pdf#toolbar=0&navpanes=0&scrollbar=0" type="application/pdf" width="100%" height="200px" /> -->
+                              <!-- docusign -->
+                              <!-- <div class="row content">
+
+                                <iframe class="pdf pdf3" src="{{docpdf.doc3}}" width="100%" height="200px" /></iframe>
+
+                                <div class="input-group" style="width: 200px;">
+
+                                  <div data-role="page" class="doc">
+                                    <div data-role="popup" id="divPopUpSignContract">
+                                      <div data-role="header" data-theme="b">
+                                        <a data-role="button" data-rel="back" data-transition="slide"
+                                          class="ui-btn-right" onclick="closePop()"> Close </a>
+                                        <p class="popupHeader">Sign Pad</p>
+
+
+                                        <iframe class="pdfdata3" name="gdpr_document" id="" src="{{docpdf.doc3}}"
+                                          width="100%" height="400px" /></iframe>
+
+
+                                      </div>
+                                      <div class="ui-content popUpHeight">
+                                        <canvas id="canvas">Canvas is not supported</canvas>
+                                        <div>
+                                          <input id="btnSubmitSign" class="btn_submit" type="button" data-inline="true"
+                                            data-mini="true" data-theme="b" value="Submit Sign"
+                                            onclick="fun_submit()" />
+                                          <input id="btnClearSign" type="button" data-inline="true" data-mini="true"
+                                            data-theme="b" value="Clear" onclick="init_Sign_Canvas()" />
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div> -->
+                              <!-- end Docusign -->
+
+
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="panel panel-white">
+                          <div class="panel-heading">
+                            <h6 class="panel-title">
+                              <label>
+                                {% if data_assesment.dpa_aggrement %}
+                                <input type="checkbox" class="filled-in docs_check" name="dpa_aggrement" value="1"
+                                  checked />
+                                {%else%}
+                                <input type="checkbox" class="filled-in docs_check" name="dpa_aggrement" value="1" />
+                                {%endif%}
+                                <span style="font-size:.8rem;height:16px"></span>
+                              </label>
+                              <a class="collapsed" data-toggle="collapse" data-parent="#accordion1"
+                                href="#accordion-group4">DPA</a>
+                              {% if data_assesment.dpa_aggrement %}
+                              {%else%}
+                              <!-- <div class="btn_docsign" id="page" data-role="content"
+                                style="background: #2196F3;
+    color: #fff;display: block;padding: 8px 16px; border-radius: 3px;/*text-transform: uppercase;*/font-weight: 500;border: 1px solid transparent;margin-left: 89%; margin-right: 19px; margin-top: -30px;">
+                                <a href="#divPopUpSignContract" style="color: #fff;" id="sign_btn" data-rel="popup"
+                                  data-position-to="window" data-role="button" data-inline="true">DocuSign</a>
+                              </div> -->
+                              {%endif%}
+                            </h6>
+                          </div>
+                          <div id="accordion-group4" class="panel-collapse collapse">
+                            <div class="panel-body">
+
+                              {% if docpdf.doc4 != '/media/' %}
+                              <iframe id="ajaxprogres" src="{{docpdf.doc4}}" width="100%" height="200px"
+                                class="pdf4" /></iframe>
+                              <!-- Trigger the modal with a button -->
+                              {% else %}
+                              <span class="fileError">No data available</span>
+                              {% endif %}
+
+                              <!-- Modal -->
+                              <div class="modal" id="myModal" role="dialog">
+
+
+                                <div data-role="page" class="doc">
+                                  <div data-role="popup" id="divPopUpSignContract">
+                                    <div data-role="header" data-theme="b">
+                                      <div class="modal-footer">
+                                        <button style="background: #2196F3;" type="button" class="btn btn-default"
+                                          data-dismiss="modal">Close</button>
+                                      </div>
+                                      <!-- 
+            <a data-role="button" data-rel="back" data-transition="slide"
+              class="ui-btn-right" onclick="closePop()"> Close </a> -->
+                                      <p class="popupHeader">Sign Pad</p>
+                                      <iframe class="pdfdata4" name="nda_mnda_document" id="" src="{{docpdf.doc4}}"
+                                        width="100%" height="400px" /></iframe>
+                                    </div>
+                                    <div class="ui-content popUpHeight">
+                                      <canvas class="canvas">Canvas is not supported</canvas>
+                                      <div>
+                                        <input id="btnSubmitSign" class="btn_submit" id="frame" type="button"
+                                          data-inline="true" data-mini="true" data-theme="b" value="Submit Sign"
+                                          onclick="fun_submit()" />
+                                        <input id="btnClearSign" type="button" data-inline="true" data-mini="true"
+                                          data-theme="b" value="Clear" onclick="init_Sign_Canvas()" />
+                                      </div>
+                                    </div>
+
+                                  </div>
+                                </div>
+                              </div>
+
+                              <!-- <embed src="http://www.africau.edu/images/default/sample.pdf#toolbar=0&navpanes=0&scrollbar=0" type="application/pdf" width="100%" height="200px" /> -->
+                              <!-- docusign -->
+                              <!-- <div class="row content">
+
+                                <iframe class="pdf pdf4" src="{{docpdf.doc4}}" width="100%" height="200px" /></iframe>
+                                <div class="input-group" style="width: 200px;">
+
+                                  <div data-role="page" class="doc">
+                                    <div data-role="popup" id="divPopUpSignContract">
+                                      <div data-role="header" data-theme="b">
+                                        <a data-role="button" data-rel="back" data-transition="slide"
+                                          class="ui-btn-right" onclick="closePop()"> Close </a>
+                                        <p class="popupHeader">Sign Pad</p>
+
+
+                                        <iframe class="pdfdata4" name="dpa_document" id="" src="{{docpdf.doc4}}"
+                                          width="100%" height="400px" /></iframe>
+
+
+                                      </div>
+                                      <div class="ui-content popUpHeight">
+                                        <canvas id="canvas">Canvas is not supported</canvas>
+                                        <div>
+                                          <input id="btnSubmitSign" class="btn_submit" type="button" data-inline="true"
+                                            data-mini="true" data-theme="b" value="Submit Sign"
+                                            onclick="fun_submit()" />
+                                          <input id="btnClearSign" type="button" data-inline="true" data-mini="true"
+                                            data-theme="b" value="Clear" onclick="init_Sign_Canvas()" />
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div> -->
+
+                              <!-- end docusign -->
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="panel panel-white">
+                          <div class="panel-heading">
+                            <h6 class="panel-title">
+                              <label>
+                                {% if data_assesment.io_aggrement %}
+                                <input type="checkbox" class="filled-in docs_check" name="io_aggrement" value="1"
+                                  checked />
+                                {%else%}
+                                <input type="checkbox" class="filled-in docs_check" name="io_aggrement" value="1" />
+                                {%endif%}
+                                <span style="font-size:.8rem;height:16px"></span>
+                              </label>
+                              <a class="collapsed" data-toggle="collapse" data-parent="#accordion1"
+                                href="#accordion-group5">IO</a>
+                              {% if data_assesment.io_aggrement %}
+                              {%else%}
+                              <!-- <div class="btn_docsign" id="page" data-role="content"
+                                style="background: #2196F3;
+    color: #fff;display: block;padding: 8px 16px; border-radius: 3px;/*text-transform: uppercase;*/font-weight: 500;border: 1px solid transparent;margin-left: 89%; margin-right: 19px; margin-top: -30px;">
+                                <a href="#divPopUpSignContract" style="color: #fff;" id="sign_btn" data-rel="popup"
+                                  data-position-to="window" data-role="button" data-inline="true">DocuSign</a>
+                              </div> -->
+                              {%endif%}
+                            </h6>
+                          </div>
+                          <div id="accordion-group5" class="panel-collapse collapse">
+                            <div class="panel-body">
+                              {% if docpdf.doc5 != '/media/' %}
+                              <!-- <embed src="http://www.africau.edu/images/default/sample.pdf#toolbar=0&navpanes=0&scrollbar=0" type="application/pdf" width="100%" height="200px" /> -->
+                              <iframe id="ajaxprogres" src="{{docpdf.doc5}}" width="100%" height="200px"
+                                class="pdf5" /></iframe>
+                              <!-- Trigger the modal with a button -->
+                              {% else %}
+                              <span class="fileError">No data available</span>
+                              {% endif %}
+
+
+                              <!-- Modal -->
+                              <div class="modal" id="myModal" role="dialog">
+
+
+                                <div data-role="page" class="doc">
+                                  <div data-role="popup" id="divPopUpSignContract">
+                                    <div data-role="header" data-theme="b">
+                                      <div class="modal-footer">
+                                        <button style="background: #2196F3;" type="button" class="btn btn-default"
+                                          data-dismiss="modal">Close</button>
+                                      </div>
+                                      <!-- 
+            <a data-role="button" data-rel="back" data-transition="slide"
+              class="ui-btn-right" onclick="closePop()"> Close </a> -->
+                                      <p class="popupHeader">Sign Pad</p>
+                                      <iframe class="pdfdata5" name="nda_mnda_document" id="" src="{{docpdf.doc5}}"
+                                        width="100%" height="400px" /></iframe>
+                                    </div>
+                                    <div class="ui-content popUpHeight">
+                                      <canvas class="canvas">Canvas is not supported</canvas>
+                                      <div>
+                                        <input id="btnSubmitSign" class="btn_submit" id="frame" type="button"
+                                          data-inline="true" data-mini="true" data-theme="b" value="Submit Sign"
+                                          onclick="fun_submit()" />
+                                        <input id="btnClearSign" type="button" data-inline="true" data-mini="true"
+                                          data-theme="b" value="Clear" onclick="init_Sign_Canvas()" />
+                                      </div>
+                                    </div>
+
+                                  </div>
+                                </div>
+                              </div>
+
+                              <!-- docusign -->
+                              <!--    <div class="row content">
+
+                                <iframe class="pdf pdf5" src="{{docpdf.doc5}}" width="100%" height="200px" /></iframe>
+
+                                <div class="input-group" style="width: 200px;">
+
+                                  <div data-role="page" class="doc">
+                                    <div data-role="popup" id="divPopUpSignContract">
+                                      <div data-role="header" data-theme="b">
+                                        <a data-role="button" data-rel="back" data-transition="slide"
+                                          class="ui-btn-right" onclick="closePop()"> Close </a>
+                                        <p class="popupHeader">Sign Pad</p>
+
+
+                                        <iframe class="pdfdata5" name="io_document" src="{{docpdf.doc5}}" width="100%"
+                                          height="400px" /></iframe>
+
+
+                                      </div>
+                                      <div class="ui-content popUpHeight">
+                                        <canvas id="canvas">Canvas is not supported</canvas>
+                                        <div>
+                                          <input id="btnSubmitSign" class="btn_submit" type="button" data-inline="true"
+                                            data-mini="true" data-theme="b" value="Submit Sign"
+                                            onclick="fun_submit()" />
+                                          <input id="btnClearSign" type="button" data-inline="true" data-mini="true"
+                                            data-theme="b" value="Clear" onclick="init_Sign_Canvas()" />
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div> -->
+                              <!-- end Docusign -->
+                              <!-- end docusign -->
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </fieldset>
+                    <h6>Corporate Profile</h6>
+                    <fieldset>
+                      <div class="row">
+                        <!-- <div class="col-md-6">
+                          <div class="form-group">
+                            <label>Card Details:</label>
+                            <textarea name="experience-description" rows="4" cols="4"
+                              placeholder="Tasks and responsibilities" class="form-control"></textarea>
+                          </div>
+                          <div class="form-group">
+                            <label>Address:</label>
+                            <textarea class="form-control">
+                                                        {{userdetails.address_line1 }} , {{ userdetails.address_line2 }}
+                                                      </textarea>
+                          </div>
+
+                        </div> -->
+
+                        <div class="col-md-6">
+                          <!-- <div class="form-group">
+                            <label>Card Details:</label>
+                            <textarea name="experience-description" rows="4" cols="4"
+                              placeholder="Tasks and responsibilities" class="form-control"></textarea>
+                          </div> -->
+
+                          <div class="form-group file-field1">
+                            <label class="display-block">Media Kit:</label>
+                            <input name="recommendations" type="file" accept="application/pdf" class="file-styled">
+                            <span class="help-block">Accepted formats: pdf. Max file size: 10Mb</span>
+                            {% if client_vendor.media_kit %}
+                            {{client_vendor.media_kit.url |slice:"7:"}}
+                            {% endif %}
+                          </div>
+
+                          <div class="form-group file-field2">
+                            <label class="display-block">Company Logo:</label>
+                            <input name="company_logo" id="company_logo" type="file" class="file-styled"
+                              onchange="readURL(this);" accept="image/x-png,image/gif,image/jpeg,image/jpg">
+                            <span class="help-block">Accepted formats: .jpg, .jpeg, .png. Max file size: 2Mb</span>
+                            {% if client_vendor.company_logo %}
+                            {{client_vendor.company_logo.url |slice:"7:"}}
+                            <input class="logo" value={{client_vendor.company_logo.url}} hidden>
+                            {% endif %}
+                          </div>
+                        </div>
+                      </div>
+                    </fieldset>
+                  </form>
+
+
+                </div>
+                <!-- /pie charts-->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /tech connector data-->
+
+  <script>
+
+    if ($('.logo').val() == undefined) {
+      $('#company_logo').prop('required', true);
+    }
+    $(document).ready(function () {
+      $('.filename').hide();
+    });
+    $(document).on('change', '.file-field1 input:file', function () {
+
+      if ($(this)[0].files[0].size > 10485760) {
+        swal({
+          title: "File is too big..!",
+          text: "Please upload a valid file.",
+          button: "Close"
+        });
+        $(this)[0].value = "";
+        // console.log($(this)[0].value,$(this)[0].files)
+        $(this).siblings('span').text("Choose File")
+      } else {
+        $(this).siblings('span').text($(this).val().replace(/C:\\fakepath\\/i, ''))
+      };
+    })
+    $(document).on('change', '.file-field2 input:file', function () {
+
+      if ($(this)[0].files[0].size > 2097152) {
+        // alert("File is too big!");
+        swal({
+          title: "File is too big..!",
+          text: "Please upload a valid file.",
+          button: "Close"
+        })
+        $(this)[0].value = "";
+        // console.log($(this)[0].value,$(this)[0].files)
+        $(this).siblings('span').text("Choose File")
+      } else {
+        $(this).siblings('span').text($(this).val().replace(/C:\\fakepath\\/i, ''))
+      };
+    })
+  </script>
+
+  <div id="modal_iconified" class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+      </div>
+    </div>
+  </div>
+  {% include "dashboard/clientdashbordjs.html" %}
+
+  {% endblock %}

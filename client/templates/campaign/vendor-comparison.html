@@ -1,0 +1,106 @@
+{% extends "header/cheader.html" %}
+{% load static %}
+{% block scripts %}
+  {% include "campaign/vendor-comparisonhead.html" %}
+{% endblock %}
+
+{% block scripts1 %}
+
+{% endblock%}
+
+{% block content %}
+
+<!-- Main sidebar -->
+  {% include "side/clientside.html" %}
+<!-- /main sidebar -->
+
+
+  <!-- Main content -->
+            <div class="content-wrapper">
+
+                <!-- Content area -->
+                <div class="content" style="padding-left: 5px;">
+
+                    <div class="row">
+
+                        <!-- chart area div-->
+                        <div class="col-md-8">
+                            <div class="panel panel-height panel-flat border-left-info fixed-height">
+                                <div class="panel-body">
+
+                                    <div id="chartdiv" class="chartdiv" style="display: block;"></div>
+                                    <div id="chartdiv2" class="chartdiv" style="display: none;"></div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /chart area div-->
+
+                        <!-- visualizations options-->
+                        <div class="col-md-4">
+                            <div class="panel panel-height panel-flat border-left-info fixed-height">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <!-- fixed-height class to give some height to div if no data-->
+                                        <div class="col-md-6">
+                                            <p>Visualizations</p>
+                                            <div>
+                                                <div class="chart-img-icon">
+                                                    <img src="{% static 'assets/images/chart-icon/bar-chart-icon.png' %}" onclick="setType('column');" title="bar chart" alt="bar chart img icon" />
+                                                    <img src="{% static 'assets/images/chart-icon/pie.png' %}" onclick="setType('pie');" title="pie chart" alt="pie chart img icon" />
+                                                    <img src="{% static 'assets/images/chart-icon/line.png' %}" onclick="setType('line');" title="Line chart" alt="Line chart img icon" />
+                                                    <img src="{% static 'assets/images/chart-icon/area.png' %}" onclick="setType('area');" title="Area chart" alt="Area chart img icon" />
+                                                </div>
+                                            </div>
+
+                                            <!-- visualization fields and formatting options-->
+                                            <div class="visualization-options">
+                                                <div class="form-group">
+                                                    <label>Legend</label>
+                                                    <select id="chart-opt-legend" class="select">
+                                                        <option value="country">Country Name</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Value</label>
+                                                    <select id="chart-opt-value" class="select">
+                                                        <option value="visitors">Visitors</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Tooltip</label>
+                                                    <select id="chart-opt-tooltip" class="select">
+                                                        <option value="desc">Desc</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <!-- /visualization fields and formatting options-->
+                                        </div>
+
+                                    </div>
+                                 </div>
+                            </div>
+                        </div>
+                        <!-- /visualizations options-->
+                    </div>
+
+                </div>
+                <!-- /Content area -->
+
+            </div>
+            <!-- /main content -->
+
+        </div>
+        <!-- /page content -->
+
+    </div>
+    <!-- /page container -->
+    <script>
+
+        $(function(){
+            $("#explore-vendors").addClass("active");
+            $("#explore-vendors").find("ul").first().css({ 'display': 'block' })
+            $("#Comparison").addClass("active");
+        });
+    </script>
+{% endblock %}

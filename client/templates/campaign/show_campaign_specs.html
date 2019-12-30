@@ -1,0 +1,592 @@
+{% load custom_filters %}
+
+<div class="modal-header">
+  <div class="col-md-12 bgst">
+
+    <h5 class="modal-title">Campaign Specs for {{campaign.name}}</h5>
+  </div>
+  <button type="button" class="close" data-dismiss="modal">×</button>
+</div>
+{% if campaign.rfq == 1 %}
+<div class="modal-body" style="padding: 5%!important;">
+
+    <div class="row ">
+
+        <div class="col-md-6">
+
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="control-label col-lg-5 text-semibold">Target Quantity</label>
+                    <div class="col-lg-7">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="text" name="target_quantity" id='target_quantity' value="{{target_quantity}}" class="form-control " placeholder="text" readonly>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="control-label col-lg-5 text-semibold">Campaign Type</label>
+                    <div class="col-lg-7">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="text" name="campaign_type" id="campaign_type" value="RFQ" class="form-control " placeholder="text" readonly>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="control-label col-lg-5 text-semibold">Outreach Methods</label>
+
+                    <div class="col-lg-7">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="text" name="outrich_method" id="outrich_method" value="{{outrich_method|join:','}}" title="{{outrich_method|join:','}}" class="form-control toggle-sweet1" placeholder="text" readonly>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="control-label col-lg-5 text-semibold">Assets</label>
+                    <div class="col-lg-7">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="text" name="assets" id="assets" class="form-control toggle-sweet2" value="{{assets|alter_comma_separated:useAsTxtMapping}}" title="{{assets|alter_comma_separated:useAsTxtMapping}}" placeholder="text" readonly>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="control-label col-lg-5 text-semibold">Pacing</label>
+                    <div class="col-lg-7">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="text" name="pacing" id="pacing" value="{{pacing|alter_comma_separated:useAsTxtMapping}}" title="{{pacing|alter_comma_separated:useAsTxtMapping}}" class="form-control toggle-sweet3" placeholder="text" readonly>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="control-label col-lg-5 text-semibold">Company Size</label>
+                    <div class="col-lg-7">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="text" name="company_size" value="{{company_size|alter_comma_separated:useAsTxtMapping}}" title="{{company_size|alter_comma_separated:useAsTxtMapping}}" id="company_size" class="form-control toggle-sweet4" placeholder="text" readonly>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="control-label col-lg-5 text-semibold">Indursty Type</label>
+                    <div class="col-lg-7">
+                        <div class="row">
+                            <div class="col-md-12">
+                             
+                                <input type="text" name="indursty_type" value="{{indursty_type|alter_comma_separated:useAsTxtMapping}}"  id="indursty_type" title="{{indursty_type|alter_comma_separated:useAsTxtMapping}}" class="form-control toggle-sweet5" placeholder="text" readonly>
+                             
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="control-label col-lg-5 text-semibold">Job Title</label>
+                    <div class="col-lg-7">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="text" name="job_title" value="{{mapping.job_title_function}}" id="job_title" class="form-control " placeholder="text" readonly>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="control-label col-lg-5 text-semibold">Revenue Size</label>
+                    <div class="col-lg-7">
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <input type="text" name="Revenue Size" value="{{revenue|alter_comma_separated:useAsTxtMapping}}" id="revenue" title="{{revenue|alter_comma_separated:useAsTxtMapping}}" class="form-control toggle-sweet7" placeholder="text" readonly>
+
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <!-- <div class="form-group">
+                    <label class="control-label col-lg-5 text-semibold">Job level</label>
+                    <div class="col-lg-7">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="text" name="job_level" id="job_level" value="{{job_level}}" class="form-control " placeholder="text" required>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+
+        </div>
+        <div class="col-md-6">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="control-label col-lg-5 text-semibold">Country</label>
+                    <div class="col-lg-7">
+                        <div class="row">
+                            <div class="col-md-12">
+                                
+                                   <input type="text" name="country" id="country" title="" value="{{country|alter_comma_separated:useAsTxtMapping}}" class="form-control toggle-sweet8" placeholder="text" readonly>
+                                  
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="control-label col-lg-5 text-semibold">Data Fields</label>
+                    <div class="col-lg-7">
+                        <div class="row">
+                            {% if tc_header_status ==  1 %}
+                            <div class="col-md-12">
+                                
+                                    <input id="data_field" title="" class="form-control toggle-sweet9" readonly value="{{data_field|alter_comma_separated:useAsTxtMapping}}"> 
+                                    
+                                <span class="help-block"></span>
+                            </div>
+                            {% endif %}
+                            {% if custom_header_status ==  1 %}
+                            <div class="col-md-12">
+                                <input id="custom_data_fields" title="" class="form-control" readonly value="{{custom_data_fields|alter_comma_separated:useAsTxtMapping}}"> 
+
+                                <span class="help-block"></span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+           <!--  <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="control-label col-lg-5 text-semibold">Delivery Methods</label>
+                    <div class="col-lg-7">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="text" name="delivery_method" value="{{delivery_method}}" id="delivery_method" class="form-control " placeholder="text" readonly>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+        <div class="col-sm-12">
+            <div class="form-group">
+                <label class="control-label col-lg-5 text-semibold">Instructions</label>
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <textarea id="instructions" class="form-control " readonly>{{instructions}}</textarea>
+
+                            <span class="help-block"></span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% else %}
+<div class="modal-body" style="padding: 5%!important;" >
+    <div class="row">
+
+        <div class="col-md-6">
+
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="control-label col-lg-5 text-semibold">Target Quantity</label>
+                    <div class="col-lg-7">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="text" name="target_quantity" id='target_quantity' value="{{target_quantity}}" class="form-control " placeholder="text" readonly>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="control-label col-lg-5 text-semibold">Campaign Type</label>
+                    <div class="col-lg-7">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="text" name="campaign_type" id="campaign_type" value="{{campaign_type}}" class="form-control " placeholder="text" readonly>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="control-label col-lg-5 text-semibold">Outreach Method</label>
+                    <div class="col-lg-7">
+                        <div class="row">
+                            <div class="col-md-12">
+                                       
+                                  <input type="text" name="outrich_method" id="outrich_method" title="{{outrich_method|join:','}}" value="{{outrich_method|join:','}}" class="form-control toggle-sweet1" placeholder="text" readonly>
+                                
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="control-label col-lg-5 text-semibold">Assets</label>
+                    <div class="col-lg-7">
+                        <div class="row">
+                            <div class="col-md-12">
+                                      
+                                    <input type="text" name="assets" id="assets" title="{{assets|alter_comma_separated:useAsTxtMapping}}" class="form-control toggle-sweet2" value="{{assets|alter_comma_separated:useAsTxtMapping}}"placeholder="text" readonly>
+
+
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="control-label col-lg-5 text-semibold">Pacing</label>
+                    <div class="col-lg-7">
+                        <div class="row">
+                            <div class="col-md-12">
+                                 
+                                    <input type="text" name="pacing" id="pacing" title="{{pacing|alter_comma_separated:useAsTxtMapping}}" value="{{pacing|alter_comma_separated:useAsTxtMapping}}" class="form-control toggle-sweet3" placeholder="text" readonly>
+                                 
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="control-label col-lg-5 text-semibold">Company Size</label>
+                    <div class="col-lg-7">
+                        <div class="row">
+                            <div class="col-md-12">
+                                    
+                                    <input type="text" name="company_size" value="{{company_size|alter_comma_separated:useAsTxtMapping}}" id="company_size" title="{{company_size|alter_comma_separated:useAsTxtMapping}}" class="form-control toggle-sweet4" placeholder="text" readonly>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="control-label col-lg-5 text-semibold">Indursty Type</label>
+                    <div class="col-lg-7">
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <input type="text" name="indursty_type" value="{{indursty_type|alter_comma_separated:useAsTxtMapping}}" id="indursty_type" title="{{indursty_type|alter_comma_separated:useAsTxtMapping}}" class="form-control toggle-sweet5" placeholder="text" readonly>
+                               
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="control-label col-lg-5 text-semibold">Job Title</label>
+                    <div class="col-lg-7">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="text" name="job_title" value="{{job_title}}" id="job_title" class="form-control " placeholder="text" readonly>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="control-label col-lg-5 text-semibold">Job level</label>
+                    <div class="col-lg-7">
+                        <div class="row">
+                            <div class="col-md-12">
+                                
+                                    <input type="text" name="job_level" id="job_level" title="{{job_level|alter_comma_separated:useAsTxtMapping}}" value="{{job_level|alter_comma_separated:useAsTxtMapping}}" class="form-control toggle-sweet6" placeholder="text" readonly>
+                                 
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="control-label col-lg-5 text-semibold">Revenue Size</label>
+                    <div class="col-lg-7">
+                        <div class="row">
+                            <div class="col-md-12">
+                               
+                                    <input type="text" name="Revenue Size" value="{{revenue|alter_comma_separated:useAsTxtMapping}}" id="revenue" title="{{revenue|alter_comma_separated:useAsTxtMapping}}" class="form-control toggle-sweet7" placeholder="text" readonly>
+                                 
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="control-label col-lg-5 text-semibold">Country</label>
+                    <div class="col-lg-7">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="text" name="country" id="country" title="" value="{{country|alter_comma_separated:useAsTxtMapping}}" class="form-control toggle-sweet8" placeholder="text" readonly>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="control-label col-lg-5 text-semibold">Data Fields</label>
+                    <div class="col-lg-7">
+                        <div class="row">
+                                {% if data_field !=  ' ' %}
+                                <div class="col-md-12">
+                                    
+                                        <textarea id="data_field" title="" class="form-control toggle-sweet9" readonly> {{data_field|alter_comma_separated:useAsTxtMapping}}</textarea>
+
+                                    
+                                    <span class="help-block"></span>
+                                </div>
+                                {% endif %}
+                                {% if custom_data_fields !=  ' ' %}
+                                <div class="col-md-12">
+                       
+                                        <textarea id="custom_data_fields" title="" class="form-control toggle-sweet9" readonly> {{custom_data_fields|alter_comma_separated:useAsTxtMapping}}</textarea>
+                                                      
+                                    <span class="help-block"></span>
+                                </div>
+                                {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+             <!-- <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="control-label col-lg-5 text-semibold">Delivery Methods</label>
+                    <div class="col-lg-7">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="text" name="delivery_method" value="{{delivery_method}}" id="delivery_method" class="form-control " placeholder="text" readonly>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+        <div class="col-sm-12">
+            <div class="form-group">
+                <label class="control-label col-lg-5 text-semibold">Instructions</label>
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <textarea id="instructions" class="form-control " readonly>{{instructions}}</textarea>
+
+                            <span class="help-block"></span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endif %}
+
+<div class="modal-footer">
+    {% if usertype == 1 %}
+        {% if Custom_question_status == 1 %}
+        <a href="/form/view_custome_question_pdf/{{campaign_id}}" target="_blank"><button class="btn btn-primary" >Custom Question</button></a>
+        {% endif %}
+        {% if stat != 1 %}
+        {% if rfq_status == 0 %}
+        <a id="camp_spec_edit_id" href="{% url 'update_c_mandatory_fields' campaign_id %}">
+            <button type="button" class="btn btn-danger">Edit</button>
+        </a>
+        {% else %}
+        <a id="camp_spec_edit_id" href="{% url 'add_campaign_spec' campaign_id %}">
+            <button type="button" class="btn btn-danger">Edit</button>
+        </a>
+        {% endif %}
+        {% endif %}
+    {% endif %}
+    <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+
+</div>
+                 
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script>
+  $( function() {
+    $( document ).tooltip();
+  } );
+  </script>
+  <style>
+  label {
+    display: inline-block;
+    width: 5em;
+  }
+  </style>
+<!-- Show Data + more -->
+<script type="text/javascript">
+
+var outrich_method = document.getElementById('outrich_method').value
+outrich_method=outrich_method.split(",")
+console.log(outrich_method);
+          $('.toggle-sweet1').val(`${outrich_method[0]} + ${outrich_method.length - 1} more`);
+
+var assets = document.getElementById('assets').value
+// console.log(assets.length);
+if (assets!= 'None'){          
+    assets=assets.split(",")
+    if (assets.length ==1 ){
+        $('.toggle-sweet2').val(`${assets[0]}`)
+    }else{
+        $('.toggle-sweet2').val(`${assets[0]} + ${assets.length - 1} more`);
+    }
+}
+
+var pacing = document.getElementById('pacing').value
+console.log(pacing);
+if (pacing != 'None'){
+    pacing=pacing.split(",")
+    if (pacing.length == 1){
+        $('.toggle-sweet3').val(`${pacing[0]} `); 
+    }else{
+        $('.toggle-sweet3').val(`${pacing[0]} + ${pacing.length - 1} more`);        
+    }
+}
+
+var company_size = document.getElementById('company_size').value
+console.log(company_size);
+if (company_size != 'None'){
+    company_size=company_size.split(",")
+    if (company_size.length ==1 ){
+          $('.toggle-sweet4').val(`${company_size[0]} `); 
+    }else{
+          $('.toggle-sweet4').val(`${company_size[0]} + ${company_size.length - 1} more`);
+    }
+}
+
+
+var indursty_type = document.getElementById('indursty_type').value
+console.log(indursty_type);
+if (indursty_type != 'None'){
+    indursty_type=indursty_type.split(",")
+    if (indursty_type.length ==1 ){
+          $('.toggle-sweet5').val(`${indursty_type[0]} `); 
+    }else{
+          $('.toggle-sweet5').val(`${indursty_type[0]} + ${indursty_type.length - 1} more`);
+    }
+}
+
+var job_level = document.getElementById('job_level').value
+console.log(job_level);
+if (job_level != 'None'){
+    job_level=job_level.split(",")
+    if (job_level.length ==1 ){
+          $('.toggle-sweet6').val(`${job_level[0]} `); 
+    }else{
+          $('.toggle-sweet6').val(`${job_level[0]} + ${job_level.length - 1} more`);
+    }
+}
+
+var revenue = document.getElementById('revenue').value
+console.log(revenue);
+if (revenue != 'None'){
+    revenue=revenue.split(",")
+    if (revenue.length ==1 ){
+          $('.toggle-sweet7').val(`${revenue[0]} `); 
+    }else{
+          $('.toggle-sweet7').val(`${revenue[0]} + ${revenue.length - 1} more`);
+    }
+}
+
+var country = document.getElementById('country').value
+country=country.split(",")
+console.log(country);
+          $('.toggle-sweet8').val(`${country[0]} + ${country.length - 1} more`);
+
+var data_field = document.getElementById('data_field').value
+data_field=data_field.split(",")
+console.log(data_field);
+          $('.toggle-sweet9').val(`${data_field[0]} + ${data_field.length - 1} more`);
+          
+</script>

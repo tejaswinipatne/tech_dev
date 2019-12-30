@@ -1,0 +1,87 @@
+
+#chartdiv {
+  width: 100%;
+  height: 250px;
+  margin-left:0px;
+}   
+.export-main{
+margin-top: -65px;
+}
+#chartdiv1 {
+  width: 100%;
+  height: 250px;
+  margin-left:0px;
+}                   
+    .addbtn{
+        padding-left: 10px;
+    }
+        tfoot {
+        display: table-row-group;
+    }
+     .upload-btn-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.btn1 {
+  border: 2px solid gray;
+  color: gray;
+  background-color: white;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.upload-btn-wrapper input[type=file] {
+  font-size: 80px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}
+
+.nav-pills > li.active > a,
+        .nav-pills > li.active > a:hover,
+        .nav-pills > li.active > a:focus {
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+        
+        .nav-pills > li.active > a,
+        .nav-pills > li.active > a:hover,
+        .nav-pills > li.active > a:focus {
+            color: #fff;
+            background-color: #2196F3;
+        }
+      
+        .nav > li > a {
+            position: relative;
+            display: block;
+            padding: 9px 20px;
+        }
+        .panel-height
+        {
+            min-height: 100vh;
+        }
+        #font14
+        {
+            font-size: 14px;
+        }
+        #font16
+        {
+            font-size:16px;
+        }
+        #paddingtop5
+        {
+            padding-top: 5px;
+        }
+        #paddingtop20
+        {
+            padding-top: 20px;
+        }
+        #centertext
+        {
+            text-align: center;
+        }

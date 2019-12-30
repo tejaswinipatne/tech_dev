@@ -1,0 +1,74 @@
+<script>
+$(document).ready(function(){
+       $('input[id="rfq"]').click(function(){
+           if($(this).prop("checked") == true){
+               $("#cpl").val('0');
+           }
+       });
+
+   });
+   function changeInfo(str)
+   {
+     
+     if(str == 'camp_name')
+        campaignNameNote()
+     else if (str == 'camp_desc')
+        campaignDescNote()
+     else if (str == 'camp_type')
+           campaignTypeNote()
+     else if (str == 'camp_method')
+           campaignMothodNote()
+    else if (str == 'camp_cpl')
+           campaignCplNote()
+    else if (str == 'camp_date')
+           campaignDateNote()
+    else if (str == 'camp_rfq')
+            campaignRfqNote()
+    else if (str == 'camp_vendor')
+            campaignVendorNote()
+   }
+   function campaignNameNote() {
+     var str=""
+     $('#field_info').text('Info : Campaign Name');
+     str="<li>Enter Campaign Name </li><li>Only 20 characters allowed for Campaign Name</li>";
+     $('#field_desc').empty().append(str);
+   }
+   function campaignDescNote() {
+     $('#field_info').text('Info : Campaign Description');
+     var str="<li>Enter Campaign Description </li><li>Only 240 characters allowed for Campaign Description</li>";
+     $('#field_desc').empty().append(str);
+   }
+   function campaignTypeNote(){
+     $('#field_info').text('Info : Campaign Type');
+     var str="<li>Select Campaign Type </li><li>You can select only one type of campaign</li>";
+     $('#field_desc').empty().append(str);
+   }
+   function campaignMothodNote(){
+     $('#field_info').text('Info : Campaign Method');
+     var str="<li>Choose Campaign Method </li><li>You can select multiple method of campaign</li>";
+     $('#field_desc').empty().append(str);
+   }
+   function campaignCplNote(){
+     $('#field_info').text('Info : Campaign CPL');
+     var str="<li>Enter Campaign CPL </li><li>CPL means Cost per lead </li><li>you can enter only number not character </li><li>CPL in Dollar</li> ";
+     $('#field_desc').empty().append(str);
+   }
+   function campaignDateNote(){
+     $('#field_info').text('Info : Campaign Date');
+     var str="<li>Select Date of Campaign  </li><li>First click on start date </li><li>Secound click on End Date</li>";
+     $('#field_desc').empty().append(str);
+   }
+   function campaignRfqNote(){
+     $('#field_info').text('Info : Campaign RFQ');
+     var str="<li>RFQ means Request for Quote  </li><li>If you are confuse to decide CPL of capaign then you can check rqf so that techconnectr will suggest you.</li>";
+     $('#field_desc').empty().append(str);
+   }
+   function campaignVendorNote(){
+     $('#field_info').text('Info : Choose  your Vendor');
+     var str="<li>TC-Vendor : Bussiness with techconntr vendor  </li><li>Internal Vendor : your team </li><li>External Vendor : Bussiness with your vendors </li>";
+     $('#field_desc').empty().append(str);
+   }
+
+
+
+</script>

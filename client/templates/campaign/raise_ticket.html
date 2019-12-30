@@ -1,0 +1,189 @@
+{% extends "header/cheader.html" %}
+{% load static %}
+{% block scripts %}
+{% include "campaign/raise_tickethead.html" %}
+{% endblock %}
+
+{% block scripts1 %}
+
+{% include "campaign/css/raise_ticket.css" %}
+
+{% endblock%}
+
+{% block content %}
+
+<!-- Main sidebar -->
+{% include "side/clientside.html" %}
+<!-- /main sidebar -->
+
+<!-- Main content -->
+<div class="content-wrapper">
+
+    <!-- Content area -->
+
+    <!-- Content area -->
+    <div class="content" style="margin-top: 4px;">
+        <div class="row">
+            <div class="col-md-12 ">
+
+                <div class="panel panel-height panel-flat">
+                    <div class="panel-heading">
+                        <h1 class="panel-title"> Raise a Ticket
+                            <button class="btn btn-primary list_switch pull-right"> View List</button>
+
+                        </h1><br>
+                        <p id="font14">Techconnectr portal provides you to solve an issue through tickets. You can raise
+                            a ticket by filling the form below. </p>
+                    </div>
+
+                    <div class="panel-body  ">
+                        <div class="row ticket_form_div">
+                            <div class="col-lg-8 col-sm-12">
+                                <div class="col-md-7">
+                                    <form id="raise_ticket_form" action="" method="" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        <div class="raise_ticket_box">
+                                            <input type="hidden" id="user_id" value="{{request.session.userid}}">
+                                            <div class="form-group">
+                                                <label>Category</label>
+                                                <select id="ticket_category" name="ticket_category" class="select select2-hidden-accessible"
+                                                    tabindex="-1" aria-hidden="true">
+                                                    <option value="0">Select Category</option>
+                                                    {% for category in tc_cat %}
+                                                    {% if category.is_client == True %}
+                                                    <option value="{{category.id}}">{{category.category}}</option>
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Subject :</label>
+                                                <input type="text" name="ticket_subject" class="form-control" id="ticket_subject"
+                                                    placeholder="Please enter subject">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Detail Description:</label>
+                                                <textarea rows="4" cols="5" class="form-control" name="ticket_desc" id="ticket_desc"
+                                                    placeholder="Enter your message here"></textarea>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Image :</label>
+                                                <input type="file" id="ticket_image" name="ticket_image" multiple="multiple" class="form-control" placeholder="Please enter email">
+                                            </div>
+                                                
+                                            <div class="form-group">
+                                                <button type="submit" id="centertext" class="btn btn-primary">Submit<i
+                                                        class=""></i></button>
+                                            </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h6 class="panel-title">Info</h6>
+
+                                </div>
+
+                                <div class="panel-body">
+                                    Raise a Ticket
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ticket_list_div hidden">
+                        <table class="table datatable-column-search-inputs DataTables">
+                            <thead>
+                                <th>ID</th>
+                                <th>Subject</th>
+                                <th>Category</th>
+                                <th>Description</th>
+                                <th>Status</th>
+                            </thead>
+                            
+                            <tbody>
+                                {% for tic in tickets %}
+                                {% if tic.ticket_owner.id == request.session.userid %}
+                                <tr>
+                                <td>#{{tic.id}}</td>
+                                <td>{{tic.ticket_sub}}</td>
+                                <td>{{tic.ticket_category}}</td>
+                                <td>{{tic.ticket_description|truncatechars:15}}</td>
+                                <td>
+                                    {% if tic.ticket_status == '1' %}
+                                    <span class="badge bg-blue">Registered</span>
+                                    {% elif tic.ticket_status == '0' %}
+                                    <span class="badge bg-danger">Closed</span>
+                                    {% elif tic.ticket_status == '2' %}
+                                    <span class="badge bg-blue">In Process</span>
+                                    {% elif tic.ticket_status == '3' %}
+                                    <span class="badge bg-success-400">Resolved</span>
+                                    {% endif %}
+                                </td>
+                                </tr>
+                                {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>  
+
+                </div>
+            </div>
+           <!-- /content area -->
+        </div>
+        <!-- /main content -->
+    </div>
+    <!-- /page content -->
+</div>
+<!-- /page container -->
+<script>
+    $(function () {
+        $("#support").addClass("active");
+        $("#support").find("ul").first().css({ 'display': 'block' })
+        $("#RaiseaTicket").addClass("active");
+    });
+
+
+
+    $("#raise_ticket_form").submit(function (event) {
+
+            /* stop form from submitting normally */
+            event.preventDefault();
+            category = $('#ticket_category').val()
+            subject = $('#ticket_subject').val()
+            desc = $('#ticket_desc').val()
+            token = getCookie('csrftoken');
+            var formData = new FormData($('#raise_ticket_form')[0])
+            $.ajax({
+                type: "post",
+                enctype: 'multipart/form-data',
+                url: "/support/send_ticket/",
+                // data: {'category':category,'subject':subject,'desc':desc},
+                data: formData,
+                contentType: false,
+                processData: false,
+                // contentType: "application/x-www-form-urlencoded",
+                success: function(data) {
+                    if (data.status == 1) {
+                        swal({
+                            title: "Ticket Raised", 
+                            text: data.msg, 
+                            icon:"success"
+                        }).then(function () {
+                            location.reload();
+                        });
+                    }
+                }
+            })
+        });
+
+    $('.list_switch').click(function(){
+        $('.ticket_form_div').toggleClass('hidden')
+        $('.ticket_list_div').toggleClass('hidden')
+    })
+</script>
+{% endblock %}

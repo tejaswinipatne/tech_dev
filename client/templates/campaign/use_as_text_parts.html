@@ -1,0 +1,30 @@
+<div class="panel-body">
+    <div>
+        <label>
+            <input type='checkbox' />Select All
+        </label>
+        <label class="pull-right">
+            <input class="chkbx_use_as_txt" data-parent="panel-body" type='checkbox' />Use As Text
+        </label>
+    </div>
+    <div class="form-group checkbox_container">
+        <!-- Leads,Survey,Appointment,Data -->
+        <!--{ specificationform }} -->
+        {% with field_name='campaign_category' default_checked_value=specification.campaign_category|split %}
+        <input type="hidden" name="campaign_category" id="id_campaign_category" value="{{default_checked_value}}" />
+        {% for name in campaign_category %}
+        {% if name != "---------" %}
+        <div class="radio">
+            <label>
+                <input type="checkbox" name="{{ field_name }}[]" data-txt="{{ name }}" value="{{ name }}" {% if name|lower in default_checked_value|lower %} checked {% endif %}> {{ name }}
+            </label>
+            <!-- set data-txt attribute inside above lable to get original text in jquery -->
+            <input type='text' class="form-control-inline {% if not name|ifinlist:txt_mapping_list %}hidden{% endif %} pull-right txtbx_use_as_txt"
+            value='{{ name|alter_txt:useAsTxtMapping }}'>
+        </div>
+        {% endif %}
+        {% endfor %}
+        {% endwith %}
+        {{ form.campaign_category.errors }}
+    </div>
+</div>

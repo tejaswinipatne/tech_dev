@@ -1,0 +1,277 @@
+{% extends "common/base.html" %}
+
+{% load static %}
+
+{% load cuatom_filters %}
+
+{% block title %} Create Campaign {% endblock %}
+{% load widget_tweaks %}
+<!--
+    page code must be start in block content
+    inside block content
+-->
+{% block content %}
+
+<!-- Main content -->
+<div class="content-wrapper">
+
+ <!-- Content area -->
+ <div class="content">
+
+   <!-- main row -->
+   <div class="row">
+
+      <!-- global ---->
+      <a id="link-managecampaign" href="/client/manage-campaign/" class="hidden">Manage campaign</a>
+      <input type="hidden" id="link_save_text_mapping" value="/client/save_alternative_text"/>
+      <input type="hidden" id="link_save_volume_and_cpl" value="/client/save_volume_and_cpl"/>
+      <input type="hidden" id="link_delete_volume_and_cpl" value="/client/delete_volume_and_cpl"/>
+      <!-- /global ---->
+
+      <!-- create campaign panel -->
+      <div class="panel panel-height panel-flat">
+        <div class="panel-heading">
+            <center><h1 class="panel-title">Create-Campaign</h1></center>
+        </div>
+
+        <div class="panel-body">
+            <div id="tab_1_campaign" class="tab-pane fade in active">
+            <form id="form_save_campaign" data-action="{% url 'createcampaign' %}" data-go_to_tab="tab2" method="POST" class="form-horizontal">
+            {% csrf_token %}
+            <input type="hidden" name="user" id="id_user" value="{{ request.session.userid }}"/><!-- client id-->
+            <div class='row'>
+              <div class='col-sm-8 col-md-8'>
+                <div class='row createcampaign'>
+
+                  <div class='col-md-12 col-sm-12'>
+                      <div class="form-group">
+                          <label class="control-label col-lg-3">Campaign Name:
+                          </label>
+                          <div class="col-lg-6">
+                              {% render_field campaignform.name class="form-control" placeholder='Campaign Name' %}
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class='col-md-12 col-sm-12'>
+                      <div class="form-group">
+                          <label class="control-label col-lg-3">Campaign Description
+                          </label>
+                          <div class="col-lg-6">
+                              <textarea name="description" id="id_description" rows="2" cols="20" class="form-control"></textarea>
+                          </div>
+                      </div>
+                  </div>
+                  <div class='col-md-12 col-sm-12'>
+                      <div class="form-group">
+                          <label class="control-label col-lg-3">Techconnectr IO Number:
+                          </label>
+                          <div class="col-lg-6">
+                              {% render_field campaignform.io_number class="form-control" placeholder='Techconnectr IO Number' %}
+                          </div>
+                      </div>
+                  </div>
+                  <div class='col-md-12 col-sm-12'>
+                      <div class="form-group">
+                          <label class="control-label col-lg-3">Client PO Number:
+                          </label>
+                          <div class="col-lg-6">
+                              {% render_field campaignform.po_number class="form-control" placeholder='Techconnectr PO Number' %}
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class='col-md-12 col-sm-12'>
+                      <div class="form-group">
+                          <label class="control-label col-lg-3">CPL
+                          </label>
+                          <div class="col-lg-6">
+                              <div class="input-group">
+                                  <span class="input-group-addon">$
+                                  </span> {% render_field campaignform.cpl class="form-control" placeholder='Enter amount' %}
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class='col-md-12 col-sm-12'>
+                    <div class="form-group">
+                      <div class="radio">
+                        <label>
+                          <input type="hidden" name="rfq" id="id_rfq" value="">
+                          <input type="checkbox" class="chk_put_vals"> Request For Quote
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class='col-md-12 col-sm-12'>
+                      <div class="form-group">
+                          <label class="control-label col-lg-3">Start Date:
+                          </label>
+                          <div class="col-lg-6">
+                            {% render_field campaignform.start_date class="form-control pickadate-format" type="text" placeholder='Pick date' %}
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class='col-md-12 col-sm-12'>
+                      <div class="form-group">
+                          <label class="control-label col-lg-3">End Date:
+                          </label>
+                          <div class="col-lg-6">
+                              {% render_field campaignform.end_date class="form-control pickadate-format" type="text" placeholder='Pick a last date' %}
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class='col-md-12 col-sm-12'>
+                      <div class="form-group">
+                        <div class="radio">
+                            <label>
+                                <input type="hidden" name="adhoc" id="id_adhoc" value="">
+                                <input type="hidden" name="priority" id="id_priority" value="">
+                                <input type="checkbox" class="chk_put_vals"> Ad-Hoc Campaign
+                            </label>
+                        </div>
+                      </div>
+                  </div>
+
+                  <div class='col-md-12 col-sm-12'>
+                      <div class="form-group">
+                          <div class="col-lg-9">
+                              <button type="button" class="btn_save_form hidden"></button>
+
+                              <button type="button" class="btn_process_before_save_form btn btn-primary pull-right btn-ladda btn-ladda-progress" data-style="slide-right">
+                                  <span class="ladda-label">Next</span>
+                              </button>
+                              <button style="display:none;" class="btn btn-secondary pull-right form-control-inline"><a>Previous</a></button>
+
+                          </div>
+
+                      </div>
+                  </div>
+              </div>
+
+              </div>
+              <div class='col-sm-12 col-md-4' style="padding-right:20px;">
+                <div class="panel panel-primary">
+                  <div class="panel-heading headfont">Getting Started Tips</div>
+                  <div class="panel-body">
+                    <strong>All The Fields Are Mandatory</strong></div>
+                </div>
+
+              </div>
+            </div>
+            </form>
+          </div>
+      <!-- /create campaign panel -->
+
+        </div>
+      </div>
+
+     </div>
+   <!-- main row -->
+
+ </div>
+ <!-- /content area -->
+
+</div>
+<!-- /main content -->
+
+{% endblock %}
+
+
+<!-- ============================ -->
+<!--        page level scripts    -->
+<!-- =========================== -->
+{% block page_level_scripts %}
+<script>
+    $(function () {
+        /*change li active*/
+        /*add active class to li*/
+        $("#campaign").addClass("active");
+        $("#campaign-create").addClass("active");
+    });
+
+    // global variable
+    var DEBUG = true; // false or true
+</script>
+
+<!-- panel-tab color-->
+<link href="{% static 'client/css/createcampaign.css' %}" rel="stylesheet" type="text/css">
+
+<!--treeview / from checkbox-->
+<link href="{% static 'assets/css/hummingbird-treeview-1.3.css' %}" rel="stylesheet" type="text/css" />
+<script src="{% static 'assets/js/hummingbird-treeview-1.3.js' %}"></script>
+
+<!-- fountnt ausome icons -->
+<link href="{% static 'assets/css/icons/fontawesome/styles.min.css' %}" rel="stylesheet" type="text/css">
+
+<!-- checkbox and radios -->
+<script type="text/javascript" src="{% static 'assets/js/plugins/forms/styling/uniform.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/forms/styling/switchery.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/forms/styling/switch.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'client/js/create_campaign/form_checkboxes_radios.js' %}"></script>
+<!-- /checkbox and radios -->
+
+<!--
+ fieldChooser builds off the jQuery UI Sortable interaction,
+ which allows for dragging and dropping of an HTML element between two containers
+ Dependencies - jquery and  jQuery UI for drag and drop support.
+-->
+<link href="{% static 'assets/css/jquery-ui.css' %}" rel="stylesheet" type="text/css" />
+<script src="{% static 'assets/js/jquery-ui.js' %}"></script>
+<script src="{% static 'assets/js/fieldChooser.js' %}"></script>
+<script src="{% static 'assets/js/fieldChooser.js' %}"></script>
+
+<!-- notifications -->
+<script type="text/javascript" src="{% static 'assets/js/plugins/notifications/pnotify.min.js' %}"></script>
+<!-- /notifications -->
+
+<!-- button with animations -->
+<script type="text/javascript" src="{% static 'assets/js/plugins/velocity/velocity.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/velocity/velocity.ui.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/buttons/spin.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/buttons/ladda.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/pages/components_buttons.js' %}"></script>
+<!-- /button with animations -->
+
+<!-- custom js - initialization of plugins--->
+<script type="text/javascript" src="{% static 'client/js/create_campaign/tree-initialize.js' %}"></script>
+<script type="text/javascript" src="{% static 'client/js/create_campaign/treeview-init.js' %}"></script>
+<script type="text/javascript" src="{% static 'client/js/create_campaign/validation.js' %}"></script>
+
+<!-- save records -->
+<script type="text/javascript" src="{% static 'client/js/create_campaign/save_form.js' %}"></script>
+
+<!-- get checkbox clicked values into hidden input -->
+<script type="text/javascript" src="{% static 'client/js/create_campaign/get_checkbox_values.js' %}"></script>
+
+<!-- waterfall in campaign_terms -->
+<script type="text/javascript" src="{% static 'client/js/create_campaign/waterfall.js' %}"></script>
+
+<!-- set priority level of campaign by gap between the dates -->
+<script type="text/javascript" src="{% static 'client/js/create_campaign/set_priority.js' %}"></script>
+
+<!-- datepicker -->
+<script type="text/javascript" src="{% static 'assets/js/plugins/ui/moment/moment.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/pickers/pickadate/picker.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/pickers/pickadate/picker.date.js' %}"></script>
+<script type="text/javascript" src="{% static 'client/js/create_campaign/picker_date.js' %}"></script>
+
+<!-- Account Based Marketing AND Account Supression -->
+<script type="text/javascript" src="{% static 'client/js/create_campaign/account_supression.js' %}"></script>
+
+<!-- delivery_timing -->
+<script type="text/javascript" src="{% static 'client/js/create_campaign/delivery_timing.js' %}"></script>
+
+<!-- Use as text -->
+<script type="text/javascript" src="{% static 'client/js/create_campaign/use_as_text.js' %}"></script>
+
+<!-- jquery.serializeObject used instead of jquery serializeArray-->
+<script type="text/javascript" src="{% static 'client/js/jquery.serializeObject.js' %}"></script>
+
+{% endblock %}
+<!--       page level scripts    -->
+<!-- /=========================== -->

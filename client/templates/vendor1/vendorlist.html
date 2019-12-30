@@ -1,0 +1,255 @@
+{% extends "header/vendor_header.html" %}
+
+{% block scripts %}
+{% include "campaign/manage_campaignhead.html" %}
+{% endblock %}
+
+{% block scripts1 %}
+{% include "campaign/manage_campaign.css" %}
+{% endblock %}
+{% block content %}
+<!-- Main sidebar -->
+{% include "side/clientside.html" %}
+<style type="text/css">
+    input:checked  {
+
+}
+</style>
+<!-- Main content -->
+<div class="content-wrapper">
+
+
+
+
+    <!-- Content area -->
+    <div class="content">
+        <div class="row">
+
+            <!-- global data holders-->
+            <input type="hidden" name="url_pending_campaign" value="{% url 'client_pending_campaign' %}">
+
+            <!-- Top Clients List -->
+            <div class="panel panel-height panel-flat">
+                <div class="panel-heading main">
+                    <h1 class="panel-title">Vendor List
+                        <button type="button" id="databtn" class="btn btn-filter-tb btn-labeled pull-right"
+                            style="display:none">
+                            <b><span id="filter_icon" class="glyphicon glyphicon-filter"></span></b>
+                            Filter
+                        </button>
+                    </h1>
+
+                    <p id="font14">
+                        <span style="color: #9e9b9b">
+                            Please Select checkbox's to Suggest Vendor.
+                            <span class="pull-right">
+                            <button class="btn btn-primary" id="vendor_suggest" camp_id="{{camp}}">Suggest</button>
+                        <a href="{% url 'client_pending_campaign' %}"><button
+                                class="btn btn-primary ">Skip</button></a>
+                        </span>
+                        </span>
+                    </p>
+
+                </div>
+                <div class="table-responsive-sm main">
+                    <table id="Submitted_vendores" class="table datatable DataTables ">
+
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="allcheck" title="click to suggest" /></th>
+                                <th>Name</th>
+                                <th>Acceptance Rate</th>
+                                <th>Avg. conv. Month</th>
+                                <th>Avg.launch time</th>
+                                <th>Geo</th>
+                                <!-- <th class="text-center">Actions</th> -->
+
+                            </tr>
+                        </thead>
+                        <tfoot id="datatfootfilter" style="display:none">
+                            <tr>
+
+                                <td rowspan="1" colspan="1">
+                                    <input type="text" class="form-control input-sm" placeholder="Search Company">
+                                </td>
+                                <td rowspan="1" colspan="1">
+                                    <input type="text" class="form-control input-sm" placeholder="Search Category">
+                                </td>
+
+                                <td rowspan="1" colspan="1">
+                                    <input type="text" class="form-control input-sm" placeholder="Search Type">
+                                </td>
+
+                                <td rowspan="1" colspan="1">
+                                    <input type="text" class="form-control input-sm" placeholder="Search Billing">
+                                </td>
+
+                                <td rowspan="1" colspan="1">
+                                    <input type="text" class="form-control input-sm" placeholder="Status">
+                                </td>
+
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            {% if clients %}
+                            {% for vendor in clients %}
+                            <tr>
+                                <td><input type="checkbox" class="checkbox" name="check[]"
+                                        id="{{vendor.client_vendor.id}}" /></td>
+                                <td><a href="/client/vendor-profile/{{vendor.client_vendor.id}} ">
+                                        {{ vendor.client_vendor.user_name }}</a></td>
+                                <td><span class="label label-info">100%</span></td>
+                                <td><span class="label label-primary">24,526</span></td>
+                                <td><span class="label label-success">2</span></td>
+                                <td><span class="label label-info">{{ vendor.geo_loc.name}}US</span></td>
+
+                                <td class="text-center">
+                                    <ul class="icons-list">
+                                        <li class="dropdown">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                                <!-- <i class="icon-menu9"></i> -->
+                                            </a>
+
+                                            <ul class="dropdown-menu dropdown-menu-right">
+                                                <!--<li><a href="#"><i class="icon-file-pdf"></i> Export to .pdf</a></li>
+                                                    <li><a href="#"><i class="icon-file-excel"></i> Export to .csv</a></li>
+                                                    <li><a href="#"><i class="icon-file-word"></i> Export to .doc</a></li>-->
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </td>
+
+                            </tr>
+                            {% endfor %}
+                            {%else%}
+                            <tr>
+                                <td colspan="5">
+                                    <center>No Matching Records found...!</center>
+                                </td>
+                            </tr>
+                            {%endif%}
+
+
+                        </tbody>
+
+                    </table>
+                </div>
+                <div class="progress_div">
+                    <div style="text-align: center;">
+                        <h1>Please wait while we search best vendors for your campaign.</h1>
+                    </div>
+                    <div id="myProgress" class="progress">
+                        <div id="myBar" class="progress-bar progress-bar-striped active"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- /highlighting rows and columns -->
+
+
+
+
+
+            <!-- Footer -->
+            <div class="footer text-muted" style="display: none;">
+                &copy; 2018. <a href="#">Trigensoft</a> by <a href="Trigensoft.com" target="_blank">Eugene Kopyov</a>
+            </div>
+            <!-- /footer -->
+        </div>
+    </div>
+    <!-- /content area -->
+
+</div>
+<!-- /main content -->
+
+</div>
+<!-- /page content -->
+
+</div>
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" onclick="closeModel()" class="close">&times;</button>
+                <h4 class="modal-title">Upload Lead File</h4>
+            </div>
+            <div class="modal-body">
+                <div id="home">
+
+                    <div class="panel panel-flat">
+                        <form class="form-horizontal" action="#">
+                            <fieldset class="content-group">
+                                <div class="form-group" id="margin5">
+                                    <div class="col-lg-12">
+
+                                        <table class='table'>
+                                            <thead>
+                                                <th>Campaign Name: &nbsp;&nbsp; Test 1</th>
+                                                <th> Status :&nbsp;&nbsp;<span class="label label-info">Completed</span>
+                                                </th>
+                                                <th> Leads Submitted: &nbsp;&nbsp;30</th>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+
+                                        <p id="toppadding">There are two ways to upload lead file</p>
+                                        <p>
+                                            <li>Bulk Upload: upload with csv or excel files</li>
+                                        </p>
+                                        <p>
+                                            <li>Manual Upload: Fill form manually</li>
+                                        </p>
+
+                                    </div>
+                                </div>
+                                <center>
+                                    <div class="form-group" id="paddingleft20">
+                                        <div class="col-lg-3">
+                                            <div class="btn-group btn-justified">
+                                                <div class="btn-group">
+                                                    <a href="/vendor/manual-upload/" data-popup="tooltip"
+                                                        title="Manualupload" data-placement="left"><button type="button"
+                                                            class="btn bg-primary">+</button></a>
+                                                </div>
+
+                                                <div class="btn-group">
+                                                    <a href="/vendor/bulk-upload/" data-popup="tooltip"
+                                                        title="Bulkupload" data-placement="right"><button type="button"
+                                                            class="btn bg-primary">Import</button></a>
+                                                </div>
+
+
+
+
+                                            </div>
+                                        </div>
+
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    //select all checkboxes
+    $("#allcheck").change(function () {  //"select all" change
+        $(".checkbox").prop('checked', $(this).prop("checked")); //change all ".checkbox" checked status
+    });
+
+    //".checkbox" change
+    $('.checkbox').change(function () {
+        //uncheck "select all", if one of the listed checkbox item is unchecked
+        if (false == $(this).prop("checked")) { //if this item is unchecked
+            $("#allcheck").prop('checked', false); //change "select all" checked status to false
+        }
+        //check "select all" if all checkbox items are checked
+        if ($('.checkbox:checked').length == $('.checkbox').length) {
+            $("#allcheck").prop('checked', true);
+        }
+    });
+</script>
+<!-- /page container -->
+{% include "vendor1/vendorjs.html" %}
+{% endblock %}

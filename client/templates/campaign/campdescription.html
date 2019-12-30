@@ -1,0 +1,286 @@
+{% extends "header/cheader.html" %}
+
+{% block scripts1 %}
+{% include "campaign/css/campdesc.css" %}
+{% endblock %}
+
+{% block content %}
+<!-- Main sidebar -->
+{% include "side/clientside.html" %}
+
+{% load static %}
+<!-- /main sidebar -->
+
+<div class="content-wrapper">
+
+  <!-- Page header -->
+  <div class=" page-header-default">
+
+
+    <div class="breadcrumb-line">
+      <ul class="breadcrumb">
+        <li><a href="/superadmin/dashboard/"><i class="icon-home2 position-left"></i> Home</a></li>
+        <li class="active">Campaign Details</li>
+      </ul>
+
+    </div>
+  </div>
+  <!-- /page header -->
+
+  <!-- Content area -->
+  <div class="content">
+
+    <!-- client registration model -->
+
+
+    <div class="panel panel-white ">
+
+      <div class="row ">
+        <div class="row top">
+
+          <div class="col-md-3">
+            <div class="form-group ">
+              <label id="campstat">Campaign Status</label>
+              {% if camp.status == 1 %}
+              <label class="desc_camp_status ">Live</label>
+              {% endif %}
+              {% if camp.status == 2 %}
+              <label class="desc_camp_status ">Draft</label>
+              {% endif %}
+              {% if camp.status == 3 %}
+              <label class="desc_camp_status">Pending</label>
+              {% endif %}
+              {% if camp.status == 4 %}
+              <label class="desc_camp_status">Complete</label>
+              {% endif %}
+              {% if camp.status == 5 %}
+              <label class="desc_camp_status">Assigned</label>
+              {% endif %}
+            </div>
+          </div>
+          <div class="col-md-9   ">
+            <div class="form-group ">
+              <span class="label label-info1 lbl">CID :
+              </span> <span class="label label-info lbl" id="campstat1">#{{camp.id}}</span>
+              <span class="label label-info1 lbl">Campaign Name:
+              </span> <span class="label label-info lbl" id="campstat1">{{camp.name}}</span>
+              <!-- <label > </label><br> -->
+              <!-- <label id="campstat1">Campaign Name: {{camp.name}}</label><br> -->
+              <span class="label label-info1 lbl">Default Payout :
+              </span> <span class="label label-info lbl">${{camp.cpl}}</span>
+              &nbsp;&nbsp;<span class="label label-info1 lbl">Target Quantity :</span> <span class="label label-info lbl">{{camp.target_quantity}}</span>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+
+        <div class="panel-heading">
+          <!-- <h5 class="panel-title">
+            <button type="button" id="databtn" class="btn btn-filter-tb btn-labeled pull-right" style="margin-top: -3.8%!important;">
+              <b><span id="filter_icon" class="glyphicon glyphicon-filter"></span></b>
+              Filter
+            </button>
+          </h5> -->
+
+
+        </div> 
+        <div class="table-responsive-sm">
+          <table class="table" id="client_pending_campaign_datatable">
+            <thead>
+              <tr>
+                <th>Vendor</th>
+                <th>Assigned Leads</th>
+                <th>Submit Leads</th>
+                <th>Status</th>
+                <th>Returned</th>
+                <!--<th>Start Date</th>-->
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tfoot class="datatfootfilter" style="display:none">
+              <tr>
+
+                <td rowspan="1" colspan="1">
+                  <input type="text" class="form-control input-sm" placeholder="Search Company">
+                </td>
+                <td rowspan="1" colspan="1">
+                  <input type="text" class="form-control input-sm" placeholder="Search Company">
+                </td>
+
+                <td rowspan="1" colspan="1">
+                  <input type="text" class="form-control input-sm" placeholder="Search Person">
+                </td>
+
+                <td rowspan="1" colspan="1">
+                  <input type="text" class="form-control input-sm" placeholder="Search Category">
+                </td>
+
+
+
+                <td rowspan="1" colspan="1">
+                  <input type="text" class="form-control input-sm" placeholder="Status">
+                </td>
+
+              </tr>
+            </tfoot>
+            <tbody>
+
+              {% for vendorallc in vendoralloc %}
+              {% if vendorallc.volume != -1 %}
+                {% if vendorallc.status == 1 %}
+                <tr>
+                  <td><a href="/client/leadlist/{{vendorallc.id}}/{{vendorallc.status}}">
+                      {{ vendorallc.client_vendor.user_name }}</a></td>
+                  <td>{{vendorallc.volume}}</td>
+                  <td>{{vendorallc.submited_lead}}</td>
+                  {% if vendorallc.status == 1 %}
+                  <td><span class="label label-success">Live</span></td>
+                  {% else %}
+                  <td><span class="label label-primary">Pending</span></td>
+                  {%endif%}
+                  <td>{{vendorallc.return_lead}}</td>
+                  <td class="text-center">
+                    <ul class="icons-list">
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                          <i class="icon-menu9"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                          {% if vendorallc.approve_leads == vendorallc.volume %}
+                            <li><a href="/vendor/completed_lead/{{ vendorallc.id }}/"></i>Complete Lead</a></li>
+                          {%endif%}
+                          <!-- <li><a href="/client/leadlist/{{vendorallc.id}}/{{vendorallc.status}}"></i>Lead List</a></li> -->
+                        </ul>
+                      </li>
+                    </ul>
+                  </td>
+                </tr>
+                {% elif vendorallc.status == 3 %}
+                <tr>
+                  <td><a href="/client/vendor-profile/{{vendorallc.client_vendor.id}}">
+                      {{ vendorallc.client_vendor.user_name }}</a></td>
+                  <td>{{vendorallc.volume}}</td>
+                  <td>{{vendorallc.submited_lead}}</td>
+                  {% if vendorallc.status == 1 %}
+                  <td><span class="label label-success">Live</span></td>
+                  {% else %}
+                  <td><span class="label label-primary">Pending</span></td>
+                  {%endif%}
+                  <td>{{vendorallc.return_lead}}</td>
+                  <td class="text-center">
+                    <ul class="icons-list">
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                          <i class="icon-menu9"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-right">
+
+                          {% if vendorallc.counter_status == 1 %}
+                          <li><a href="#" campaign_id='{{camp.id}}' camp_alloc_id='{{vendorallc.id}}' vendor_id='{{vendorallc.client_vendor_id}}'
+                              id="counter_for_cpl">Counter</a></li>
+                          {%endif%}
+                        </ul>
+                      </li>
+                    </ul>
+                  </td>
+                </tr>
+                {% elif vendorallc.status == 4 %}
+                <tr>
+                  <td><a href="/client/vendor-profile/{{vendorallc.client_vendor.id}}">{{
+                      vendorallc.client_vendor.user_name }}</a></td>
+                  <td>{{vendorallc.volume}}</td>
+                  <td>{{vendorallc.submited_lead}}</td>
+                  <td><span class="label label-info ">Complete</span></td>
+                  <td>{{vendorallc.return_lead}}</td>
+                  <!--<td>7/23/2018</td>-->
+                  <td class="text-center">
+                    <ul class="icons-list">
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                          <i class="icon-menu9"></i>
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-menu-right">
+                          <li><a href="/vendor/completed_lead/{{ vendorallc.id }}/"></i>Complete Lead</a></li>
+                          <li><a href="/client/leadlist/{{vendorallc.id}}/{{vendorallc.status}}"></i>Lead List</a></li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </td>
+
+                </tr>
+                {% elif vendorallc.status == 5 %}
+                <tr>
+                  <td><a href="/client/vendor-profile/{{vendorallc.client_vendor.id}}">
+                    {{vendorallc.client_vendor.user_name }}</a></td>
+                  <td>{{vendorallc.volume}}</td>
+                  <td>{{vendorallc.submited_lead}}</td>
+                  <td><span class="label label-info ">Assigned</span></td>
+                  <td>{{vendorallc.return_lead}}</td>
+                  <!--<td>7/23/2018</td>-->
+                  <td class="text-center">
+                    <ul class="icons-list">
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                          <i class="icon-menu9"></i>
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-menu-right">
+                          <li><a href="/vendor/completed_lead/{{ vendorallc.id }}/"></i>Complete Lead</a></li>
+                          <li><a href="/client/leadlist/{{vendorallc.id}}/{{vendorallc.status}}"></i>Lead List</a></li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </td>
+
+                </tr>
+                {% endif %}
+                {% endif %}
+              {% endfor %}
+
+
+
+            </tbody>
+
+
+          </table>
+        </div>
+
+
+      </div>
+
+    </div>
+
+    <div id="cpl_counter" class="modal fade">
+      <div class="modal-dialog modal-xs">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h5 class="modal-title">Counter CPL</h5>
+          </div>
+          <form method="post" action="#">
+            <div class="modal-body">
+              <h6 class="text-semibold">Enter CPL</h6>
+              <div class="col-sm-12">
+
+                <input type="number" id="vendor_cpl" placeholder="cpl" value="" class="form-control">
+                <input type="hidden" id="campaign_alloc_id" class="form-control">
+                <input type="hidden" id="counter_vendor_id" class="form-control">
+              </div>
+
+            </div>
+            <br />
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-success counter_action" id="1">Accept</button>
+              <button type="button" class="btn btn-danger counter_action" id="2">Reject</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% include "campaign/js/accountjs.html" %}
+
+    {% endblock %}

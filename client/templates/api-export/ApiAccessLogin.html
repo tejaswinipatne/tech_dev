@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Techconnectr - B2B Lead Generation Marketplace </title>
+
+	<!-- Global stylesheets -->
+
+	<link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
+	{% load static %}
+	<link href="{% static 'assets/css/icons/icomoon/styles.css'  %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'assets/css/icons/fontawesome/styles.min.css' %}" rel="stylesheet" type="text/css">
+
+	<link href="{% static 'assets/css/bootstrap.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'assets/css/core.css'  %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'assets/css/components.css'  %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'assets/css/colors.css'  %}" rel="stylesheet" type="text/css">
+	<!-- /global stylesheets -->
+
+	<!-- login page stylesheet-->
+	<link href="{% static 'assets/css/login.css' %}" rel="stylesheet" type="text/css">
+	<!-- btn hover-->
+	<link href="{% static 'assets/css/btn-hover.css' %}" rel="stylesheet" type="text/css">
+
+	<!-- Core JS files -->
+	<script type="text/javascript" src="{% static 'assets/js/plugins/loaders/pace.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'assets/js/core/libraries/jquery.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'assets/js/core/libraries/bootstrap.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'assets/js/plugins/loaders/blockui.min.js' %}"></script>
+	<!-- /core JS files -->
+
+	<!-- Theme JS files -->
+	<script type="text/javascript" src="{% static 'assets/js/plugins/forms/styling/uniform.min.js' %}"></script>
+
+	<script type="text/javascript" src="{% static 'assets/js/core/app.js' %}"></script>
+	<script type="text/javascript" src="{% static 'assets/js/pages/login.js' %}"></script>
+
+	<script type="text/javascript" src="{% static 'assets/js/plugins/ui/ripple.min.js' %}"></script>
+
+
+	<!-- notifications -->
+	<script type="text/javascript" src="{% static 'assets/js/plugins/notifications/pnotify.min.js' %}?ver=1.1"></script>
+	<!-- /notifications -->
+	{% if messages %}
+		<script>
+		$(document).ready(function() {
+		{% for message in messages %}
+			new PNotify({
+				title: '{{ message.tags|upper }}',//'success',
+				text: '{{ message }}.',
+				//addclass: 'alert alert-success alert-styled-left alert-arrow-left',
+				addclass: 'alert alert-{{ message.tags }} alert-styled-left alert-arrow-left',
+				type: '{{ message.tags }}', //'success',
+				delay: 6500  // 3.5 seconds
+			});
+		{% endfor %}
+		});
+		</script>
+	{% endif %}
+
+
+	<!-- /theme JS files -->
+<style>
+.error_message
+{
+	color: red;
+	font-weight: bold;
+	font-size: 14px;
+}
+.success_message
+{
+	color: green;
+	font-weight: bold;
+	font-size: 14px;
+}
+</style>
+
+</head>
+
+<body class="login-container">
+
+	<!-- Main navbar
+	<div class="navbar navbar-inverse bg-indigo">
+		<div class="navbar-header">
+			<a class="navbar-brand" href="index.html"><img src="assets/images/logo/tc-logo1.gif" alt=""></a>
+
+			<ul class="nav navbar-nav pull-right visible-xs-block">
+				<li><a data-toggle="collapse" data-target="#navbar-mobile"><i class="icon-tree5"></i></a></li>
+			</ul>
+		</div>
+	</div>
+	<!-- /main navbar -->
+
+
+	<!-- Page container -->
+	<div class="page-container">
+
+		<!-- Page content -->
+		<div class="page-content">
+
+			<!-- Main content -->
+			<div class="content-wrapper">
+
+				<!-- Content area -->
+				<div class="content">
+
+					<!-- Advanced login -->
+					<form method="post" action="{% url 'api-access-user-login' %}">
+						{% csrf_token %}
+						<div class="panel login-form">
+							<div class="heading">
+								<div class="text-center">
+									<img src="{% static 'assets/images/logo/tc-logo1.gif' %}" alt="tech-connectr logo"/>
+								</div>
+							</div>
+
+
+							<div class="panel panel-body">
+								{% if error %}
+								<div class="alert alert-danger" role="alert">
+								  <strong>Error: </strong>{{error}}
+								</div>
+								{% endif %}
+								{% if request.session.success %}
+								<div class="alert alert-success" role="alert">
+								  <strong>Success: </strong>{{ request.session.success }}
+								</div>
+								{% endif %}
+									<div class="form-group has-feedback has-feedback-left">
+									<input type="text" class="form-control" name="email" placeholder="Username" required>
+									<div class="form-control-feedback">
+										<i class="fa fa-user fa-3"  aria-hidden="true"></i>
+									</div>
+								</div>
+
+								<div class="form-group has-feedback has-feedback-left">
+									<input type="password" class="form-control" name="password" placeholder="Password" required>
+									<div class="form-control-feedback">
+										<i class="icon-lock2 text-muted"></i>
+									</div>
+								</div>
+
+								<div class="form-group has-feedback has-feedback-left">
+									<input type="text" class="form-control" name="code" placeholder="Valid Token" required>
+									<div class="form-control-feedback">
+										<i class="icon-lock2 text-muted"></i>
+									</div>
+								</div>
+
+
+
+								<div class="form-group btn-wrapper">
+									<!--<button type="submit" class="btn bg-pink-400 btn-block">
+										Login
+										<i class="fa fa-thumbs-o-up  i-hide position-right"></i>
+									</button>-->
+
+									   <button class="login_btn lbutton btn_layout" type="submit">Login</button>
+								</div>
+							</div>
+
+						</div>
+					</form>
+					<!-- /advanced login -->
+
+
+					<!-- Footer -->
+					<div class="footer text-muted text-center">
+
+					</div>
+					<!-- /footer -->
+
+				</div>
+				<!-- /content area -->
+
+			</div>
+			<!-- /main content -->
+
+		</div>
+		<!-- /page content -->
+
+	</div>
+	<!-- /page container -->
+
+
+</body>
+</html>

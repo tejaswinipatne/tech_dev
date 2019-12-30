@@ -1,0 +1,143 @@
+{% extends "header/cheader.html" %}
+{% load static %}
+
+      <!-- header uniq file  for chat screen  -->
+      {% block scripts %}
+          {% include "campaign_chat/chat_screen_head.html" %}
+      {% endblock %}
+      <!-- For chat screen purpose -->
+      {% block scripts1 %}
+          {% include "campaign_chat/css/chat_screen.css" %}
+      {% endblock %}
+{% block content %}
+<!-- Main sidebar -->
+{% include "side/clientside.html" %}
+
+
+<div class="content-wrapper">
+  <div class="content">
+
+					<!-- Inside tabs -->
+					<h6 class="content-group text-semibold">
+					Campaign : {{campaign.name}}
+						<small class="display-block"></small>
+					</h6>
+          <div class="row">
+            <div class="col-md-3">
+              <div class=" panel panel-flat ">
+            <div class="sidebar-category">
+									<div class="category-title">
+										<span>Vendor-List</span>
+										<ul class="icons-list">
+											<li><a href="#" data-action="collapse"></a></li>
+										</ul>
+									</div>
+
+									<div class="category-content">
+										<ul class="media-list">
+                      {% for vendor in vendor_list%}
+
+                      <li class="media">
+												<div class="media-left">
+													<img src="{% static 'assets/images/placeholder.jpg' %}" class="img-circle img-sm" alt="">
+												</div>
+
+												<div class="media-body">
+													<a href="#" class="media-heading">
+														<span class="text-semibold">{{vendor.vendor_name}}</span>
+													</a>
+													<span class="text-muted">Who knows, maybe that...</span>
+												</div>
+											</li>
+                      {%endfor%}
+										</ul>
+									</div>
+								</div>
+              </div>
+              <div class=" panel panel-flat">
+              <div class="sidebar-category">
+                    <div class="category-title">
+                      <span>Live-Campaign-List</span>
+                      <ul class="icons-list">
+                        <li><a href="#" data-action="collapse"></a></li>
+                      </ul>
+                    </div>
+
+                    <div class="category-content">
+                      <ul class="media-list">
+                        {% for campaign in campaign_list%}
+
+                        <li class="media">
+                          <div class="media-left">
+                            <img src="{% static 'assets/images/placeholder.jpg' %}" class="img-circle img-sm" alt="">
+                          </div>
+
+                          <div class="media-body">
+                            <a href="/client/chat-app/{{campaign.id}}/" class="media-heading">
+                              <span class="text-semibold">{{campaign.name}}</span>
+                            </a>
+                            <span class="text-muted">Who knows, maybe that...</span>
+                          </div>
+                        </li>
+                        {%endfor%}
+                      </ul>
+                    </div>
+                  </div>
+            </div>
+          </div>
+          <div class="col-md-9">
+					<div class="tabbable tab-content-bordered content-group-lg">
+            <div class="panel panel-flat">
+						<div class="panel-heading">
+							<h6 class="panel-title">{{campaign.name}}:</h6>
+							<div class="heading-elements">
+								      <ul class="icons-list">
+			                		<li><a data-action="collapse"></a></li>
+			                		<li><a data-action="reload"></a></li>
+			                		<li><a data-action="close"></a></li>
+			                </ul>
+		                	</div>
+						</div>
+
+						<div class="panel-body">
+							<ul id="chat_box" class="media-list chat-list content-group">
+
+							</ul>
+                <div class="row">
+                  <form method="post" id="send_msg">
+                  {% csrf_token %}
+                      <div class="col-md-10 text-right">
+                        <ul class="dropdown-menu1" id="vendor_list">
+                           <li><a href="#"><input type="checkbox" id="allcheck"  value="0"  />All</a></li>
+                          {% for vendor in vendor_list %}
+                           <li><a href="#"><input type="checkbox"  name="vendor_names" class="vendor_names" value="{{vendor.id}}"/> {{vendor.vendor_name}}</a></li>
+                          {%endfor%}
+                          <li><a href="#"><input type="checkbox"  name="vendor_names" class="vendor_names" value="3"/>Superadmin</a></li>
+                         </ul>
+                        <input type="text" name="message" id="message" class="form-control"  onkeyup=" return key_check(this.value)" required placeholder="Enter your message..." />
+
+                        <input type="hidden" name="camp_id" id="camp_id" value="{{campaign.id}}" />
+                        <input type="hidden" name="sender_id" id="sender_id" value="{{sender_id}}" />
+                      </div>
+	                    <div class="col-md-2 text-right">
+		                        <button type="submit" class="btn btn-primary"><b><i class="icon-circle-right2"></i></b> Send</button>
+	                    </div>
+                  </form>
+	             </div>
+               <div class="row">
+               </div>
+						</div>
+					</div>
+					<!-- /color options -->
+
+
+					<!-- Footer -->
+
+				</div>
+        </div>
+        </div>
+
+			</div>
+    </div>
+{% include "campaign_chat/js/chatjs.html"%}
+{% endblock %}

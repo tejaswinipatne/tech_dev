@@ -1,0 +1,216 @@
+{% extends "header/cheader.html" %}
+{% load static %}
+{% block scripts %}
+{% include "campaign/campaign_notebook_head.html" %}
+{% endblock %}
+
+{% block scripts1 %}
+
+{% include "campaign/css/campaign_notebook.css" %}
+
+{% endblock %}
+
+{% include "campaign_chat/css/chat_screen.css" %}
+{% block content %}
+
+{% load custom_filters %}
+
+<!-- Main sidebar -->
+{% include "side/clientside.html" %}
+{% load range %}
+<!-- Content area -->
+<div class="content-wrapper" style=" background-color:white;">
+	<div class="content" style="margin-top: 17px;">
+		<!-- tech connector data-->
+		<div class="panel-body">
+			<div class="row">
+			<!-- <span class="">
+				<a class="btn btn-primary" href="/client/campaign_type/">Create Campaign</a>
+			</span> -->
+			<select class="btn btn-primary" name="FILTER" id='mySelector'>
+				<option value="">Filter Table</option>
+				<option value="0">Draft</option>
+				<option value="1">Live</option>
+				<option value="2">Pause</option>
+				<option value="3">Pending</option>
+				<option value="4">Complete</option>
+				<option value="5">Assigned</option>
+			</select>
+		</div>
+		<div class="row">
+			<table class="table" id='myTable'>
+			  <thead>
+			    <tr>
+						<th hidden>type</th>
+			      <th scope="col">#id</th>
+			      <th scope="col">Campaign Name</th>
+			      <th scope="col">CPL</th>
+			      <th scope="col">Leads</th>
+						<th scope="col">Campaign Progress</th>
+						<th scope="col">Actions</th>
+			    </tr>
+			  </thead>
+			  <tbody>
+					{% for i in result %}
+			    <tr>
+						<td hidden>{{i.status}}</td>
+			      <th scope="row">{{i.id}}</th>
+			      <td>{{i.name}}</td>
+			      <td>{{i.cpl}}</td>
+			      <td>{{i.leads}}</td>
+						<td><!-- {{i.progress}} -->
+							<div class="example-2" >
+      							<div class="cssProgress">
+                            		<div class="progress2">
+                              			<div class="cssProgress-bar cssProgress-success" data-percent="{{i.progress}}" style="width: 25%; background-color:{{i.color}};">
+                              			  	<span class="cssProgress-label"></span>
+                              			</div>
+                            		</div>
+                         	 	</div>
+                        	</div>
+						</td>
+						<td class="text-center">
+							<ul class="icons-list">
+				        <li class="dropdown">
+				            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+				                <i class="icon-menu9"></i>
+				            </a>
+				            <ul class="dropdown-menu dropdown-menu-left">
+												{% if i.status == 0 %}
+												<li><a href="/client/draft-campaign/">Campaign Notebook</a></li>
+												{% elif i.status == 1 %}
+												<li><a href="/client/live-campaign/">Campaign Notebook</a></li>
+												{% elif i.status == 2 %}
+												<li><a href="/client/pause-campaign/">Campaign Notebook</a></li>
+												{% elif i.status == 3 %}
+												<li><a href="/client/pending-campaign/">Campaign Notebook</a></li>
+												{% elif i.status == 4 %}
+												<li><a href="/client/completed-campaign/">Campaign Notebook</a></li>
+												{% elif i.status == 5 %}
+												<li><a href="/client/assigned-campaign/">Campaign Notebook</a></li>
+												{% endif %}
+												{% if i.status == 1 %}
+				                <li><a href="/client/campaign_lifecycle/{{i.id}}">Life Cycle</a></li>
+												{% endif %}
+				            </ul>
+				        </li>
+				    	</ul>
+						</td>
+			    </tr>
+					{% empty %}
+					<tr>
+						<td>No data found.</td>
+					</tr>
+					{% endfor %}
+			  </tbody>
+			</table>
+		</div>
+		</div>
+
+	</div>
+</div>
+<!-- /content area -->
+<style type="text/css">
+	#mySelector{
+		padding: 11px;
+    	float: right;
+    	background: #fff;
+    	border: 1px solid #1E88E5;
+    	color: #9c8d8d;
+
+	}
+	#mySelector:hover{
+		padding: 11px;
+    	float: right;
+    	background: #fff;
+    	border: 1px solid #1E88E5;
+    	color: #9c8d8d;
+
+	}
+	#mySelector>option{
+		background: #ddd;
+		color: #000;
+	}
+	#myTable{
+		margin-top: 30px;
+	}
+	#myTable>thead>tr>th{
+		background:#dddddd61;
+	}
+</style>
+<!--this script use to Change the size of Div-->
+{% include "campaign/js/campaign_notebook.html" %}
+<script>
+	$(document).ready( function () {
+		$('.example-2').progress_fnc();
+    oTable = $('#myTable').DataTable({
+			"bFilter": true,
+			"pageLength": 10,
+			"aoColumnDefs": [{ "bSortable": false, "aTargets": [ 0, 1, 2, 3, 4, 5, 6 ] },]
+                // { "bSearchable": false, "aTargets": [ 0, 1, 2, 3 ] }
+		});
+
+ 		$('#mySelector').change(function() {
+	    var selection = $(this).val();
+			console.log(selection);
+			oTable.columns(0).search(selection).page.len(10).draw();
+	  });
+	});
+</script>
+<script type="text/javascript">
+
+$(document).ready(function() {
+   	$('.progressStart').on('click', function() {
+	    var perent = $(this).closest("div").attr("id");
+	    $('#' + perent).progress_fnc({ type: 'start' });
+	  });
+
+	  $('.progressReset').on('click', function() {
+	    var perent = $(this).closest("div").attr("id");
+	    $('#' + perent).progress_fnc({ type: 'reset' });
+	  });
+
+});
+
+
+(function($) {
+
+  $.fn.progress_fnc = function(options) {
+    var settings = $.extend({
+      type: 'start'
+    }, options);
+
+    var div = $(this);
+		var progress = div.find('.cssProgress');
+
+    progress.each(function() {
+      var self = $(this);
+      var progress_bar = self.find('.cssProgress-bar');
+      var progress_label = self.find('.cssProgress-label, .cssProgress-label2');
+      var progress_value = progress_bar.data('percent');
+      var percentage = parseInt(progress_value, 10) + '%';
+
+      progress_bar.css({'width': '0%', 'transition': 'none', '-webkit-transition': 'none', '-moz-transition': 'none'});
+
+      if(settings.type == 'start') {
+
+        progress_bar.animate({
+          width: percentage
+        }, {
+          duration: 2000,
+          step: function(x) {
+            progress_label.text(Math.round(x) + '%');
+          }
+        });
+
+      } else if(settings.type == 'reset') {
+        progress_bar.css('width', '0%');
+        progress_label.text('0%');
+      }
+
+    });
+  }
+
+}(jQuery));
+    </script>
+{% endblock %}

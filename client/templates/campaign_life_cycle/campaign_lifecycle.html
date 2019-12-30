@@ -1,0 +1,386 @@
+{% extends "header/cheader.html" %}
+{% block content %}
+<!-- Main sidebar -->
+{% include "side/clientside.html" %}
+{% include "campaign_life_cycle/campaign_lifecycle_head.html" %}
+<!-- /main sidebar -->
+<!-- Main content -->
+{% load range %}
+{% load humanize %}
+{% load static %}
+{% load custom_filters %}
+
+
+<!-- Main content -->
+
+<body style='background-color:white;'>
+
+
+  <!-- Page header -->
+  <div class="page-header page-header-default" style="margin-top:50px;">
+    <div class="page-header-content" style="overflow:hideen">
+      <div class=" row topheadd">
+        <div class="col-md-5">
+          <p class='lead h6'>{{intro.campaign.name}}'s Life Cycle</p><br>
+          <div class="col-md-7">
+            <p class="info"><span class="label {{color}} text-semibold">{{message}}</span></p><br>
+            <p class="info sp">Time lapsed: {{days}} out of {{total}} days</p><br>
+            <p class="info">Total Leads: {{Total_leads}}</p><br>
+
+          </div>
+          <div class="col-md-5 pro-top">
+            <p class="info">Submitted Leads: {{Submitted_Leads}}</p><br>
+            <p class="info">Approved Leads: {{approved_leads}}</p><br>
+
+            <div class="page">
+              <!-- <div class="circlebar" data-circle-startTime=0 data-circle-maxValue="{{per}}" data-circle-dialWidth=10 data-circle-size="100px" data-circle-type="progress">
+                          <div class="loader1-bg">
+                              <div class="text">00:00:00</div>
+                          </div>
+                      </div> -->
+            </div>
+            <div class="page1">
+              <div class="circlebar" data-circle-startTime=0 data-circle-maxValue="{{per}}" data-circle-dialWidth=10
+                data-circle-size="100px" data-circle-type="progress">
+                <div class="loader1-bg">
+                  <div class="text text1">0%</div>
+
+                </div>
+                <div class="lead_progress ">
+                  Lead Progress
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-8">
+
+        </div>
+
+      </div>
+
+
+
+    </div>
+
+  </div>
+  <!-- /page header -->
+
+
+
+  <!-- /page header -->
+
+
+  <!-- Content area -->
+  <div class="content">
+
+    <!-- Timeline -->
+    <div class="timeline timeline-center" style="padding-top:5px">
+      <div class="timeline-container">
+
+        <!-- Sales stats -->
+        <div class="timeline-row post-full">
+          <div class="timeline-icon">
+            <a href="#"><img src="{% static 'assets/images/placeholder.jpg' %}" alt=""></a>
+          </div>
+        </div>
+        <!-- /sales stats -->
+
+
+        <!-- Blog post -->
+        <div class="timeline-row">
+          <div class="timeline-icon">
+
+            <img src="{% static 'assets/images/placeholder.jpg' %}" alt="">
+          </div>
+
+          <div class="timeline-time">
+            <p style="color:#1E88E5;">{{intro.campaign.user.user_name}} created new campaign</p>
+            <span class="text-muted">{{intro.created_date}}</span>
+          </div>
+          <div class="timeline-content">
+
+
+            <div class="panel border-left-lg border-left-danger"
+              style="box-shadow:13px 13px 9px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);">
+              <!-- Accordion with controls -->
+              <div class="panel-heading">
+                <h6 class="panel-title">
+                  <a class="collapsed" data-toggle="collapse" data-parent="#accordion-controls"
+                    href="#accordion-controls-group0"><strong>Campaign Name : </strong>{{intro.campaign.name}} <i
+                      class="fa fa-plus pull-right" aria-hidden="true"></i></a>
+                </h6>
+              </div>
+              <div id="accordion-controls-group0" class="panel-collapse collapse">
+                <div class="panel-body" style="border-top:1px solid #ddd;">
+                  <div class="panel-body">
+                    <strong>Type:</strong>{% if intro.campaign.rfq == 1 %} RFQ {% else %} Normal {% endif %}<strong
+                      style="padding:5px;">CPL:</strong>${{intro.campaign.cpl}} <strong style="padding:5px;">Target
+                      Quantity:</strong>{{intro.campaign.target_quantity}}
+                  </div>
+                  <!-- <div class="progress">
+                            <div class="progress-bar progress-bar-striped active" role="progressbar"
+                            aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:{{i.client_percentage}}%">
+                              {{i.client_percentage}}%
+                            </div>
+                          </div> -->
+
+                </div>
+              </div>
+
+
+              <!-- /accordion with controls -->
+              <div class="panel-footer panel-footer-condensed">
+                <div class="heading-elements">
+                  <span class="heading-text">Start Date: <span class="text-semibold">{{intro.start_date}}</span></span>
+                  <span class="heading-text pull-right">Status : <span
+                      class="label bg-success text-semibold">Pending</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- /blog post -->
+
+
+        {% if info %}
+        {% for i in info %}
+        {% if i.type == 'vendor' %}
+        <div class="timeline-date text-muted" style="background-color:white;">{{ i.date|modifying }}</div>
+
+        <!-- Task -->
+        <div class="timeline-row post-even">
+          <div class="timeline-icon">
+            <img src="{% static 'assets/images/placeholder.jpg' %}" alt="">
+          </div>
+
+          <div class="timeline-time">
+            <p style="color:#1E88E5;">Leads are assigned to {{i.Name}}</p>
+            <span class="text-muted">{{i.date|modifying}}</span>
+          </div>
+
+          <div class="timeline-content">
+            <div class="panel border-left-lg border-left-primary"
+              style="box-shadow:13px 13px 9px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);">
+              <div class="panel-heading">
+                <h6 class="panel-title">
+                  <a class="collapsed" data-toggle="collapse" data-parent="#accordion-controls"
+                    href="#accordion-controls-group{{forloop.counter}}"><strong>Assigned: </strong>{{i.Name}}<i
+                      class="fa fa-plus pull-right" aria-hidden="true"></i></a>
+                </h6>
+              </div>
+              <div id="accordion-controls-group{{forloop.counter}}" class="panel-collapse collapse">
+                <div class="panel-body" style="border-top:1px solid #ddd;">
+                  <ul style="padding-left:20px">
+                    <li class="mb-15"><span class="col-md-6">Assigned leads: </span><a href="#"><span
+                          class="btn btn-primary">{{i.assigned_leads}}</span></a></li>
+                    <!-- <li class="mb-15"><span class="col-md-6">CPL: </span><a href="#"><span class="btn btn-primary">{{i.cpl}}</span></a></li> -->
+                  </ul>
+                  <!-- <div class="progress">
+                                  <div class="progress-bar progress-bar-striped active" role="progressbar"
+                                  aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:{{i.client_percentage}}%">
+                                    {{i.client_percentage}}%
+                                  </div>
+                                </div> -->
+                </div>
+              </div>
+              <div class="panel-footer panel-footer-condensed">
+                <div class="heading-elements">
+                  <span class="heading-text">Date: <span class="text-semibold">{{i.date|modifying}}</span></span>
+                  <span class="heading-text pull-right">Status : <span
+                      class="label bg-success text-semibold">Live</span></span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <!-- /task -->
+        {% elif i.type == 'action' %}
+
+        <div class="timeline-date text-muted" style="background-color:white;">{{ i.date|modifying}}</div>
+
+        <!-- Task -->
+        <div class="timeline-row post-even">
+          <div class="timeline-icon">
+            <img src="{% static 'assets/images/placeholder.jpg' %}" alt="">
+          </div>
+
+          <div class="timeline-time">
+            <p style="color:#1E88E5;">{{intro.campaign.user.user_name}} {{i.status}} leads of {{i.vendor}}</p>
+            <span class="text-muted">{{i.date|modifying}}</span>
+          </div>
+
+          <div class="timeline-content">
+            <div class="panel border-left-lg border-left-primary"
+              style="box-shadow:13px 13px 9px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);">
+              <div class="panel-heading">
+                <h6 class="panel-title">
+                  <a class="collapsed" data-toggle="collapse" data-parent="#accordion-controls"
+                    href="#accordion-controls-group{{forloop.counter}}"><strong>Leads {{i.status}}:</strong>
+                    {{i.vendor}} <i class="fa fa-plus pull-right" aria-hidden="true"></i></a>
+                </h6>
+              </div>
+              <div id="accordion-controls-group{{forloop.counter}}" class="panel-collapse collapse">
+                <div class="panel-body" style="border-top:1px solid #ddd;">
+                  <ul style="padding-left:20px">
+                    <li class="mb-15"><span class="col-md-6">Count of {{i.status}}:</span><a href="#"><span
+                          class="btn btn-primary"> {{i.lead_id | length}}</span></a></li>
+                    {% if i.reason != None %}<li class="mb-15"><span class="col-md-6">Reason of {{i.status}}</span><a
+                        href="#"><span class="btn btn-primary">{{i.reason}}</span></a></li>{% endif %}
+                  </ul>
+                  <div class="progress">
+                    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="40"
+                      aria-valuemin="0" aria-valuemax="100" style="width:{{i.client_percentage}}%">
+                      {{i.client_percentage}}%
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="panel-footer panel-footer-condensed">
+                <div class="heading-elements">
+                  <span class="heading-text">Date: <span class="text-semibold">{{i.date|modifying}}</span></span>
+                  <span class="heading-text pull-right">Status : <span
+                      class="label bg-success text-semibold">Live</span></span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        {% elif i.type == 'complete'%}
+        <div class="timeline-date text-muted" style="background-color:white;">{{ i.date|modifying}}</div>
+
+        <!-- Task -->
+        <div class="timeline-row post-odd">
+          <div class="timeline-icon">
+            <img src="{% static 'assets/images/placeholder.jpg' %}" alt="">
+          </div>
+
+          <div class="timeline-time">
+            <p style="color:#1E88E5;">Campaign is completed for {{i.vendor_name}}</p>
+            <span class="text-muted">{{i.date|modifying}}</span>
+          </div>
+
+          <div class="timeline-content">
+            <div class="panel panel border-left-lg border-left-danger"
+              style="box-shadow:13px 13px 9px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);">
+              <div class="panel-heading">
+                <h6 class="panel-title">
+                  <a class="collapsed" data-toggle="collapse" data-parent="#accordion-controls"
+                    href="#accordion-controls-group{{forloop.counter}}"><strong>Campaign completion:</strong>
+                    {{i.vendor_name}}<i class="fa fa-plus pull-right" aria-hidden="true"></i></a>
+                </h6>
+              </div>
+              <div id="accordion-controls-group{{forloop.counter}}" class="panel-collapse collapse">
+                <div class="panel-body" style="border-top:1px solid #ddd;">
+                  <ul style="padding-left:20px">
+                    <li class="mb-15"><span class="col-md-6">Campaign is completed for </span><a href="#"><span
+                          class="btn btn-primary">{{i.vendor_name}}</span></a></li>
+                    <!-- <li class="mb-15"><span class="col-md-6">CPL: </span><a href="#"><span class="btn btn-primary">{{i.cpl}}</span></a></li> -->
+                  </ul>
+                  <!-- <div class="progress">
+                                  <div class="progress-bar progress-bar-striped active" role="progressbar"
+                                  aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:{{i.client_percentage}}%">
+                                    {{i.client_percentage}}%
+                                  </div>
+                                </div> -->
+                </div>
+              </div>
+              <div class="panel-footer panel-footer-condensed">
+                <div class="heading-elements">
+                  <span class="heading-text">Date: <span class="text-semibold">{{i.date|modifying}}</span></span>
+                  <span class="heading-text pull-right">Status : <span
+                      class="label bg-success text-semibold">Live</span></span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        {% elif i.type == 'upload'%}
+        <div class="timeline-date text-muted" style="background-color:white;">{{ i.date|modifying }}</div>
+
+        <!-- Task -->
+        <div class="timeline-row post-odd">
+          <div class="timeline-icon">
+            <img src="{% static 'assets/images/placeholder.jpg' %}" alt="">
+          </div>
+
+          <div class="timeline-time">
+            <p style="color:#1E88E5;">{{i.vendor}} uploaded leads</p>
+            <span class="text-muted">{{i.date|modifying}}</span>
+          </div>
+
+          <div class="timeline-content">
+            <div class="panel panel border-left-lg border-left-danger"
+              style="box-shadow:13px 13px 9px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);">
+              <div class="panel-heading">
+                <h6 class="panel-title">
+                  <a class="collapsed" data-toggle="collapse" data-parent="#accordion-controls"
+                    href="#accordion-controls-group{{forloop.counter}}"><strong>Leads upload: </strong>{{i.vendor}} <i
+                      class="fa fa-plus pull-right" aria-hidden="true"></i></a>
+                </h6>
+              </div>
+              <div id="accordion-controls-group{{forloop.counter}}" class="panel-collapse collapse">
+                <div class="panel-body" style="border-top:1px solid #ddd;">
+                  <ul style="padding-left:20px">
+                    <li class="mb-15"><span class="col-md-6">Uploaded leads count: </span><a href="#"><span
+                          class="btn btn-primary">{{i.all_uploaded_leads}}</span></a></li>
+                    <li class="mb-15"><span class="col-md-6">Valid leads count: </span><a href="#"><span
+                          class="btn btn-primary">{{i.valid_leads}}</span></a></li>
+                  </ul>
+                  <!-- <div class="progress">
+                                      <div class="progress-bar" role="progressbar" aria-valuenow="80"
+                                      aria-valuemin="0" aria-valuemax="100" style="width:{{i.client_percentage}}%;">
+                                      {{i.client_percentage}}%
+                                      </div>
+                                    </div> -->
+                  <!-- <div class="progress">
+                                      <div class="progress-bar progress-bar-striped active" role="progressbar"
+                                      aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:{{i.client_percentage}}%">
+                                        {{i.client_percentage}}%
+                                      </div>
+                                    </div> -->
+                </div>
+              </div>
+              <div class="panel-footer panel-footer-condensed">
+                <div class="heading-elements">
+                  <span class="heading-text">Date: <span class="text-semibold">{{i.date|modifying}}</span></span>
+                  <span class="heading-text pull-right">Status : <span
+                      class="label bg-success text-semibold">Live</span></span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+
+
+      </div>
+    </div>
+    <!-- /timeline -->
+  </div>
+  <!-- /content area -->
+<style type="text/css">
+  @media only screen and (min-width: 1920px)  {
+    .loader1-bg{
+      margin-top: -25px; 
+    }
+  }
+  @media only screen and (max-width: 1599px)and (min-width: 1440px)  {
+    .loader1-bg{
+      margin-top: -25px; 
+    }
+  }
+</style>
+
+</body>
+{% include "dashboard/clientdashbordjs.html" %}
+{% endblock %}

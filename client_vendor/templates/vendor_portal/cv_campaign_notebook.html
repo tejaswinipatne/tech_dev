@@ -1,0 +1,655 @@
+{% extends "header/cheader.html" %}
+{% load static %}
+{% block scripts %}
+{% include "campaign/campaign_notebook_head.html" %}
+{% endblock %}
+
+{% block scripts1 %}
+
+{% include "campaign/css/campaign_notebook.css" %}
+
+{% endblock %}
+
+{% include "campaign_chat/css/chat_screen.css" %}
+{% block content %}
+
+<!-- Main sidebar -->
+{% include "side/clientvendorside.html" %}
+{% load range %}
+<div class="content-wrapper">
+	<!-- Content area -->
+	<div class="content" style="margin-top: 17px;">
+		<!-- tech connector data-->
+		<div class="row">
+			<div class="col-md-12 ">
+				<div class="panel panel-height panel-flat first ">
+					<div class="panel-body">
+                        <div id="centertext" style="padding-bottom: 10px;">
+                                <h4>Campaign Notebook</h4> {% if not camps %} (You dont't have campaign to show){%endif%}
+                        </div>
+						<div class="table-responsive">
+							<table class="table text-nowrap">
+								<tbody>
+									<!--Heading for Live campaign-->
+									<tr class="active border-double">
+										<td colspan="1">Live Campaign</td>
+										<td class="text-right">
+											<span class="progress-meter" id="today-progress" data-progress="30"></span>
+										</td>
+									</tr>
+									<!--List of Live campaign-->
+									{% for camp in camps %}
+									{% if camp.status == 1 %}
+									<tr class="shadow show_camp" camp_id="{{camp.campaign.id}}">
+										<td>
+											<div class="media-left">
+												<div class=""><a href="#" class="text-default text-semibold show_camp">{{ camp.campaign.name }}</a></div>
+												<div class="text-muted text-size-small" style="display:none">
+													<span class="status-mark border-blue position-left"></span>
+													02:00 - 03:00
+												</div>
+											</div>
+										</td>
+										<td><span class="label bg-blue">Live</span></td>
+									</tr>
+									{%endif%}
+									{%endfor%}
+									<!--Heading for Pending campaign-->
+									<tr class="active border-double">
+										<td colspan="1">Assigned Campaign</td>
+										<td class="text-right">
+											<span class="progress-meter" id="today-progress" data-progress="30"></span>
+										</td>
+									</tr>
+									<!--List of Pending campaign-->
+									{% for camp in camps %}
+									{% if camp.status == 5 %}
+									<tr class="shadow show_camp" camp_id="{{camp.campaign.id}}">
+										<td>
+											<div class="media-left">
+												<div class=""><a href="#" id="{{camp.id}}" class="text-default text-semibold show_camp">{{ camp.campaign.name }}</a></div>
+												<div class="text-muted text-size-small" style="display:none">
+													<span class="status-mark border-blue position-left"></span>
+													02:00 - 03:00
+												</div>
+											</div>
+										</td>
+										<td><span class="label bg-blue">Assigned</span></td>
+									</tr>
+									{%endif%}
+									{%endfor%}
+									<!--Heading for Pending campaign-->
+									<tr class="active border-double">
+										<td colspan="1">Pending Campaign</td>
+										<td class="text-right">
+											<span class="progress-meter" id="today-progress" data-progress="30"></span>
+										</td>
+									</tr>
+									<!--List of Pending campaign-->
+									{% for camp in camps %}
+									{% if camp.status == 3 %}
+									<tr class="shadow show_camp" camp_id="{{camp.campaign.id}}">
+										<td>
+											<div class="media-left">
+												<div class=""><a href="#" id="{{camp.id}}" class="text-default text-semibold show_camp">{{ camp.campaign.name }}</a></div>
+												<div class="text-muted text-size-small" style="display:none">
+													<span class="status-mark border-blue position-left"></span>
+													02:00 - 03:00
+												</div>
+											</div>
+										</td>
+										<td><span class="label bg-blue">Pending</span></td>
+									</tr>
+									{%endif%}
+									{%endfor%}
+									<!--Heading for Pending campaign-->
+									<tr class="active border-double">
+										<td colspan="1">Completed Campaign</td>
+										<td class="text-right">
+											<span class="progress-meter" id="today-progress" data-progress="30"></span>
+										</td>
+									</tr>
+									<!--List of Pending campaign-->
+									{% for camp in camps %}
+									{% if camp.status == 4 %}
+									<tr class="shadow show_camp" camp_id="{{camp.campaign.id}}">
+										<td>
+											<div class="media-left">
+												<div class=""><a href="#" id="{{camp.id}}" class="text-default text-semibold show_camp">{{ camp.campaign.name }}</a></div>
+												<div class="text-muted text-size-small" style="display:none">
+													<span class="status-mark border-blue position-left"></span>
+													02:00 - 03:00
+												</div>
+											</div>
+										</td>
+										<td><span class="label bg-blue">Complete</span></td>
+									</tr>
+									{%endif%}
+									{%endfor%}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /FULL NOTEBOOK END-->
+		<div class="row">
+			<div class="col-md-12 notebook" style="display: none;">
+				<div class="col-md-7">
+					<div class="panel panel-height panel-flat">
+						<div class="panel-body scroll">
+							<div id="centertext" style="padding-bottom: 10px;">
+                                    <h4>Campaign Notebook</h4>
+							</div>
+							<div class="table-responsive">
+								<table class="table text-nowrap">
+									<tbody>
+										<!--Heading for Live campaign-->
+										<tr class="active border-double">
+											<td colspan="1">Live Campaign</td>
+											<td class="text-right">
+												<span class="progress-meter" id="today-progress" data-progress="30"></span>
+											</td>
+										</tr>
+										<!--List of Live campaign-->
+										{% for camp in camps %}
+										{% if camp.status == 1 %}
+										<tr class="shadow show_camp" id="show_camp{{camp.id}}" camp_id="{{camp.campaign.id}}">
+											<td>
+												<div class="media-left">
+													<div class=""><a href="#" id="{{camp.id}}" class="text-default text-semibold show_camp">{{ camp.campaign.name }}</a></div>
+													<div class="text-muted text-size-small" style="display:none">
+														<span class="status-mark border-blue position-left"></span>
+														02:00 - 03:00
+													</div>
+												</div>
+											</td>
+											<td><span class="label bg-blue">Live</span></td>
+										</tr>
+										{%endif%}
+										{%endfor%}
+										<tr class="active border-double">
+											<td colspan="1">Assigned Campaign</td>
+											<td class="text-right">
+												<span class="progress-meter" id="today-progress" data-progress="30"></span>
+											</td>
+										</tr>
+										<!--List of Live campaign-->
+										{% for camp in camps %}
+										{% if camp.status == 5 %}
+										<tr class="shadow show_camp" id="show_camp{{camp.id}}" camp_id="{{camp.campaign.id}}">
+											<td>
+												<div class="media-left">
+													<div class=""><a href="#" id="{{camp.id}}" class="text-default text-semibold show_camp">{{ camp.campaign.name }}</a></div>
+													<div class="text-muted text-size-small" style="display:none">
+														<span class="status-mark border-blue position-left"></span>
+														02:00 - 03:00
+													</div>
+												</div>
+											</td>
+											<td><span class="label bg-blue">Live</span></td>
+										</tr>
+										{%endif%}
+										{%endfor%}
+										<!--Heading for Pending campaign-->
+										<tr class="active border-double">
+											<td colspan="1">Pending Campaign</td>
+											<td class="text-right">
+												<span class="progress-meter" id="today-progress" data-progress="30"></span>
+											</td>
+										</tr>
+										<!--List of Pending campaign-->
+										{% for camp in camps %}
+										{% if camp.status == 3 %}
+										<tr class="shadow show_camp" id="show_camp{{camp.id}}" camp_id="{{camp.campaign.id}}">
+											<td>
+												<div class="media-left">
+													<div class=""><a href="#" id="{{camp.id}}" class="text-default text-semibold show_camp">{{ camp.campaign.name }}</a></div>
+													<div class="text-muted text-size-small" style="display:none">
+														<span class="status-mark border-blue position-left"></span>
+														02:00 - 03:00
+													</div>
+												</div>
+											</td>
+											<td><span class="label bg-blue">Pending</span></td>
+										</tr>
+										{%endif%}
+										{%endfor%}
+										<tr class="active border-double">
+											<td colspan="1">completed Campaign</td>
+											<td class="text-right">
+												<span class="progress-meter" id="today-progress" data-progress="30"></span>
+											</td>
+										</tr>
+										<!--List of Live campaign-->
+										{% for camp in camps %}
+										{% if camp.status == 4 %}
+										<tr class="shadow show_camp" id="show_camp{{camp.id}}" camp_id="{{camp.campaign.id}}">
+											<td>
+												<div class="media-left">
+													<div class=""><a href="#" id="{{camp.id}}" class="text-default text-semibold show_camp">{{ camp.campaign.name }}</a></div>
+													<div class="text-muted text-size-small" style="display:none">
+														<span class="status-mark border-blue position-left"></span>
+														02:00 - 03:00
+													</div>
+												</div>
+											</td>
+											<td><span class="label bg-blue">Complete</span></td>
+										</tr>
+										{%endif%}
+										
+										{%endfor%}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-5">
+					<div class="panel panel-height panel-flat ">
+						<div class="panel-body scroll">
+
+							<section onclick="myFunction2()">
+								<div class="example" data-options='{"direction": "auto", "contentSelector": ">", "containerSelector": ">"}'>
+									<div class="campaign_details">
+										<div class="panel-group" id="accordion">
+											<div class="panel panel-default">
+												<div class="panel-heading">
+													<h5 class="panel-title">
+														<a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+															Campaign Details</a>
+														<span class="icons" style="float:right;">
+															<span class="note_icon fas fa-paperclip"></span>
+															<span class="glyphicon glyphicon-link note_icon"></span>
+															<div class="dropdown">
+																<span class="dropdown-toggle" type="text" data-toggle="dropdown"><i class="glyphicon glyphicon-option-horizontal note_icon"></i></span>
+																<ul class="dropdown-menu assets_list">
+																	<li><a href="#">Add Scripts</a></li>
+																	<li><a data-toggle="modal" data-target="#myModal">Add Assests</a>
+																	</li>
+																	<li><a href="#">Lead Stutas</a></li>
+																</ul>
+															</div>
+															<span class="glyphicon glyphicon-thumbs-up note_icon"></span>
+															<span class="glyphicon glyphicon-remove note_icon" onclick="myFunctionClose()"></span>
+														</span>
+													</h5>
+												</div>
+												<div id="collapse1" class="panel-collapse collapse in">
+													<div class="panel-body side_tab">
+														<div class="panel1">
+															<p style="text-transform: capitalize;">Campaign Name : <span style="color: #6d6d70" id="camp_name"></span></p>
+														</div>
+														<div class="panel1">
+															<p >CPL: <span style="color: #6d6d70" id="camp_cpl"></p>
+														</div>
+														<div class="panel1 ">
+															<div class="circle">
+																<span><img style="height:35px;width:30px;margin-top: 7px; " src="http://www.clker.com/cliparts/3/V/U/m/W/U/admin-button-icon-md.png">
+																	<p style="margin-left:39px;margin-top:-36px; color:#848f99;font-size:12px;">Assigned to</p> <br>
+																	<p style="margin-left:33px;margin-top:-42px; color:black;font-size:13px;" >{{user}}</p>
+																</span>
+															</div>
+															<div class="circle1">
+																<span class="date">
+																	<input style="width: 74px;" type="text" id="datepicker1" placeholder="Start Date">
+																</span>
+															</div>
+															<div class="circle2">
+																<span class="date">
+																	<input style="width: 84px;" type="text" id="datepicker2" placeholder="Due Date">
+																</span>
+															</div>
+															<i style="margin-top: -69px;margin-left: 136px;" class="icon-calendar"></i>
+															<i style="margin-top: -69px;margin-left: 100px;" class="icon-calendar"></i>
+															
+															<textarea rows="4" cols="4" id="camp_desc" class="form-control" placeholder="Description"></textarea>
+														</div>
+														<div class="panel1 view_more">
+															<button class="btn bg-teal legitRipple " id="specs_data" camp_id="" data-toggle="modal"
+															data-target="#modal_large" style=> View More</button>
+														</div>
+														<div class="panel1">
+															<ul id="chat_box" class="media-list chat-list content-group">
+
+															</ul>
+														</div>
+													</div>
+													<div class="panel-footer">
+														<div class="row">
+															<form method="post" id="send_msg">
+																{% csrf_token %}
+																<div class="col-md-9 text-right">
+																	<ul class="dropdown-menu1" id="vendor_list">
+																		<li><a href="#"><input type="checkbox" id="allcheck" value="0" />All</a></li>
+																		{% for vendor in vendor_list %}
+																		<li><a href="#"><input type="checkbox" name="vendor_names" class="vendor_names" value="{{vendor.id}}" />
+																				{{vendor.vendor_name}}</a></li>
+																		{%endfor%}
+																		<li><a href="#"><input type="checkbox" name="vendor_names" class="vendor_names" value="3" />Superadmin</a></li>
+																	</ul>
+																	<input type="text" name="message" id="message" class="form-control" onkeyup=" return key_check(this.value)"
+																		required placeholder="Enter your message..." />
+                                                                    <input type="hidden" name="camp_id" id="camp_id" value="{{camp.id}}" />
+                                                                    <input type="hidden" name="client_id" id="client_id" value="{{client_id}}" />
+																	<input type="hidden" name="sender_id" id="sender_id" value="{{sender_id}}" />
+
+																</div>
+																<div class="col-md-2 text-right">
+																	<button type="submit" class="btn btn-primary"><b><i class="icon-circle-right2"></i></b> Send</button>
+																</div>
+															</form>
+														</div>
+													</div>
+												</div>
+											</div>
+											<!-- <div class="panel panel-default">
+												<div class="panel-heading">
+													<h5 class="panel-title">
+														<a data-toggle="collapse" data-parent="#accordion" href="#collapse2">
+															Chat</a>
+													</h5>
+												</div>
+												<div id="collapse2" class="panel-collapse collapse in">
+													<div class="panel-body side_tab chat_panel">
+														
+													</div>
+													
+
+												</div>
+
+											</div> -->
+										</div>
+
+  </div>
+</div>
+<!--aseets model Start-->
+   <div class="modal fade" id="myModal" role="dialog">
+     <div class="modal-dialog " style="margin-top: 125px;">
+       <div class="modal-content">
+         <div class="modal-header">
+         </div>
+            <div class="modal-body">
+             <form action="/client/asset_submit/" method="post">
+                {% csrf_token %}
+             <label class="label1">Assets Name :</label><input type="text" name="assets" required=""><br>
+               
+                 <label class="label1">Type of Assets :</label>
+
+                            
+               <input type="label" class="shadow show_camp" id="assets" name="assets"  style="width:25%;height:30px; color:#000000;">  
+                            
+              
+               <input type="file" class="custom-file-input"style="margin-left: 310px;margin-top: -33px;" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01"><br>
+            
+
+               <label class="label1">Sponsers:</label><input type="text" name="sponsers"><br>
+               <label class="label1" style="width: 150px;">Asset distributor :</label><input type="text" name="assset_dist"><br>
+               <label class="label1">Add assets link :</label><input type="text" name="add_assets">
+            </div>
+         <div class="modal-footer">
+               <button type="submit" class="btn btn-primary legitRipple pull-right">Submit<span class="legitRipple-ripple"></span></button>
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+        </form>
+       </div>
+     </div>
+   </div>
+   <!-- Large modal -->
+					<div id="modal_large" class="modal fade">
+						<div class="modal-dialog modal-lg">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+									<h5 class="modal-title">Campaign Specs</h5>
+								</div>
+							</section>
+
+
+
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<!--aseets model Start-->
+		<div class="modal fade" id="myModal" role="dialog">
+			<div class="modal-dialog " style="margin-top: 125px;">
+				<div class="modal-content">
+					<div class="modal-header">
+					</div>
+					<div class="modal-body">
+						<label class="label1">Assets Name :</label><input type="text" name=""><br>
+						<label class="label1">Type of Assets :</label>
+						<select style="width:25%;height:30px; color:#000000;">
+							<option value="E-Books">E-Books</option>
+							<option value="White Paper">White Paper</option>
+							<option value="NewsLetter">NewsLetter</option>
+							<option value="Guides">Guides</option>
+						</select>
+						<input type="file" class="custom-file-input" style="margin-left: 310px;margin-top: -33px;" id="inputGroupFile01"
+						 aria-describedby="inputGroupFileAddon01"><br>
+						<label class="label1">Sponsers:</label><input type="text" name=""><br>
+						<label class="label1" style="width: 150px;">Asset distributor :</label><input type="text" name=""><br>
+						<label class="label1">Add assets link :</label><input type="text" name="">
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Large modal -->
+		<div id="modal_large" class="modal fade">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h5 class="modal-title">Campaign Specs</h5>
+					</div>
+
+					<div class="modal-body">
+						<div class="row">
+
+							<div class="col-md-6">
+
+								<div class="col-sm-12">
+									<div class="form-group">
+										<label class="control-label col-lg-5 text-semibold">Target Quntity</label>
+										<div class="col-lg-7">
+											<div class="row">
+												<div class="col-md-12">
+													<input type="text" name="target_quantity" id='target_quantity' class="form-control " placeholder="text"
+													 required>
+													<span class="help-block"></span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-12">
+									<div class="form-group">
+										<label class="control-label col-lg-5 text-semibold">Campaign Type</label>
+										<div class="col-lg-7">
+											<div class="row">
+												<div class="col-md-12">
+													<input type="text" name="campaign_type" id="campaign_type" class="form-control " placeholder="text"
+													 required>
+													<span class="help-block"></span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-12">
+									<div class="form-group">
+										<label class="control-label col-lg-5 text-semibold">Outrich method</label>
+										<div class="col-lg-7">
+											<div class="row">
+												<div class="col-md-12">
+													<input type="text" name="outrich_method" id="outrich_method" class="form-control " placeholder="text"
+													 required>
+													<span class="help-block"></span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="col-sm-12">
+									<div class="form-group">
+										<label class="control-label col-lg-5 text-semibold">Assets</label>
+										<div class="col-lg-7">
+											<div class="row">
+												<div class="col-md-12">
+													<input type="text" name="assets" id="assets" class="form-control " placeholder="text" required>
+													<span class="help-block"></span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-sm-12">
+									<div class="form-group">
+										<label class="control-label col-lg-5 text-semibold">Delivery Methods</label>
+										<div class="col-lg-7">
+											<div class="row">
+												<div class="col-md-12">
+													<input type="text" name="delivery_method" id="delivery_method" class="form-control " placeholder="text"
+													 required>
+													<span class="help-block"></span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-12">
+									<div class="form-group">
+										<label class="control-label col-lg-5 text-semibold">Company Size</label>
+										<div class="col-lg-7">
+											<div class="row">
+												<div class="col-md-12">
+													<input type="text" name="company_size" id="company_size" class="form-control " placeholder="text" required>
+													<span class="help-block"></span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="col-sm-12">
+									<div class="form-group">
+										<label class="control-label col-lg-5 text-semibold">Indursty Type</label>
+										<div class="col-lg-7">
+											<div class="row">
+												<div class="col-md-12">
+													<input type="text" name="indursty_type" id="indursty_type" class="form-control " placeholder="text"
+													 required>
+													<span class="help-block"></span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-sm-12">
+									<div class="form-group">
+										<label class="control-label col-lg-5 text-semibold">Job title</label>
+										<div class="col-lg-7">
+											<div class="row">
+												<div class="col-md-12">
+													<input type="text" name="job_title" id="job_title" class="form-control " placeholder="text" required>
+													<span class="help-block"></span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-12">
+									<div class="form-group">
+										<label class="control-label col-lg-5 text-semibold">Job level</label>
+										<div class="col-lg-7">
+											<div class="row">
+												<div class="col-md-12">
+													<input type="text" name="job_level" id="job_level" class="form-control " placeholder="text" required>
+													<span class="help-block"></span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+							</div>
+							<div class="col-md-6">
+								<div class="col-sm-12">
+									<div class="form-group">
+										<label class="control-label col-lg-5 text-semibold">Country</label>
+										<div class="col-lg-7">
+											<div class="row">
+												<div class="col-md-12">
+													<input type="text" name="country" id="country" class="form-control " placeholder="text" required>
+													<span class="help-block"></span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-12">
+									<div class="form-group">
+										<label class="control-label col-lg-5 text-semibold">Pacing</label>
+										<div class="col-lg-7">
+											<div class="row">
+												<div class="col-md-12">
+													<input type="text" name="pacing" id="pacing" class="form-control " placeholder="text" required>
+													<span class="help-block"></span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-12">
+									<div class="form-group">
+										<label class="control-label col-lg-5 text-semibold">Data Field</label>
+										<div class="col-lg-7">
+											<div class="row">
+												<div class="col-md-12">
+													<textarea id="data_field" class="form-control "></textarea>
+
+													<span class="help-block"></span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+
+
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /large modal -->
+		<!--aseets model end-->
+		<!-- /content area -->
+
+		<!--this script use to Change the size of Div-->
+		{% include "campaign/vendor_campaign_notebook_js.html" %}
+		{% include "campaign_chat/js/vendor_chatjs.html"%}
+
+		{% endblock %}

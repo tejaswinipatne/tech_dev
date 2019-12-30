@@ -1,0 +1,266 @@
+{% extends "header/vendorportalheader.html" %}
+
+  {% block scripts %}
+      {% include "leads/leadlisthead.html" %}
+  {% endblock %}
+
+  {% block scripts1 %}
+      {% include "leads/leadlist.css" %}
+  {% endblock%}
+{% block content %}
+<!-- Main sidebar -->
+  {% include "side/clientvendorside.html" %} 
+
+
+    <!-- Main content -->
+            <div class="content-wrapper">
+
+
+ 
+
+                <!-- Content area -->
+                <div class="content">
+                    <div class="row">
+                    <!-- Top Clients List -->
+                    <div class="panel panel-height panel-flat">
+                        <div class="panel-heading">
+                                <h1 class="panel-title">Test
+                                <button type="button" id="databtn" class="btn btn-filter-tb btn-labeled pull-right" >
+                                    <b><span id ="filter_icon" class="glyphicon glyphicon-filter"></span></b>
+                                     Filter
+                                </button>
+                            </h1>
+                        </div>
+                             <div class="table-responsive-sm">
+                            <table class="table datatable-column-search-inputs  DataTables" id="example">
+                                <thead>
+                                    <tr>
+                                        <th>Company Name</th>
+                                        <th>Prospect Name</th>
+                                        <th>Email</th>
+                                        <th>Company Website</th>
+                                        <th>Status</th>
+                                        <th>Submitted Date</th>
+                                        <th class="text-center">Actions</th>
+
+                                    </tr>
+                                </thead>
+                                <tfoot id='datatfootfilter'>
+                                    <tr>
+
+                                        <td rowspan="1" colspan="1">
+                                            <input type="text" class="form-control input-sm" placeholder="Search Company">
+                                        </td>
+
+                                        <td rowspan="1" colspan="1">
+                                            <input type="text" class="form-control input-sm" placeholder="Search Person">
+                                        </td>
+
+                                        <td rowspan="1" colspan="1">
+                                            <input type="text" class="form-control input-sm" placeholder="Search Category">
+                                        </td>
+
+                                        <td rowspan="1" colspan="1">
+                                            <input type="text" class="form-control input-sm" placeholder="Search Type">
+                                        </td>
+
+                                        <td rowspan="1" colspan="1">
+                                            <input type="text" class="form-control input-sm" placeholder="Search Billing">
+                                        </td>
+
+                                        <td rowspan="1" colspan="1">
+                                            <input type="text" class="form-control input-sm" placeholder="Search Billing">
+                                        </td>
+
+
+                                        <td rowspan="1" colspan="1"></td>
+
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                    <tr>
+                                        <td>Comp1</td>
+                                        <td>Pros1</td>
+                                        <td>bob@techconnectr.com</td>
+                                        <td>www.techconnectr.com</td>
+                                        <td><span class="label label-info">Approved</span></td>
+                                        <td>30/08/2018</td>
+                                         <td class="text-center">
+                                            <ul class="icons-list" style="display:none">
+                                            <li class="dropdown">
+                                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                                    <i class="icon-menu9"></i>
+                                                </a>
+
+                                                <ul class="dropdown-menu dropdown-menu-right">
+                                                    <li><a href="#" id="on_boarding" onclick="openModal()">Upload Lead File</a></li>
+                                                    <li><a href="#" class="abhi">Pause</a></li>
+                                                    <li><a href="#" class="abhi1">Complete</a></li>
+
+                                                    <li><a href="#" class="abhi2">Questions/Suggestions</a></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                   </tr>
+
+
+                                  <tr>
+                                        <td>Comp2</td>
+                                        <td>Pros1</td>
+                                        <td>bob@techconnectr.com</td>
+                                        <td>www.techconnectr.com</td>
+                                        <td><span class="label label-warning">Dispute</span></td>
+                                        <td>30/08/2018</td>
+                                         <td class="text-center">
+                                            <ul class="icons-list">
+                                            <li class="dropdown">
+                                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                                    <i class="icon-menu9"></i>
+                                                </a>
+
+                                                <ul class="dropdown-menu dropdown-menu-right">
+                                                    <li><a href="#">Replace Lead</a></li>
+                                                    <li><a href="#">Credit</a></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                   </tr>
+
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                    <!-- /highlighting rows and columns -->
+
+
+
+
+
+                    <!-- Footer -->
+                    <div class="footer text-muted" style="display: none;">
+                        &copy; 2018. <a href="#">Trigensoft</a> by <a href="Trigensoft.com" target="_blank">Eugene Kopyov</a>
+                    </div>
+                    <!-- /footer -->
+                </div>
+                </div>
+                <!-- /content area -->
+
+            </div>
+            <!-- /main content -->
+
+        </div>
+        <!-- /page content -->
+
+    </div>
+    <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" onclick="closeModel()"  class="close" >&times;</button>
+          <h4 class="modal-title">Upload Lead File</h4>
+        </div>
+        <div class="modal-body" >
+                <div id="home" >
+
+                        <div class="panel panel-flat">
+                            <form class="form-horizontal" action="#">
+                                <fieldset class="content-group">
+                                    <div class="form-group" id="margin5" >
+                                        <div class="col-lg-12">
+
+                                    <table class='table'>
+                                    <thead>
+                                    <th>Test 1</th>
+                                    <th><span class="label label-info">Completed</span></th>
+                                    <th>30 Leads Submitted</th>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                    </table>
+
+                                          <p>There are two ways to upload lead file</p>
+                                          <p> <li>Bulk Upload: upload with csv or excel files</li></p>
+                                          <p> <li>Manual Upload: Fill form manually</li></p>
+
+                                        </div>
+                                    </div>
+                                    <center>
+                                <div class="form-group" id="paddingleft20">
+                                    <div class="col-lg-3">
+                                <div class="btn-group btn-justified">
+                                        <div class="btn-group">
+                                        <a href="vendor_manualupload.html" data-popup="tooltip" title="Manualupload" data-placement="left"><button type="button" class="btn bg-primary">+</button></a>
+                                    </div>
+
+                                    <div class="btn-group">
+                                        <a href="vendor_bulkupload.html" data-popup="tooltip" title="Bulkupload" data-placement="right"><button type="button" class="btn bg-primary">Import</button></a>
+                                    </div>
+
+
+
+
+                                </div>
+                                </div>
+
+                                </fieldset>
+                            </form>
+                        </div>
+                       </div>
+                    </div>
+</div>
+</div>
+</div>
+</div>
+    <!-- /page container -->
+<div id="modal_iconified" class="modal fade">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h5 class="modal-title">History</h5>
+                                    <hr>
+                                </div>
+
+                                <div class="modal-body">
+
+                                    <div class="row">
+                                        <table class="table datatable-show-all">
+                                            <thead>
+                                                <tr>
+                                                    <th>Sr No.</th>
+                                                    <th>Date</th>
+                                                    <th>Time</th>
+                                                    <th>Activity</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                <td>1</td>
+                                                <td>16-May-2018</td>
+                                                <td>5:24 PM</td>
+                                                <td>Project Started</td>
+                                                </tr>
+                                                 <tr>
+                                                <td>2</td>
+                                                <td>17-May-2018</td>
+                                                <td>5:24 PM</td>
+                                                <td>Project Completed</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button class="btn btn-link" data-dismiss="modal"><i class="icon-cross"></i> Close</button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% include "leads/leadlistjs.html" %}
+                    {% endblock %}

@@ -1,0 +1,1992 @@
+{% extends "common/base.html" %}
+
+{% load static %}
+
+{% load custom_filters %}
+
+{% load widget_tweaks %}
+
+{% block title %} Create Campaign {% endblock %}
+
+<!--
+    page code must be start in block content
+    inside block content
+-->
+
+{% block content %}
+
+<!-- Main content -->
+<div class="content-wrapper">
+
+    <!-- Content area -->
+    <div class="content">
+
+        <!-- hidden values used globally -->
+        <!-- cmaign id -->
+        <input type="hidden" id="id_campaign" value="{{ campaign.id }}" />
+        <input type="hidden" id="url_add_selected_component" value="{% url 'save_selected_components' %}" />
+
+        <input type="hidden" id="url_remove_selected_component" value="{% url 'remove_selected_component' %}" />
+        <input type="hidden" id="link_save_text_mapping" value="/client/save_alternative_text" />
+        <input type="hidden" id="link_save_lead_limitation" value="/client/save_lead_limit_cmp" />
+
+        <input type="hidden" id="link_save_volume_and_cpl" value="{% url 'save_volume_and_cpl' %}" />
+        <input type="hidden" id="link_delete_volume_and_cpl" value="{% url 'delete_volume_and_cpl' %}" />
+
+        <input type="hidden" id="link_add_set_as_default" value="{% url 'add_default' %}" />
+        <input type="hidden" id="link_remove_set_as_default" value="{% url 'remove_default' %}" />
+
+        <input type="hidden" id="data_useAsTxtMapping" value="{{ useAsTxtMapping }}" />
+        <input type="hidden" id="data_set_as_defaults" value="{{ set_as_defaults }}" />
+
+        <!--
+        ################# notes #######################
+        * div with class 'component_data' must have same name with hidden model field
+          inside checkbox_container class div.
+        * Also field name in 'Component List' and SetAsDefault table must have
+          same field that match inside models of campaign
+        * ex :
+            - component_data has id 'pacing'
+            - <input type="hidden" class="save_data" name="pacing" id="id_{{field_name}}" value="id_pacing" />
+            - Component Lists table has 'invoke_div' value must be 'pacing'
+            - Set as Defaults table field name must be 'pacing'
+    -->
+
+        <form method="post" id="form_save_campaign_data" class="hidden">
+            {% csrf_token %}
+            <input type="hidden" name="campaign" id="id_camapaign" value="{{ campaign.id }}" />
+            <div class="new_fields_holder">
+                <!-- append new fields at save time and remove after ajax call end-->
+            </div>
+        </form>
+
+        <div class="row">
+            <div id="kaban">
+                <div id="scroller">
+                    <div id="boards">
+                        <!-- drag area-->
+                        <div class="pull-right  col-md-4 col-sm-12">
+                            <div class="panel panel-height panel-flat">
+                                <!-- <div class="panel-heading text-center">
+                            <hp class="panel-title">Drag Specs from here</p>
+                        </div> -->
+                                <div class="panel-body">
+                                    <div>
+                                        <!--  boards -->
+                                        <div class="board" id="board2">
+                                            <header>Drag Specs from here</header>
+                                            <div class="cards" id="board-drag">
+                                                {% for component in component_list %}
+                                                {% if component.id|to_int not in selected_component_ids and component.is_default|to_int == 0 and component.invoke_div not in set_as_defaults %}
+                                                <div class="card {% if component.extra_css_class %}{{ component.extra_css_class }}{% endif %}"
+                                                    data-component-id="{{ component.id }}"
+                                                    data-invoke-div="{{ component.invoke_div }}"
+                                                    data-is-user-set-default="{% if component.invoke_div in set_as_defaults%}True{% else %}False{% endif %}"
+                                                    data-position="{{ component.position }}">
+                                                    <span class="component_label">{{ component.label }}</span>
+                                                </div>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                        <!--  /boards -->
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /drag area-->
+
+                        <!-- <div class="loader loader-default is-active"></div> -->
+
+                        <!-- drop area-->
+                        <div class="panel panel-height panel-flat col-md-8 col-sm-12">
+                            <!--
+                        <div class="panel-heading text-center">
+                            <p class="panel-title">Selected Specs</p>
+                        </div>
+                        -->
+                            <div class="panel-body">
+                                <!--  boards -->
+                                <div class="board" id="board3">
+                                    <header>Selected Specs for campaign {{campaign}}</header>
+                                    <div class="cards p-15" id="board-drop">
+                                        <!-- show default or set as default selected fields-->
+                                        {% for component in component_list %}
+                                        {% if component.is_default|to_int == 1 or component.invoke_div in set_as_defaults %}
+                                        <div class="card" data-component-id="{{ component.id }}"
+                                            data-invoke-div="{{ component.invoke_div }}"
+                                            data-is-user-set-default="{% if component.invoke_div in set_as_defaults%}True{% else %}False{% endif %}"
+                                            data-position="{{ component.position }}">
+                                            <span class="component_label">&nbsp;{{ component.label }}</span>
+                                        </div>
+                                        {% endif %}
+                                        {% endfor %}
+
+
+                                        {% for selected_component in selected_component_list%}
+                                        {% if selected_component.component.invoke_div not in set_as_defaults %}
+                                        <div class="card {% if selected_component.component.extra_css_class %}{{ selected_component.component.extra_css_class }}{% endif %}"
+                                            data-invoke-div="{{ selected_component.component.invoke_div }}"
+                                            data-component-id="{{ selected_component.component.id }}"
+                                            data-is-user-set-default="{% if component.invoke_div in set_as_defaults%}True{% else %}False{% endif %}"
+                                            data-position="{{ selected_component.component.position }}">
+                                            <span class="component_label">&nbsp;{{ selected_component.component.label }}
+                                            </span>
+                                        </div>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <!--  /boards -->
+
+                            </div>
+
+                            <div class="panel-body">
+                                <a id="link_change_campaign_status"
+                                    href="{% url 'change_campaign_status' campaign.id %}"></a>
+                                <button id="btn_change_campaign_status" type="button" class="btn btn-primary">
+                                    Submit
+                                </button>
+                            </div>
+                        </div>
+                        <!-- /drop area-->
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- store component data inside holder -->
+            <div id="component-data-holder" class="hidden">
+
+                <!-- product category-->
+                <div id="product_category" class="component_data">
+                    <article class="beefup">
+                        <h6 class="panel-title beefup__head"><span>Select Product Categories</span>
+                            <button type="button" class="close remove_component">×</button>
+                        </h6>
+                        <div class="beefup__body">
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 mb-5 mt-5">
+                                    <div class="radio display-inline-block">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chk_bx_select_all"
+                                            type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Select All</label>
+                                    </div>
+                                    <div class="radio pull-right">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chkbx_use_as_txt"
+                                            data-parent="beefup__body" type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Use as Text</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group checkbox_container">
+                                {% with field_name='campaign_category' default_checked_value=specification.campaign_category|split %}
+                                <input type="hidden" class="save_data" name="campaign_category"
+                                    id="id_campaign_category" value="{{ default_checked_value }}" />
+                                <input type="hidden" class="url_holder_save_data"
+                                    value="{% url 'save_specifications' %}" />
+
+                                <table class="table table-hover">
+                                    <tbody>
+                                        {% for name in campaign_category %} {% if name != "---------" %}
+                                        <tr>
+                                            <td>
+                                                <div class="radio ml-10" data-txt="{{ name }}">
+                                                    <input id="{{ field_name }}{{ forloop.counter }}"
+                                                        name="{{ field_name }}[]" data-txt="{{ name }}"
+                                                        value="{{ name }}" type="checkbox"
+                                                        {% if name|lower in default_checked_value|lower %} checked
+                                                        {% endif %} />
+
+                                                    <label for="{{ field_name }}{{ forloop.counter }}"
+                                                        class="lbl">{{ name }}</label>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <!-- set data-txt attribute inside above lable to get original text in jquery -->
+                                                <input type='text'
+                                                    class="form-control-inline {% if not name|ifinlist_dict:useAsTxtMapping %}hidden{% endif %} pull-right txtbx_use_as_txt"
+                                                    value='{{ name|alter_txt:useAsTxtMapping }}'>
+                                            </td>
+                                        </tr>
+                                        {% endif %} {% endfor %}
+                                    </tbody>
+                                </table>
+                                {% endwith %}
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 mb-5 mt-5">
+                                    <div class="radio pull-right">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chk_bx_set_default"
+                                            data-parent="beefup__body" type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Set as Default</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </article>
+                </div>
+                <!-- /product category-->
+
+                <!-- target quantity -->
+                <div id="target_quantity" class="component_data">
+                    <article class="beefup">
+                        <h6 class="panel-title beefup__head"><span>Select Target Quantity</span>
+                            <button type="button" class="close remove_component">×</button>
+                        </h6>
+                        <div class="beefup__body">
+                            <div class="form-group checkbox_container">
+                                <input class="form-control save_data" name="campaign_quantity" id="id_campaign_quantity"
+                                    type="number" value="{{ specification.campaign_quantity }}">
+                                <input type="hidden" class="url_holder_save_data"
+                                    value="{% url 'save_specifications' %}" />
+
+                            </div>
+                        </div>
+                    </article>
+                </div>
+                <!-- /target quantity -->
+
+                <!-- select pacing -->
+                <div id="campaign_pacing" class="component_data">
+                    <article class="beefup">
+                        <h6 class="panel-title beefup__head">
+                            <span>Select Pacing</span>
+                            <button type="button" class="close remove_component">×</button>
+                        </h6>
+                        <div class="beefup__body">
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 mb-5 mt-5">
+                                    <div class="radio display-inline-block">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chk_bx_select_all"
+                                            type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Select All</label>
+                                    </div>
+                                    <div class="radio pull-right">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chkbx_use_as_txt"
+                                            data-parent="beefup__body" type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Use as Text</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group checkbox_container">
+                                {% with field_name='campaign_pacing' default_checked_value=specification.campaign_pacing %}
+                                <input type="hidden" class="save_data" name="campaign_pacing" id="id_campaign_pacing"
+                                    value="{{ default_checked_value }}" />
+                                <input type="hidden" class="url_holder_save_data"
+                                    value="{% url 'save_specifications' %}" />
+
+                                <table class="table table-hover">
+                                    <tbody>
+                                        {% for name in campaign_pacing %}
+                                        {% if name != "---------" %}
+                                        <tr>
+                                            <td>
+                                                <div class="radio ml-10" data-txt="{{ name }}">
+                                                    <input id="{{ field_name }}{{ forloop.counter }}"
+                                                        name="{{ field_name }}[]" data-txt="{{ name }}"
+                                                        value="{{ name }}" type="checkbox"
+                                                        {% if name|lower in default_checked_value|lower %} checked
+                                                        {% endif %} />
+
+                                                    <label for="{{ field_name }}{{ forloop.counter }}"
+                                                        class="lbl">{{ name }}</label>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <!-- set data-txt attribute inside above lable to get original text in jquery -->
+                                                <input type='text'
+                                                    class="form-control-inline {% if not name|ifinlist_dict:useAsTxtMapping %}hidden{% endif %} pull-right txtbx_use_as_txt"
+                                                    value='{{ name|alter_txt:useAsTxtMapping }}'>
+                                            </td>
+                                        </tr>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                {% endwith %}
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 mb-5 mt-5">
+                                    <div class="radio pull-right">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chk_bx_set_default"
+                                            data-parent="beefup__body" type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Set as Default</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </article>
+                </div>
+                <!-- /select pacing -->
+
+                <!-- select touchbase meeting -->
+                <div id="touchbase_meeting" class="component_data">
+                    <article class="beefup">
+                        <h6 class="panel-title beefup__head">
+                            <span>Select Touchbase Meeting</span>
+                            <button type="button" class="close remove_component">×</button>
+                        </h6>
+                        <div class="beefup__body">
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 mb-5 mt-5">
+                                    <div class="radio display-inline-block">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chk_bx_select_all"
+                                            type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Select All</label>
+                                    </div>
+                                    <div class="radio pull-right">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chkbx_use_as_txt"
+                                            data-parent="beefup__body" type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Use as Text</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group checkbox_container">
+                                {% with field_name='touchbase_meeting' default_checked_value=specification.touchbase_meeting %}
+                                <input type="hidden" class="save_data" name="touchbase_meeting"
+                                    id="id_touchbase_meeting" value="{{ default_checked_value}}" />
+                                <input type="hidden" class="url_holder_save_data"
+                                    value="{% url 'save_specifications' %}" />
+
+                                <table class="table table-hover">
+                                    <tbody>
+                                        {% for name in days %} {% if name != "---------" %}
+                                        <tr>
+                                            <td>
+                                                <div class="radio ml-10" data-txt="{{ name }}">
+                                                    <input id="{{ field_name }}{{ forloop.counter }}"
+                                                        name="{{ field_name }}[]" data-txt="{{ name }}"
+                                                        value="{{ name }}" type="checkbox"
+                                                        {% if name|lower in default_checked_value|lower %} checked
+                                                        {% endif %} />
+
+                                                    <label for="{{ field_name }}{{ forloop.counter }}"
+                                                        class="lbl">{{ name }}</label>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <!-- set data-txt attribute inside above lable to get original text in jquery -->
+                                                <input type='text'
+                                                    class="form-control-inline {% if not name|ifinlist_dict:useAsTxtMapping %}hidden{% endif %} pull-right txtbx_use_as_txt"
+                                                    onkeypress="return (event.charCode > 64 &&
+                                            event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)"
+                                                    value='{{ name|alter_txt:useAsTxtMapping }}'>
+                                            </td>
+                                        </tr>
+                                        {% endif %} {% endfor %}
+                                    </tbody>
+                                </table>
+                                {% endwith %}
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 mb-5 mt-5">
+                                    <div class="radio pull-right">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chk_bx_set_default"
+                                            data-parent="beefup__body" type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Set as Default</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </article>
+                </div>
+                <!-- /select touchbase meeting -->
+
+                <!-- account based marketing -->
+                <div id="account_based_marketing" class="component_data">
+                    <article class="beefup">
+                        <h6 class="panel-title beefup__head">
+                            <span>Account Based Marketing</span>
+                            <button type="button" class="close remove_component">×</button>
+                        </h6>
+                        <div class="beefup__body">
+                            <div class="form-group checkbox_container">
+                                <p>Note: The target account list must contain 5x the number of leads you want to
+                                    generate. By uploading a target account list, you will not be able to select a
+                                    company size or industry filter.
+                                    <a href="/media/abm_template/ABM_TEMPLATE.csv" download>download template</a>
+                                </p>
+                            </div>
+
+                            <div class="mt-20">
+
+                                <div>
+                                    <p>
+                                        Upload Company ABM List:
+                                    </p>
+
+                                    <div class="previous_selected_file mb-5">
+                                        {% if specification.abm_company_file %}
+                                        <span>Currently selected :</span>
+                                        <a href="{{ specification.abm_company_file.url }}" target="_blank">
+                                            {{ specification.abm_company_file.name }}
+                                        </a>
+                                        {% endif %}
+                                    </div>
+
+                                    <!-- FORM-->
+                                    <form method="post" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        <input type="file" accept=".csv" name="abm_company_file"
+                                            data-url-save-data="{% url 'upload_single_file' %}"
+                                            id="button_abm_company_list" class="file-styled-primary data_file">
+                                    </form>
+                                    <!-- /FORM-->
+                                </div>
+                                <div class="mt-20">
+                                    <!-- <p>
+                                    Upload Contact ABM List:
+                                </p> -->
+
+                                    <!-- <div class="previous_selected_file mb-5">
+                                    {% if specification.abm_contact_file %}
+                                        <span>Currently selected :</span>
+                                        <a href="{{ specification.abm_contact_file.url }}" target="_blank">
+                                        {{ specification.abm_contact_file.name }}
+                                        </a>
+                                    {% endif %}
+                                </div> -->
+
+                                    <!-- <form method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                    <input type="file" name="abm_contact_file"
+                                        data-url-save-data="{% url 'upload_single_file' %}"
+                                        id="button_abm_contact_list"
+                                        class="file-styled-primary data_file">
+                                </form> -->
+                                </div>
+                                </form>
+                            </div>
+
+                        </div>
+                    </article>
+                </div>
+                <!-- /account based marketing -->
+
+                <!-- account suppression -->
+                <div id="account_supression" class="component_data">
+                    <article class="beefup">
+                        <h6 class="panel-title beefup__head">
+                            <span>Account Suppression</span>
+                            <button type="button" class="close remove_component">×</button>
+                        </h6>
+                        <div class="beefup__body">
+                            <div class="form-group checkbox_container">
+                                <p>Note: The account suppression list may contain a maximum of 100 companies.
+                                    <a href="/media/abm_template/suppression_TEMPLATE.csv" download>download
+                                        template</a>
+                                </p>
+
+                                <div class="mt-20">
+                                    <div>
+                                        <p>
+                                            Upload Company Supression List:
+                                        </p>
+
+                                        <div class="previous_selected_file mb-5">
+                                            {% if specification.suppression_company_file %}
+                                            <span>Currently selected :</span>
+                                            <a href="{{ specification.suppression_company_file.url }}" target="_blank">
+                                                {{ specification.suppression_company_file.name }}
+                                            </a>
+                                            {% endif %}
+                                        </div>
+
+                                        <!-- FORM-->
+                                        <form method="post" enctype="multipart/form-data">
+                                            {% csrf_token %}
+                                            <input type="file" accept=".csv" name="suppression_company_file"
+                                                data-url-save-data="{% url 'upload_single_file' %}"
+                                                id="id_suppression_company_file" class="file-styled-primary data_file">
+                                        </form>
+                                        <!-- /FORM-->
+                                    </div>
+                                    <div class="mt-20" style="display:none">
+                                        <p>
+                                            Upload Contact Supression List:
+                                        </p>
+
+                                        <div class="previous_selected_file mb-5">
+                                            {% if specification.suppression_contact_file %}
+                                            <span>Currently selected :</span>
+                                            <a href="{{ specification.suppression_contact_file.url }}" target="_blank">
+                                                {{ specification.suppression_contact_file.name }}
+                                            </a>
+                                            {% endif %}
+                                        </div>
+
+
+                                        <!-- FORM-->
+                                        <form method="post" enctype="multipart/form-data">
+                                            {% csrf_token %}
+                                            <input type="file" name="suppression_contact_file"
+                                                data-url-save-data="{% url 'upload_single_file' %}"
+                                                id="id_suppression_contact_file" class="file-styled-primary data_file">
+                                        </form>
+                                        <!-- /FORM-->
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </article>
+                </div>
+                <!-- /account supression -->
+
+                <!-- select industry type -->
+                <div id="industry_type" class="component_data">
+                    <article class="beefup">
+                        <h6 class="panel-title beefup__head">
+                            <span class="tipso" data-tipso="Industry Type">Select Industry</span>
+                        </h6>
+                        <div class="beefup__body">
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 mb-5 mt-5">
+                                    <div class="radio display-inline-block">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chk_bx_select_all"
+                                            type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Select All</label>
+                                    </div>
+                                    <div class="radio pull-right">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chkbx_use_as_txt"
+                                            data-parent="beefup__body" type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Use as Text</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group checkbox_container">
+                                {% with field_name='industry_type' default_checked_value=mapping.industry_type %}
+                                <input type="hidden" class="save_data" name="{{ field_name }}" id="id_{{field_name}}"
+                                    value="{{ default_checked_value}}" />
+                                <input type="hidden" class="url_holder_save_data" value="{% url 'save_mapping' %}" />
+
+                                <div class="table_scroller">
+                                    <table class="table table-hover">
+                                        <tbody>
+                                            {% for name in industry_types %}
+                                            {% if name != "---------" %}
+                                            <tr>
+                                                <td>
+                                                    <div class="radio ml-10" data-txt="{{ name }}">
+                                                        <input id="{{ field_name }}{{ forloop.counter }}"
+                                                            name="{{ field_name }}[]" data-txt="{{ name }}"
+                                                            value="{{ name }}" type="checkbox"
+                                                            {% if name|lower in default_checked_value|lower %} checked
+                                                            {% endif %} />
+
+                                                        <label for="{{ field_name }}{{ forloop.counter }}"
+                                                            class="lbl">{{ name }}</label>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <!-- set data-txt attribute inside above lable to get original text in jquery -->
+                                                    <input type='text'
+                                                        class="form-control-inline mr-10 {% if not name|ifinlist_dict:useAsTxtMapping %}hidden{% endif %} pull-right txtbx_use_as_txt"
+                                                        value='{{ name|alter_txt:useAsTxtMapping }}'>
+                                                </td>
+                                            </tr>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {% endwith %}
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 mb-5 mt-5">
+                                    <div class="radio pull-right">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chk_bx_set_default"
+                                            data-parent="beefup__body" type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Set as Default</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </article>
+                </div>
+                <!-- /select industry type -->
+
+                <!-- Textbox job title -->
+                <div id="job_title" class="component_data">
+                    <article class="beefup">
+                        <h6 class="panel-title beefup__head">
+                            <span>Enter Your Job Title</span>
+                            <!--<button type="button" class="close remove_component">×</button>-->
+                        </h6>
+                        <div class="beefup__body">
+                            <div class="form-group checkbox_container">
+                                <input type="hidden" class="url_holder_save_data" value="{% url 'save_mapping' %}" />
+                                <textarea name="job_title" class="form-control save_data" id="id_job_title" rows="2"
+                                    cols="20">{{ mapping.job_title_function|default_if_none:'' }}</textarea>
+                            </div>
+                            <p>Note: Enter your job titles (Ex: HR, Developer, Testing, etc)</p>
+                        </div>
+                    </article>
+                </div>
+                <!-- /Textbox  job title -->
+
+                <!-- Textbox special instructions -->
+                <div id="special_instructions" class="component_data">
+                    <article class="beefup">
+                        <h6 class="panel-title beefup__head">
+                            <span>Enter Special Instructions</span>
+                            <button type="button" class="close remove_component">×</button>
+                        </h6>
+                        <div class="beefup__body">
+                            <div class="form-group checkbox_container">
+                                <input type="hidden" class="url_holder_save_data" value="{% url 'save_mapping' %}" />
+                                <textarea name="special_instructions" class="form-control save_data"
+                                    id="id_special_instructions" rows="2"
+                                    cols="20">{{ mapping.special_instructions|default_if_none:'' }}</textarea>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+                <!-- /Textbox  special instructions -->
+
+                <!-- Job Level -->
+                <div id="job_level" class="component_data">
+                    <article class="beefup">
+                        <h6 class="panel-title beefup__head">
+                            <span>Select Job Level</span>
+                            <!--<button type="button" class="close remove_component">×</button>-->
+                        </h6>
+                        <div class="beefup__body">
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 mb-5 mt-5">
+                                    <div class="radio display-inline-block">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chk_bx_select_all"
+                                            type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Select All</label>
+                                    </div>
+                                    <div class="radio pull-right">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chkbx_use_as_txt"
+                                            data-parent="beefup__body" type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Use as Text</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group checkbox_container">
+
+                                {% with field_name='job_level' default_checked_value=mapping.job_level %}
+                                <input type="hidden" class="save_data" name="{{field_name}}" id="id_{{field_name}}"
+                                    value="{{ default_checked_value}}" />
+                                <input type="hidden" class="url_holder_save_data" value="{% url 'save_mapping' %}" />
+                                <div class="table_scroller">
+                                    <table class="table table-hover">
+                                        <tbody>
+                                            {% for name in job_levels %}
+                                            {% if name != "---------" %}
+                                            <tr>
+                                                <td>
+                                                    <div class="radio ml-10" data-txt="{{ name }}">
+                                                        <input id="{{ field_name }}{{ forloop.counter }}"
+                                                            name="{{ field_name }}[]" data-txt="{{ name }}"
+                                                            value="{{ name }}" type="checkbox"
+                                                            {% if name|lower in default_checked_value|lower %} checked
+                                                            {% endif %} />
+
+                                                        <label for="{{ field_name }}{{ forloop.counter }}"
+                                                            class="lbl">{{ name }}</label>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <!-- set data-txt attribute inside above lable to get original text in jquery -->
+                                                    <input type='text'
+                                                        class="mr-10 form-control-inline {% if not name|ifinlist_dict:useAsTxtMapping %}hidden{% endif %} pull-right txtbx_use_as_txt"
+                                                        value='{{ name|alter_txt:useAsTxtMapping }}'>
+                                                </td>
+                                            </tr>
+                                            {% endif %} {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {% endwith %}
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 mb-5 mt-5">
+                                    <div class="radio pull-right">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chk_bx_set_default"
+                                            data-parent="beefup__body" type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Set as Default</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </article>
+                </div>
+                <!-- /Job Level -->
+
+                <!-- country -->
+                <div id="country" class="component_data">
+                    <article class="beefup">
+                        <h6 class="panel-title beefup__head">
+                            <span>Select Country</span>
+                            <!--<button type="button" class="close remove_component">×</button>-->
+                        </h6>
+                        <div class="beefup__body">
+                            <!-- Search form -->
+
+                            <div class="row  mb-15 mt-5">
+                                <div class="col-md-3 col-sm-3">
+                                    <div class="radio display-inline-block">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chk_bx_select_all"
+                                            type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Select All</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-5 col-sm-5">
+                                    <input class="form-control" id='search_country' onkeyup="myFunction()" type="text"
+                                        placeholder="Search Countries..." aria-label="Search">
+                                </div>
+                                <div class="col-md-4 col-sm-4">
+                                    <div class="radio pull-right">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chkbx_use_as_txt"
+                                            data-parent="beefup__body" type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Use as Text</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group checkbox_container">
+                                {% with field_name='country' default_checked_value=mapping.country %}
+                                <input type="hidden" class="save_data" name="{{field_name}}" id="id_{{field_name}}"
+                                    value="{{ default_checked_value}}" />
+                                <input type="hidden" class="url_holder_save_data" value="{% url 'save_mapping' %}" />
+                                <div class="searchError" style="display:none">Invalid search input</div>
+                                <div class="table_scroller">
+                                    <table class="table table-hover">
+                                        <tbody id='country_table'>
+
+                                            {% for region in region_list.all %}
+
+                                            <tr colspan='3'>
+                                                <td> <strong>{{region.name}}</strong></td>
+                                            </tr>
+                                            <tr>
+                                                {% for country in countries.all %}
+                                                {% if region.id == country.region_id %}
+                                                <td>
+
+                                                    <div class="radio ml-10" data-txt="{{ name }}">
+                                                        <input id="{{ field_name }}{{ forloop.counter }}"
+                                                            name="{{ field_name }}[]" data-txt="{{ country.name }}"
+                                                            value="{{ country.name }}" type="checkbox"
+                                                            {% if country.name|lower in default_checked_value|lower %}
+                                                            checked {% endif %} />
+
+                                                        <label for="{{ field_name }}{{ forloop.counter }}" id="lbl"
+                                                            class="lbl">{{ country.name }}</label>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <!-- set data-txt attribute inside above lable to get original text in jquery -->
+                                                    <input type='text'
+                                                        class="mr-10 form-control-inline {% if not name|ifinlist_dict:useAsTxtMapping %}hidden{% endif %} pull-right txtbx_use_as_txt"
+                                                        value='{{ name|alter_txt:useAsTxtMapping }}'>
+                                                </td>
+                                            </tr>
+
+                                            {% endif %}
+                                            {%endfor%}
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {% endwith %}
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 mb-5 mt-5">
+                                    <div class="radio pull-right">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chk_bx_set_default"
+                                            data-parent="beefup__body" type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Set as Default</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </article>
+                </div>
+                <!-- /country -->
+
+                <!-- company size -->
+                <div id="company_size" class="component_data">
+                    <article class="beefup">
+                        <h6 class="panel-title beefup__head">
+                            <!-- "Company Size" changed to "Employee Size" -->
+                            <span>Select Employee Size</span>
+                            <!--<button type="button" class="close remove_component">×</button>-->
+                        </h6>
+                        <div class="beefup__body">
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 mb-5 mt-5">
+                                    <div class="radio display-inline-block">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chk_bx_select_all"
+                                            type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Select All</label>
+                                    </div>
+                                    <div class="radio pull-right">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chkbx_use_as_txt"
+                                            data-parent="beefup__body" type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Use as Text</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group checkbox_container">
+                                {% with field_name='company_size' default_checked_value=mapping.company_size %}
+                                <input type="hidden" class="save_data" name="{{field_name}}" id="id_{{field_name}}"
+                                    value="{{ default_checked_value}}" />
+                                <input type="hidden" class="url_holder_save_data" value="{% url 'save_mapping' %}" />
+
+                                <div class="table_scroller">
+                                    <table class="table table-hover">
+                                        <tbody>
+                                            {% for name in company_sizes %} {% if name != "---------" %}
+                                            <tr>
+                                                <td>
+                                                    <div class="radio ml-10" data-txt="{{ name }}">
+                                                        <input id="{{ field_name }}{{ forloop.counter }}"
+                                                            name="{{ field_name }}[]" data-txt="{{ name }}"
+                                                            value="{{ name }}" type="checkbox"
+                                                            {% if name|lower in default_checked_value|lower %} checked
+                                                            {% endif %} />
+
+                                                        <label for="{{ field_name }}{{ forloop.counter }}"
+                                                            class="lbl">{{ name }}</label>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <!-- set data-txt attribute inside above lable to get original text in jquery -->
+                                                    <input type='text'
+                                                        class="form-control-inline {% if not name|ifinlist_dict:useAsTxtMapping %}hidden{% endif %} pull-right txtbx_use_as_txt"
+                                                        value='{{ name|alter_txt:useAsTxtMapping }}'>
+                                                </td>
+                                            </tr>
+                                            {% endif %} {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {% endwith %}
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 mb-5 mt-5">
+                                    <div class="radio pull-right">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chk_bx_set_default"
+                                            data-parent="beefup__body" type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Set as Default</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </article>
+                </div>
+                <!-- /company size -->
+
+                <!-- Revenue size -->
+                <div id="revenue_size" class="component_data">
+                    <article class="beefup">
+                        <h6 class="panel-title beefup__head">
+                            <span>Select Revenue Size</span>
+                            <button type="button" class="close remove_component">×</button>
+                        </h6>
+                        <div class="beefup__body">
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 mb-5 mt-5">
+                                    <div class="radio display-inline-block">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chk_bx_select_all"
+                                            type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Select All</label>
+                                    </div>
+                                    <div class="radio pull-right">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chkbx_use_as_txt"
+                                            data-parent="beefup__body" type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Use as Text</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group checkbox_container">
+                                {% with field_name='revenue_size' default_checked_value=mapping.revenue_size %}
+                                <input type="hidden" class="save_data" name="{{field_name}}" id="id_{{field_name}}"
+                                    value="{{ default_checked_value}}" />
+                                <input type="hidden" class="url_holder_save_data" value="{% url 'save_mapping' %}" />
+
+                                <div class="table_scroller">
+                                    <table class="table table-hover">
+                                        <tbody>
+                                            {% for name in revenue_sizes %} {% if name != "---------" %}
+                                            <tr>
+                                                <td>
+                                                    <div class="radio ml-10" data-txt="{{ name }}">
+                                                        <input id="{{ field_name }}{{ forloop.counter }}"
+                                                            name="{{ field_name }}[]" data-txt="{{ name }}"
+                                                            value="{{ name }}" type="checkbox"
+                                                            {% if name|lower in default_checked_value|lower %} checked
+                                                            {% endif %} />
+
+                                                        <label for="{{ field_name }}{{ forloop.counter }}"
+                                                            class="lbl">{{ name }}</label>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <!-- set data-txt attribute inside above lable to get original text in jquery -->
+                                                    <input type='text'
+                                                        class="form-control-inline {% if not name|ifinlist_dict:useAsTxtMapping %}hidden{% endif %} pull-right txtbx_use_as_txt"
+                                                        value='{{ name|alter_txt:useAsTxtMapping }}'>
+                                                </td>
+                                            </tr>
+                                            {% endif %} {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {% endwith %}
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 mb-5 mt-5">
+                                    <div class="radio pull-right">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chk_bx_set_default"
+                                            data-parent="beefup__body" type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Set as Default</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </article>
+                </div>
+                <!-- /Revenue size -->
+
+                <!-- custom lead  validation -->
+                <div id="lead_validation" class="component_data">
+                    <article class="beefup">
+                        <h6 class="panel-title beefup__head">
+                            <!-- "Company Size" changed to "Employee Size" -->
+                            <span>Select Custom Lead validation</span>
+                            <!--<button type="button" class="close remove_component">×</button>-->
+                        </h6>
+                        <div class="beefup__body">
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 mb-5 mt-5">
+                                    <div class="radio display-inline-block">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chk_bx_select_all"
+                                            type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Select All</label>
+                                    </div>
+                                    <!-- <div class="radio pull-right">
+                                    <input id="{% ++ i %}{{ i }}" class="pointer chkbx_use_as_txt" data-parent="beefup__body" type='checkbox' />
+                                    <label for="{{ i }}" class="lbl">Use as Text</label>
+                                </div> -->
+                                </div>
+                            </div>
+
+                            <div class="form-group checkbox_container">
+                                <input type="hidden" class="save_data" name="campaign_lead_validation"
+                                    id="id_lead_validation" value="{{ default_checked_value}}"/>
+                                <input type="hidden" class="url_holder_save_data"
+                                    value="{% url 'save_lead_validation' %}" />
+                                <div class="table_scroller">
+                                    <table class="table table-hover">
+                                        <tbody>
+                                            {% for name in lead_validation %} {% if name != "---------" %}
+                                            <tr>
+                                                <td>
+                                                    <div class="radio ml-10" data-txt="{{ name }}">
+                                                        <input id="lead_validation{{ forloop.counter }}"
+                                                            name="lead_validation[]" data-txt="{{ name }}"
+                                                            value="{{ name.function_name }}" type="checkbox"
+                                                            {% if name.function_name|lower in lead_list|lower %} checked
+                                                            {% endif %} />
+
+                                                        <label for="lead_validation{{ forloop.counter }}"
+                                                            class="lbl">{{ name.label }}</label>
+                                                    </div>
+                                                </td>
+                                                {% if name.function_name == 'company_limitation' %}
+                                                <td>
+                                                    <!-- set data-txt attribute inside above lable to get original text in jquery -->
+                                                    <input type='text' class="txtbx_use_as_lead_limit"
+                                                        value='{{company_limit}}'>
+                                                </td>
+                                                {%endif%}
+                                            </tr>
+                                            {% endif %} {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+
+                            <!-- <div class="row">
+                            <div class="col-md-12 col-sm-12 mb-5 mt-5">
+                                <div class="radio pull-right">
+                                    <input id="{% ++ i %}{{ i }}" class="pointer chk_bx_set_default" data-parent="beefup__body" type='checkbox' />
+                                    <label for="{{ i }}" class="lbl">Set as Default</label>
+                                </div>
+                            </div>
+                        </div> -->
+
+                        </div>
+                    </article>
+                </div>
+                <!-- /custom lead  validation -->
+
+                <!-- job Function -->
+                <div id="job_function" class="component_data">
+                    <article class="beefup">
+                        <h6 class="panel-title beefup__head">
+                            <span>Select Department</span>
+                            <button type="button" class="close remove_component">×</button>
+                        </h6>
+                        <div class="beefup__body">
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 mb-5 mt-5">
+                                    <div class="radio display-inline-block">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chk_bx_select_all"
+                                            type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Select All</label>
+                                    </div>
+                                    <div class="radio pull-right">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chkbx_use_as_txt"
+                                            data-parent="beefup__body" type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Use as Text</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group checkbox_container">
+                                {% with field_name='job_function' default_checked_value=mapping.job_function %}
+                                <input type="hidden" class="save_data" name="{{field_name}}" id="id_{{field_name}}"
+                                    value="{{ default_checked_value}}" />
+                                <input type="hidden" class="url_holder_save_data" value="{% url 'save_mapping' %}" />
+
+                                <div class="table_scroller">
+                                    <table class="table table-hover">
+                                        <tbody>
+                                            {% for name in job_functions %} {% if name != "---------" %}
+                                            <tr>
+                                                <td>
+                                                    <div class="radio ml-10" data-txt="{{ name }}">
+                                                        <input id="{{ field_name }}{{ forloop.counter }}"
+                                                            name="{{ field_name }}[]" data-txt="{{ name }}"
+                                                            value="{{ name }}" type="checkbox"
+                                                            {% if name|lower in default_checked_value|lower %} checked
+                                                            {% endif %} />
+
+                                                        <label for="{{ field_name }}{{ forloop.counter }}"
+                                                            class="lbl">{{ name }}</label>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <!-- set data-txt attribute inside above lable to get original text in jquery -->
+                                                    <input type='text'
+                                                        class="mr-10 form-control-inline {% if not name|ifinlist_dict:useAsTxtMapping %}hidden{% endif %} pull-right txtbx_use_as_txt"
+                                                        value='{{ name|alter_txt:useAsTxtMapping }}'>
+                                                </td>
+                                            </tr>
+                                            {% endif %} {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {% endwith %}
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 mb-5 mt-5">
+                                    <div class="radio pull-right">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chk_bx_set_default"
+                                            data-parent="beefup__body" type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Set as Default</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </article>
+                </div>
+                <!-- /job Function -->
+
+                <!--======================= Terms table data ==============================-->
+
+                <!-- level of Intent -->
+                <div id="level_intent" class="component_data">
+                    <article class="beefup">
+                        <h6 class="panel-title beefup__head">
+                            <span>Select Level of Intent</span>
+                            <button type="button" class="close remove_component">×</button>
+                        </h6>
+                        <div class="beefup__body">
+
+                            <div class="form-group checkbox_container">
+
+                                <!-- get_field-name_display -->
+                                <!-- if campaign type is waterfall (index 2 defined in campaign/choices.py) -->
+                                {% if campaign.type == '5' %}
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Level</th>
+                                            <th>Volume</th>
+                                            <th>CPL</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% with field_name='level_intent' default_checked_value=terms.level_intent|split %}
+                                        <input type="hidden" name="level_intent" id="id_level_intent"
+                                            value="{{default_checked_value}}" />
+                                        <input type="hidden" class="url_holder_save_data"
+                                            value="{% url 'save_terms' %}" />
+
+                                        {% for name in level_intent %}
+                                        {% if name != "---------" %}
+                                        <tr>
+                                            <td class="td_padding">
+                                                <label>
+                                                    <input type="checkbox" class="chkbx_level_of_intent"
+                                                        name="{{ field_name }}[]" data-txt="{{ name }}"
+                                                        value="{{ name }}"
+                                                        {% if name|lower in default_checked_value|lower %} checked
+                                                        {% endif %}> {{ name }}
+                                                </label>
+                                            </td>
+
+                                            <td>
+                                                <input type='number' name="txtbx_volume" min="0"
+                                                    class="form-control-inline txtbx_volume"
+                                                    value="{{ name|get_volume:volume_and_cpls }}">
+                                            </td>
+                                            <td>
+                                                <input type='number' name="txtbx_cpl" min="0"
+                                                    class="form-control-inline txtbx_cpl"
+                                                    value="{{ name|get_cpl:volume_and_cpls }}">
+                                            </td>
+                                        </tr>
+                                        {% endif %}
+                                        {% endfor %}
+                                        {% endwith %}
+
+                                    </tbody>
+                                </table>
+                                {% else %}
+                                {% with field_name='level_intent' default_checked_value=terms.level_intent|split %}
+                                <input type="hidden" class="save_data" name="{{field_name}}" id="id_{{field_name}}"
+                                    value="{{ default_checked_value}}" />
+                                <input type="hidden" class="url_holder_save_data" value="{% url 'save_terms' %}" />
+
+                                <table class="table table-hover">
+                                    <tbody>
+                                        {% for name in level_intent %}
+                                        {% if name != "---------" %}
+
+                                        <!-- if campaign type is 'Lead Gen' (index 2 defined in campaign/choices.py)-->
+                                        {% if campaign.type == '2' %}
+                                        {% if name|ifin_strlist:"HQL,MQL,SQL" %}
+                                        <tr>
+                                            <td>
+                                                <div class="radio ml-10" data-txt="{{ name }}">
+                                                    <input id="{{ field_name }}{{ forloop.counter }}"
+                                                        name="{{ field_name }}[]" data-txt="{{ name }}"
+                                                        value="{{ name }}" type="checkbox"
+                                                        {% if name|lower in default_checked_value|lower %} checked
+                                                        {% endif %} />
+
+                                                    <label for="{{ field_name }}{{ forloop.counter }}"
+                                                        class="lbl">{{ name }}</label>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <!-- set data-txt attribute inside above lable to get original text in jquery -->
+                                                <input type='text'
+                                                    class="mr-10 form-control-inline {% if not name|ifinlist_dict:useAsTxtMapping %}hidden{% endif %} pull-right txtbx_use_as_txt"
+                                                    value='{{ name|alter_txt:useAsTxtMapping }}'>
+                                            </td>
+                                        </tr>
+                                        {% endif %}
+                                        {% else %}
+                                        <tr>
+                                            <td>
+                                                <div class="radio ml-10" data-txt="{{ name }}">
+                                                    <input id="{{ field_name }}{{ forloop.counter }}"
+                                                        name="{{ field_name }}[]" data-txt="{{ name }}"
+                                                        value="{{ name }}" type="checkbox"
+                                                        {% if name|lower in default_checked_value|lower %} checked
+                                                        {% endif %} />
+
+                                                    <label for="{{ field_name }}{{ forloop.counter }}"
+                                                        class="lbl">{{ name }}</label>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <!-- set data-txt attribute inside above lable to get original text in jquery -->
+                                                <input type='text'
+                                                    class="mr-10 form-control-inline {% if not name|ifinlist_dict:useAsTxtMapping %}hidden{% endif %} pull-right txtbx_use_as_txt"
+                                                    value='{{ name|alter_txt:useAsTxtMapping }}'>
+                                            </td>
+                                        </tr>
+                                        {% endif %}
+
+                                        {% endif %}
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                {% endwith %}
+                                {% endif %}
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 mb-5 mt-5">
+                                    <div class="radio pull-right">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chk_bx_set_default"
+                                            data-parent="beefup__body" type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Set as Default</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </article>
+                </div>
+                <!-- /level of Intent -->
+
+                <!-- Assets -->
+                <div id="assets" class="component_data">
+                    <article class="beefup">
+                        <h6 class="panel-title beefup__head">
+                            <span>Select Assets</span>
+                            <button type="button" class="close remove_component">×</button>
+                        </h6>
+                        <div class="beefup__body">
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 mb-5 mt-5">
+                                    <div class="radio display-inline-block">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chk_bx_select_all"
+                                            type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Select All</label>
+                                    </div>
+                                    <div class="radio pull-right">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chkbx_use_as_txt"
+                                            data-parent="beefup__body" type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Use as Text</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group checkbox_container">
+                                {% with field_name='assets' default_checked_value=terms.assets %}
+                                <input type="hidden" class="save_data" name="{{field_name}}" id="id_{{field_name}}"
+                                    value="{{ default_checked_value}}" />
+                                <input type="hidden" class="url_holder_save_data" value="{% url 'save_terms' %}" />
+                                <div class="table_scroller">
+                                    <table class="table table-hover">
+                                        <tbody>
+                                            {% for name in assets %} {% if name != "---------" %}
+                                            <tr>
+                                                <td>
+                                                    <div class="radio ml-10" data-txt="{{ name }}">
+                                                        <input id="{{ field_name }}{{ forloop.counter }}"
+                                                            name="{{ field_name }}[]" data-txt="{{ name }}"
+                                                            value="{{ name }}" type="checkbox"
+                                                            {% if name|lower in default_checked_value|lower %} checked
+                                                            {% endif %} />
+
+                                                        <label for="{{ field_name }}{{ forloop.counter }}"
+                                                            class="lbl">{{ name }}</label>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <!-- set data-txt attribute inside above lable to get original text in jquery -->
+                                                    <input type='text'
+                                                        class="mr-10 form-control-inline {% if not name|ifinlist_dict:useAsTxtMapping %}hidden{% endif %} pull-right txtbx_use_as_txt"
+                                                        value='{{ name|alter_txt:useAsTxtMapping }}'>
+                                                </td>
+                                            </tr>
+                                            {% endif %} {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {% endwith %}
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 mb-5 mt-5">
+                                    <div class="radio pull-right">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chk_bx_set_default"
+                                            data-parent="beefup__body" type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Set as Default</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </article>
+                </div>
+                <!-- /Assets -->
+                <!--======================= Terms table data ==============================-->
+
+                <!-- ====================== Campaign Delivery =============================-->
+                <!-- Data Fields -->
+                <div id="data_header" class="component_data">
+                    <article class="beefup">
+                        <h6 class="panel-title beefup__head">
+                            <span>Select Data Fields</span>
+                            <button type="button" class="close remove_component">×</button>
+                        </h6>
+                        <div class="beefup__body">
+                            <div class="table_scroller lead_choice">
+                                <!-- {{deliveryform}} -->
+                                <table class="table table-hover">
+                                    <tbody>
+                                        {% if tc_header_status == 0 and custom_header_status == 0 %}
+                                        <tr>
+                                            <td class="col-md-6">
+                                                <div class="default_header ">
+                                                    <div class="radio ">
+                                                        <input id="id_tc_header_status" type='checkbox'
+                                                            data-type="tc_header_status" />
+                                                        <label for="id_tc_header_status" class="lbl">TC Headers</label>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="custom_header">
+                                                    <div class="radio ">
+                                                        <input id="id_custom_header_status" type='checkbox'
+                                                            data-type="custom_header_status"
+                                                            onClick="custom_header();" />
+                                                        <label for="id_custom_header_status" class="lbl">Custom
+                                                            Template</label>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endif %}
+
+                                        {% if tc_header_status == 1 %}
+                                        <tr>
+                                            <td class="col-md-6">
+                                                <div class="default_header ">
+                                                    <div class="radio ">
+                                                        <input id="id_tc_header_status" type='checkbox'
+                                                            data-type="tc_header_status" checked />
+                                                        <label for="id_tc_header_status" class="lbl">TC Headers</label>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="custom_header hidden">
+                                                    <div class="radio ">
+                                                        <input id="id_custom_header_status" type='checkbox'
+                                                            data-type="custom_header_status" />
+                                                        <label for="id_custom_header_status" class="lbl">Custom
+                                                            Template</label>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endif %}
+
+                                        {% if custom_header_status == 1 %}
+                                        <tr>
+                                            <td class="col-md-6">
+                                                <div class="default_header hidden">
+                                                    <div class="radio ">
+                                                        <input id="id_tc_header_status" type='checkbox'
+                                                            data-type="tc_header_status" />
+                                                        <label for="id_tc_header_status" class="lbl">TC Headers</label>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="custom_header">
+                                                    <div class="radio ">
+                                                        <input id="id_custom_header_status" type='checkbox'
+                                                            data-type="custom_header_status" checked />
+                                                        <label for="id_custom_header_status" class="lbl">Custom
+                                                            Template</label>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endif %}
+
+                                        <!-- <tr>
+                                        <td class="col-md-6">
+                                            {% if tc_header_status == 1 %}
+                                            <div class="default_header">
+                                                <div class="radio ">
+                                                    <input id="id_tc_header_status" type='checkbox' data-type="tc_header_status" checked/>
+                                                    <label for="id_tc_header_status" class="lbl">TC Headers</label>
+                                                </div>
+                                            </div>
+                                            {% else %}
+                                                {% if tc_header_status == 0 and custom_header_status == 0  %}
+                                                <div class="default_header ">
+                                                    <div class="radio ">
+                                                        <input id="id_tc_header_status" type='checkbox' data-type="tc_header_status"/>
+                                                        <label for="id_tc_header_status" class="lbl">TC Headers</label>
+                                                    </div>
+                                                </div>
+                                                {% endif %}
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-6">
+                                            {% if custom_header_status == 1 %}
+                                            <div class="custom_header">
+                                                <div class="radio ">
+                                                    <input id="id_custom_header_status" type='checkbox'  data-type="custom_header_status" checked/>
+                                                    <label for="id_custom_header_status" class="lbl">Custom Header</label>
+                                                </div>
+                                            </div>
+                                            {% else %}
+                                                {% if tc_header_status == 0 and custom_header_status == 0  %}
+                                                <div class="custom_header">
+                                                    <div class="radio ">
+                                                        <input id="id_custom_header_status" type='checkbox'  data-type="custom_header_status" onClick="custom_header();"/>
+                                                        <label for="id_custom_header_status" class="lbl">Custom Template</label>
+                                                    </div>
+                                                </div>
+                                                {% endif %}
+
+                                            {% endif %}
+                                        </td>
+                                    </tr> -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% if tc_header_status == 1 %}
+                            <div class="data_field_div ">
+                                <div class="row ">
+                                    <div class="col-md-12 col-sm-12 mb-5 mt-5">
+                                        <div class="radio display-inline-block">
+                                            <input id="{% ++ i %}{{ i }}" class="pointer chk_bx_select_all"
+                                                type='checkbox' />
+                                            <label for="{{ i }}" class="lbl">Select All</label>
+                                        </div>
+                                        <!-- <div class="radio pull-right">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chkbx_use_as_txt" data-parent="beefup__body" type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Use as Text</label>
+                                    </div> -->
+                                    </div>
+                                </div>
+
+                                <div class="form-group tc_header_div checkbox_container">
+
+                                    <!-- Data Headers are renamed as Data Field -->
+                                    {% with field_name='data_header' default_checked_value=delivery.data_header|split %}
+                                    <input type="hidden" class="save_data" name="{{field_name}}" id="id_{{field_name}}"
+                                        value="{{ default_checked_value}}" />
+                                    <input type="hidden" class="url_holder_save_data"
+                                        value="{% url 'save_delivery' %}" />
+
+                                    <div class="table_scroller ">
+                                        <table class="table table-hover">
+                                            <tbody>
+                                                {% for name in data_headers %}
+                                                {% if name != "---------" %}
+                                                <tr>
+                                                    <td>
+                                                        <div class="radio ml-10" data-txt="{{ name }}">
+                                                            <input id="{{ field_name }}{{ forloop.counter }}"
+                                                                name="{{ field_name }}[]" data-txt="{{ name }}"
+                                                                value="{{ name }}" type="checkbox"
+                                                                {% if name|lower in default_checked_value|lower %}
+                                                                checked {% endif %} />
+
+                                                            <label for="{{ field_name }}{{ forloop.counter }}"
+                                                                class="lbl">{{ name }}</label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <input type='text'
+                                                            class="mr-10 form-control-inline {% if not name|ifinlist_dict:useAsTxtMapping %}hidden{% endif %} pull-right txtbx_use_as_txt"
+                                                            value='{{ name|alter_txt:useAsTxtMapping }}'>
+                                                    </td>
+                                                </tr>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    {% endwith %}
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="data_field_div hidden">
+                                <div class="row ">
+                                    <div class="col-md-12 col-sm-12 mb-5 mt-5">
+                                        <div class="radio display-inline-block">
+                                            <input id="{% ++ i %}{{ i }}" class="pointer chk_bx_select_all"
+                                                type='checkbox' />
+                                            <label for="{{ i }}" class="lbl">Select All</label>
+                                        </div>
+                                        <!-- <div class="radio pull-right">
+                                            <input id="{% ++ i %}{{ i }}" class="pointer chkbx_use_as_txt" data-parent="beefup__body" type='checkbox' />
+                                            <label for="{{ i }}" class="lbl">Use as Text</label>
+                                        </div> -->
+                                    </div>
+                                </div>
+
+                                <div class="form-group checkbox_container">
+
+                                    <!-- Data Headers are renamed as Data Field -->
+                                    {% with field_name='data_header' default_checked_value=delivery.data_header|split %}
+                                    <input type="hidden" class="save_data" name="{{field_name}}" id="id_{{field_name}}"
+                                        value="{{ default_checked_value}}" />
+                                    <input type="hidden" class="url_holder_save_data"
+                                        value="{% url 'save_delivery' %}" />
+
+                                    <div class="table_scroller ">
+                                        <table class="table table-hover">
+                                            <tbody>
+                                                {% for name in data_headers %}
+                                                {% if name != "---------" %}
+                                                <tr>
+                                                    <td>
+                                                        <div class="radio ml-10" data-txt="{{ name }}">
+                                                            <input id="{{ field_name }}{{ forloop.counter }}"
+                                                                name="{{ field_name }}[]" data-txt="{{ name }}"
+                                                                value="{{ name }}" type="checkbox"
+                                                                {% if name|lower in default_checked_value|lower %}
+                                                                checked {% endif %} />
+
+                                                            <label for="{{ field_name }}{{ forloop.counter }}"
+                                                                class="lbl">{{ name }}</label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <input type='text'
+                                                            class="mr-10 form-control-inline {% if not name|ifinlist_dict:useAsTxtMapping %}hidden{% endif %} pull-right txtbx_use_as_txt"
+                                                            value='{{ name|alter_txt:useAsTxtMapping }}'>
+                                                    </td>
+                                                </tr>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    {% endwith %}
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            {% if custom_header_status == 1 %}
+                            <div class="data_field_div">
+                                <div class="form-group ">
+                                    <div class="table_scroller ">
+                                        <table class="table table-hover custom_header_status_container">
+                                            <tbody>
+                                                {% for name in custom_headers %}
+                                                <tr>
+                                                    <td>
+                                                        <div class="radio ml-10">
+                                                            <!-- <input id="{{name}}" type='checkbox' class="display_box"  checked /> -->
+                                                            {{forloop.counter}}<label class="lbl">{{name}}</label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            <!-- <div class="row">
+                            <div class="col-md-12 col-sm-12 mb-5 mt-5">
+                                <div class="radio pull-right">
+                                    <input id="{% ++ i %}{{ i }}" class="pointer chk_bx_set_default" data-parent="beefup__body" type='checkbox' />
+                                    <label for="{{ i }}" class="lbl">Set as Default</label>
+                                </div>
+                            </div>
+                        </div> -->
+
+                        </div>
+                    </article>
+                </div>
+                <!-- /Data Fields -->
+
+                <!-- Custom Field -->
+                <div id="custom_field" class="component_data">
+                    <article class="beefup">
+                        <h6 class="panel-title beefup__head">
+                            <span>Custom Question</span>
+                            <button type="button" class="close remove_component">×</button>
+                        </h6>
+                        <div class="beefup__body">
+                            <div class="form-group checkbox_container">
+                                <input type="hidden" class="url_holder_save_data" value="{% url 'save_mapping' %}" />
+                                <div class="col-lg-12 mb-20">
+                                    {% if mapping.custom_question == 0 %}
+                                    <input name="custom_question" min="0" max="9" id="id_custom_question"
+                                        class="form-control  save_data" value="" type="number"
+                                        placeholder="Number of question" />
+                                    {% else %}
+                                    <input name="custom_question" min="0" max="9" id="id_custom_question"
+                                        class="form-control  save_data" value="{{ mapping.custom_question }}"
+                                        type="number" placeholder="Number of question" />
+                                    {% endif %}
+
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+                <!-- /Custom Field -->
+
+
+
+                <div id="delivery_method" class="component_data">
+                    <article class="beefup">
+                        <h6 class="panel-title beefup__head">
+                            <span>Select Delivery Method</span>
+                            <button type="button" class="close remove_component">×</button>
+                        </h6>
+                        <div class="beefup__body">
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 mb-5 mt-5">
+                                    <div class="radio display-inline-block">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chk_bx_select_all"
+                                            type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Select All</label>
+                                    </div>
+                                    <div class="radio pull-right">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chkbx_use_as_txt"
+                                            data-parent="beefup__body" type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Use as Text</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group checkbox_container">
+                                {% with field_name='delivery_method' default_checked_value=delivery.delivery_method|split %}
+                                <input type="hidden" class="save_data" name="{{ field_name }}" id="id_{{field_name}}"
+                                    value="{{ default_checked_value}}" />
+                                <input type="hidden" class="url_holder_save_data" value="{% url 'save_delivery' %}" />
+
+                                <div class="table_scroller">
+                                    <table class="table table-hover">
+                                        <tbody>
+                                            {% for name in delivery_methods %}
+                                            {% if name != "---------" %}
+                                            <tr>
+                                                <td>
+                                                    <div class="radio ml-10" data-txt="{{ name }}">
+                                                        <input id="{{ field_name }}{{ forloop.counter }}"
+                                                            name="{{ field_name }}[]" data-txt="{{ name }}"
+                                                            value="{{ name }}" type="checkbox"
+                                                            {% if name|lower in default_checked_value|lower %} checked
+                                                            {% endif %} />
+
+                                                        <label for="{{ field_name }}{{ forloop.counter }}"
+                                                            class="lbl">{{ name }}</label>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <!-- set data-txt attribute inside above lable to get original text in jquery -->
+                                                    <input type='text'
+                                                        class="mr-10 form-control-inline {% if not name|ifinlist_dict:useAsTxtMapping %}hidden{% endif %} pull-right txtbx_use_as_txt"
+                                                        value='{{ name|alter_txt:useAsTxtMapping }}'>
+                                                </td>
+                                            </tr>
+                                            {% endif %} {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {% endwith %}
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 mb-5 mt-5">
+                                    <div class="radio pull-right">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chk_bx_set_default"
+                                            data-parent="beefup__body" type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Set as Default</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </article>
+                </div>
+
+
+                <div id="campaign_delivery_time" class="component_data">
+                    <article class="beefup">
+                        <h6 class="panel-title beefup__head">
+                            <span>Select Campaign Delivery Time</span>
+                            <button type="button" class="close remove_component">×</button>
+                        </h6>
+                        <div class="beefup__body">
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 mb-5 mt-5">
+                                    <div class="radio display-inline-block">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chk_bx_select_all"
+                                            type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Select All</label>
+                                    </div>
+                                    <div class="radio pull-right">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chkbx_use_as_txt"
+                                            data-parent="beefup__body" type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Use as Text</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group checkbox_container">
+                                {% with field_name='campaign_delivery_time' default_checked_value=delivery.campaign_delivery_time|split %}
+                                <input type="hidden" class="save_data" name="{{ field_name }}" id="id_{{field_name}}"
+                                    value="{{ default_checked_value}}" />
+                                <input type="hidden" class="url_holder_save_data" value="{% url 'save_delivery' %}" />
+
+                                <div class="table_scroller">
+                                    <table class="table table-hover">
+                                        <tbody>
+                                            {% for name in delivery_times %}
+                                            {% if name != "---------" %}
+                                            <tr>
+                                                <td>
+                                                    <div class="radio ml-10" data-txt="{{ name }}">
+                                                        <input id="{{ field_name }}{{ forloop.counter }}"
+                                                            name="{{ field_name }}[]" data-txt="{{ name }}"
+                                                            value="{{ name }}" type="checkbox"
+                                                            {% if name|lower in default_checked_value|lower %} checked
+                                                            {% endif %} />
+
+                                                        <label for="{{ field_name }}{{ forloop.counter }}"
+                                                            class="lbl">{{ name }}</label>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <!-- set data-txt attribute inside above lable to get original text in jquery -->
+                                                    <input type='text'
+                                                        class="mr-10 form-control-inline {% if not name|ifinlist_dict:useAsTxtMapping %}hidden{% endif %} pull-right txtbx_use_as_txt"
+                                                        value='{{ name|alter_txt:useAsTxtMapping }}'>
+                                                </td>
+                                            </tr>
+                                            {% endif %} {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {% endwith %}
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 mb-5 mt-5">
+                                    <div class="radio pull-right">
+                                        <input id="{% ++ i %}{{ i }}" class="pointer chk_bx_set_default"
+                                            data-parent="beefup__body" type='checkbox' />
+                                        <label for="{{ i }}" class="lbl">Set as Default</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </article>
+                </div>
+                <!-- ====================== /Campaign Delivery =============================-->
+            </div>
+            <!-- /store component data inside holder -->
+
+            <!-- /content area -->
+
+        </div>
+        <!-- /main content -->
+    </div>
+</div>
+{% endblock %}
+
+</div>
+<!-- /main content -->
+
+<!-- ============================ -->
+<!--        page level scripts    -->
+<!-- =========================== -->
+{% block page_level_scripts %}
+<script>
+    $(function () {
+        /*change li active*/
+        /*add active class to li*/
+        $("#campaign").addClass("active");
+    });
+
+    // global variable
+    var DEBUG = true; // false or true
+</script>
+
+<!--= collasible + icon -->
+<!-- <script type="text/javascript" src="{% static 'assets/js/core/libraries/bootstrap.min.js' %}"></script> -->
+
+<!-- dragula -->
+<script type="text/javascript" src="{% static 'client/js/dragula.js' %}?ver=1.1"></script>
+<link href="{% static 'client/css/dragula_style.css' %}?ver=1.1" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="{% static 'client/js/create_campaign/dragula-config.js' %}?ver=1.1"></script>
+
+<!-- collasible -->
+<script src="{% static 'client/plugins/BeefUp/js/jquery.beefup.min.js' %}?ver=1.1"></script>
+<link rel="stylesheet" href="{% static 'client/plugins/BeefUp/css/jquery.beefup.css' %}?ver=1.1">
+
+<script>
+    $(function () {
+        $('.beefup').beefup({
+            openSingle: true,
+            stayOpen: 1,
+            selfClose: true, // Close the accordion on click outside of the element.
+        });
+        // $('.beefup').beefup({
+        //     scroll: true,
+        //     scrollOffset: -10,
+        // })
+
+
+    });
+
+</script>
+
+
+<!-- from old file-->
+
+<!-- panel-tab color-->
+<link href="{% static 'client/css/createcampaign.css' %}?ver=1.1" rel="stylesheet" type="text/css">
+
+<!-- checkboxes with ripple effect -->
+<link href="{% static 'client/css/checkbox_ripple_effect.css' %}?ver=1.1" rel="stylesheet" type="text/css">
+<!-- /checkboxes with ripple effect -->
+
+<!-- save records -->
+<script type="text/javascript" src="{% static 'client/js/create_campaign/save_form.js' %}?ver=1.1"></script>
+
+<!-- get checkbox clicked values into hidden input -->
+<script type="text/javascript" src="{% static 'client/js/create_campaign/get_checkbox_values.js' %}?ver=1.1"></script>
+
+<!-- waterfall in campaign_terms -->
+<script type="text/javascript" src="{% static 'client/js/create_campaign/waterfall.js' %}?ver=1.1"></script>
+
+<!-- set priority level of campaign by gap between the dates -->
+<script type="text/javascript" src="{% static 'client/js/create_campaign/set_priority.js' %}?ver=1.1"></script>
+
+<!-- Account Based Marketing AND Account Supression -->
+<script type="text/javascript" src="{% static 'client/js/create_campaign/account_supression.js' %}?ver=1.1"></script>
+
+<!-- delivery_timing -->
+<script type="text/javascript" src="{% static 'client/js/create_campaign/delivery_timing.js' %}?ver=1.1"></script>
+
+<!-- Use as text -->
+<script type="text/javascript" src="{% static 'client/js/create_campaign/use_as_text.js' %}?ver=1.1"></script>
+
+<script type="text/javascript"
+    src="{% static 'client/js/create_campaign/on_ready_change_selected_compo_data.js' %}?ver=1.1"></script>
+
+<!-- scrollbar-->
+<link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/1.5.2/css/OverlayScrollbars.min.css" />
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/1.5.2/js/jquery.overlayScrollbars.min.js"></script>
+<script>
+    $(function () {
+        //The passed argument has to be at least a empty object or a object with your desired options
+        $("body").overlayScrollbars({
+            className: "os-theme-minimal-dark",
+        });
+
+        $(".table_scroller").overlayScrollbars({
+            className: "os-theme-minimal-dark",
+        });
+
+        $('#id_tc_header_status').change(function () {
+            $('.data_field_div').toggleClass('hidden')
+            $('.custom_header').toggleClass('hidden')
+        })
+
+
+        $(document).find('.component_data').each(function () {
+            id = $(this).attr('id')
+            if ($(this).find('.checkbox_container').length == 1) {
+                if ($(this).find(`input[name="${id}[]"]`).length == $(this).find(`input[name="${id}[]"]:checked`).length) {
+                    $(this).find('.chk_bx_select_all').prop('checked', true)
+                }
+            }
+
+        })
+    });
+</script>
+<script>
+    function myFunction() {
+
+        // Declare variables
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("search_country");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("country_table");
+        tr = table.getElementsByTagName("tr");
+        let c = 0;
+        // Loop through all table rows, and hide those who don't match the search query
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            label = td.getElementsByTagName("label")[0];
+            if (label) {
+                txtValue = label.textContent || label.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                    c += 1;
+                }
+            }
+        }
+        if (c == 247) {
+            $(table).hide();
+            $(".searchError").show();
+        }
+        else {
+            $(table).show();
+            $(".searchError").hide();
+        }
+    }
+
+</script>
+<link href="{% static 'client/css/slidebar/os-theme-minimal-dark.css' %}" rel="stylesheet" type="text/css">
+
+<!-- FOR FILE INPUT-->
+<script type="text/javascript" src="{% static 'assets/js/plugins/forms/styling/uniform.min.js' %}?ver=1.1"></script>
+<script type="text/javascript" src="{% static 'assets/js/pages/form_inputs.js' %}?ver=1.1"></script>
+
+<!-- change campaign status on btn click-->
+<script type="text/javascript"
+    src="{% static 'client/js/create_campaign/change_campaign_status.js' %}?ver=1.1"></script>
+
+<!-- set default fields in campaign -->
+<script type="text/javascript" src="{% static 'client/js/create_campaign/set_default.js' %}?ver=1.1"></script>
+
+{% endblock %}
+<!--       page level scripts    -->
+<!-- /=========================== -->

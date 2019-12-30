@@ -1,0 +1,135 @@
+{% extends "header/cheader.html" %}
+{% load static %}
+{% block scripts %}
+{% include "custom_datafields/create_custom_datafields_head.html" %}
+{% endblock %}
+{% block scripts1 %}
+{% include "custom_datafields/custom_datafields_css.html" %}
+{% endblock %}
+{% block content %}
+
+<!-- Main content -->
+{% load range %}
+{% load humanize %}
+<div class="content-wrapper">
+    <div class="content">
+        <div class="row" style="margin-left: -20px;margin-right: -27px;">
+            <div class="col-md-12">
+                <div class="border-top-lg border-top-primary">
+                    <div class="page-header page-header-default" style="margin-bottom: 3px !important;">
+                        <div class="breadcrumb-line">
+                            <ul class="breadcrumb" style="content: '';">
+                                <li>
+                                    <button type="button" class="btn btn-info"> Set Default </button>
+                                </li>
+                                <li>
+                                    <button type="button" id="saveHeaders" camp_id="{{camp_id}}"
+                                        class="btn btn-primary"> Save</button>
+                                </li>
+                                <li>
+                                    <label class="fileContainer" style="margin-bottom: -14px;">
+                                        <button type="button" class="btn btn-success"> Import</button>
+                                        <input type="file" id="file_upload_btn" accept=".csv" />
+                                    </label>
+                                </li>
+                                <li><a href="/client/add_campaign_spec/{{camp_id}}"><button type="button"
+                                            class="btn btn-primary back" style="margin-left: 816px;">
+                                            Back</button></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-height panel-flat">
+                    <div class="panel-body">
+                        <div class="col-md-6">
+                            <div id="handle" class="row">
+                                <!-- <div id="progress-wrp" style="display:none">
+                                        <div class="progress-bar"></div>
+                                        <div class="status">0%</div>
+                                    </div> -->
+                                <!-- <ul class="list-group list-group-sortable-connected" id="custom_heder_csv">
+
+                                    </ul> -->
+                                <div class="col-md-4" style="margin-top: 10px;padding-left: 0;">
+                                    <input type="text" class="form-control" id="header"
+                                        placeholder="Enter Header Name" />
+                                </div>
+                                <div class="col-md-4" style="margin-top:16px">
+                                    <a class="add_custom_header"><i class="icon-plus-circle2"></i> Add Header</a>
+                                </div>
+                                <ul class="list-group list-group-sortable-connected" style="margin-top: 65px;"
+                                    id="custom_heder_csv">
+
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+
+                            <div class="dropdown-content">
+                                <div class="dropdown-menu dropdown-toggle-filter-header-open"
+                                    style="width:50%;display:none;margin-left: 10px;">
+                                    <div class="col-md-12">
+                                        <div class="position-fixed" style="margin-bottom: 5px;">
+                                            <input id="deafault_header_search" onkeyup="return myFunction()"
+                                                class="form-control" type="text" placeholder="Search"
+                                                aria-label="Search">
+                                        </div>
+                                        <div class="col-md-12"
+                                            style="float:left;overflow-y:auto;height: 250px;margin-left: -8px;">
+                                            <ul class="list-group" id="default_header">
+                                                {% for head in header %}
+                                                <li style="border-bottom: 1px solid #e6e3e3;">
+                                                    <a class="list-group-item list-group-item-action "
+                                                        style="padding:10px 15px !important;">
+
+                                                        <!-- <input type="checkbox" style="display: none" /> -->
+                                                        <input type="radio" class="radiobtn" name="radio" />
+                                                        <i class="fa fa-check" style="display: none;height: 0px;"></i>
+                                                        <span style="padding-left:20px"
+                                                            class="default_header_name">{{head}}
+                                                        </span>
+
+                                                    </a>
+                                                </li>
+                                                {%endfor%}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12" style="padding-top: 10px;">
+                                        <button type="button" style="margin-left:5px;"
+                                            class="btn btn-primary pull-right dropdown-toggle-filter-header-close"
+                                            name="button"> Close</button>
+                                        <button type="button" class="btn btn-primary pull-right custom_header_submit"
+                                            name="button"> Save</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- /main content -->
+{% include "custom_datafields/create_custom_datafields_js.html"%}
+<script>
+    function myFunction() {
+        var input, filter, ul, li, a, i, txtValue;
+        input = document.getElementById("deafault_header_search");
+        filter = input.value.toUpperCase();
+        ul = document.getElementById("default_header");
+        li = ul.getElementsByTagName("li");
+        for (i = 0; i < li.length; i++) {
+            a = li[i].getElementsByTagName("a")[0];
+            txtValue = a.textContent || a.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                li[i].style.display = "";
+            } else {
+                li[i].style.display = "none";
+            }
+        }
+    }
+</script>
+{% endblock %}

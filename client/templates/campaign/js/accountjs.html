@@ -1,0 +1,232 @@
+<script>
+
+    $('#client_pending_campaign_datatable').dataTable({
+        "createdRow": function () {
+            $('.priority').parent().css('background', 'rgb(180, 255, 149)')
+        },
+    });
+    $(document).ready(function () {
+        $(".datatfootfilter").hide();
+
+
+        flag_filter_icon = true;
+
+        $(".databtn").click(function () {
+            /* toggle filters shown in datatable columns*/
+            $(".datatfootfilter").toggle();
+
+            /**
+             * if filter icon on button replace with remove icon
+             *----
+             * else remove icon of button replace with filter icon
+             */
+
+            if (flag_filter_icon == true) {
+                //alert('removing icon');
+                $('#filter_icon').removeClass('glyphicon-filter');
+                $('#filter_icon').addClass('glyphicon-remove');
+                flag_filter_icon = false;
+            }
+            else {
+                $('#filter_icon').removeClass('glyphicon-remove');
+                $('#filter_icon').addClass('glyphicon-filter');
+
+                flag_filter_icon = true;
+            }
+        });
+        /** /datatable filter toggle close*/
+    });
+    $("#passerror").hide();
+    $("#passerror1").hide();
+
+    $("#passchangeform").submit(function (e) {
+        e.preventDefault();
+        $("#passerror1").hide();
+        if ($("#npwd").val() == $("#cpwd").val()) {
+
+            if ($("#npwd").val() != '' || $("#cpwd").val() != '') {
+
+                if ($("#opwd").val() == '') {
+                    $("#passerror").text("Old Password Field Cannot Be Blank");
+                    $("#passerror").show();
+                    $("#opwd").focus();
+                }
+                else {
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "/vendor/ChangePwd/",
+                    data: $("#passchangeform").serialize(),
+                    cache: false,
+                    success: function (result) {
+                        if (result.success == 1) {
+                            $("#passerror").hide();
+                            $("#passerror1").text("Password Updated Successfully.");
+                            $("#passerror1").show();
+
+                        }
+                        else {
+                            $("#passerror").text("Please Enter Valid Old Password.");
+                            $("#passerror").show();
+                        }
+
+                    }
+                });
+            }
+            else {
+                $("#passerror").text("New Password And Confirm Password Should Not Be Blank .");
+                $("#passerror").show();
+            }
+        }
+        else {
+            $("#passerror").text("New Password And Confirm Password Should Be Same .");
+            $("#passerror").show();
+        }
+    });
+
+    var iScrollPos = 0;
+    $(window).scroll(function () {
+        var iCurScrollPos = $(this).scrollTop();
+        var h = window.innerHeight;
+        var scrolltop = $(window).scrollTop();
+        var scrollBottom = $(window).scrollTop() + $(window).height();
+        var current = $("body").scrollTop();
+        //alert(iScrollPos);
+        if (scrolltop > 1) {
+            //Scrolling Down
+            $("div.sticky").fadeOut('slow');
+            //alert('top');
+        } else {
+            //Scrolling Up
+            $("div.sticky").fadeIn('slow');
+        }
+        iScrollPos = iCurScrollPos;
+    });
+    function openModal() {
+        $("#on_boarding").hide();
+        $('#myModal').modal();
+    }
+    function closeModel() {
+        $("#on_boarding").show();
+        $('#modal').modal('hide');
+        $('#myModal').modal('hide');
+    }
+    // $('#login').popover({
+    //     placement: 'bottom',
+    //     title: 'Popover Form',
+    //     html: true,
+    //     content: $('#myForm').html()
+    // }).on('click', function () {
+
+    //     $("#searchzonearea1").change(function () {
+    //         var searchzone1 = $("#searchzonearea1 option:selected").val();
+    //         //            alert(searchzone1);
+    //         $.ajax({
+    //             type: 'post',
+    //             url: 'ajaxfiles/selectzone.php',
+    //             data: 'searchzone1=' + searchzone1,
+    //             success: function (data) {
+    //                 $("#searchzonearea2").show();
+    //                 $("#searchyear").show();
+    //                 $("#searchzonearea2").html(data);
+    //             },
+    //             failure: function (error) {
+
+    //                 $("#searchzonearea2").html(response).fadeIn();
+    //             }
+    //         });
+    //     });
+    // });
+    $('.rfqcpl').click(function () {
+        var camp_id = $(this).attr('camp_id');
+        token = getCookie('csrftoken');
+        $.ajax({
+            type: 'post',
+            url: '/client/get_rfq_cpl/',
+            data: { csrfmiddlewaretoken: token, 'camp_id': camp_id },
+            success: function (data) {
+                console.log(data)
+                $('#camp_id').val(camp_id);
+                $('#cpl').val(data.cpl);
+                $('#volume').val(data.volume);
+
+            },
+            failure: function (error) {
+
+            }
+        });
+    });
+    
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    $('#counter_for_cpl').click(function(){
+			vendor_id=$(this).attr('vendor_id');
+			camp_alloc_id=$(this).attr('camp_alloc_id');
+			token=getCookie('csrftoken');
+      // alert(vendor_id);
+      // alert(camp_alloc_id);
+			$.ajax({
+		          url: '/superadmin/get_counter_cpl/',
+							type: 'POST',
+		          data: {csrfmiddlewaretoken:token,'vendor_id':vendor_id,'camp_alloc_id':camp_alloc_id},
+		          success: function(data)
+		          {
+		              if(data.success==1)
+		              {
+		                $('#campaign_alloc_id').val(camp_alloc_id);
+                        $('#vendor_cpl').val(data.cpl);
+                        $('#counter_vendor_id').val(vendor_id)
+                        $('#cpl_counter').modal('show');
+		              }
+		          }
+		        });
+		});
+    $('.counter_action').click(function(){
+			id=$(this).attr('id');
+			camp_alloc_id=$('#campaign_alloc_id').val();
+			vendor_id=$('#counter_vendor_id').val();
+			vendor_cpl=$('#vendor_cpl').val();
+			$.ajax({
+		          url: '/client/counter_action_on_cpl/',
+							type: 'POST',
+		          data: {csrfmiddlewaretoken:token,'cpl':vendor_cpl,'id':id,'vendor_id':vendor_id,'camp_alloc_id':camp_alloc_id},
+		          success: function(data)
+		          {
+		              if(data.success==1)
+		              {
+										swal({
+													title: "Good job!",
+													text: data.msg,
+													icon: "success",
+													button: "ok",
+													showConfirmButton: false,
+													timer: 1500
+												});
+										location.reload(true);
+		              }
+		          }
+		        });
+		});
+
+        $('#Counter').click(function(){
+            $('.base_div').addClass('hidden')
+            $('.counter_div').removeClass('hidden')
+        });
+        $('.cancel').click(function(){
+            $('.base_div').removeClass('hidden')
+            $('.counter_div').addClass('hidden')
+        });
+</script>

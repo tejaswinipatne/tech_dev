@@ -1,0 +1,1782 @@
+{% extends "header/cheader.html" %}
+{% load static %}
+{% block scripts %}
+  <link rel="stylesheet" href="{% static 'assets/dist/default-skin/default-skin.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/codemirror.min.css' %}">
+
+<link href="{% static 'assets/css/froala_editor.pkgd.min.css' %}" rel="stylesheet" type="text/css" />
+<link href="{% static 'assets/css/froala_style.min.css' %}" rel="stylesheet" type="text/css" />
+
+<link href="{% static 'assets/css/hummingbird-treeview-1.3.css' %}" rel="stylesheet" type="text/css" />
+
+<link href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css" rel="stylesheet" type="text/css" />
+
+<link href="{% static 'assets/css/square/grey.css' %}" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="{% static 'assets/js/plugins/uploaders/fileinput/plugins/purify.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/uploaders/fileinput/plugins/sortable.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/uploaders/fileinput/fileinput.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/pages/uploader_bootstrap.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/forms/styling/switchery.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/forms/styling/switch.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/pages/client/form_checkboxes_radios.js' %}"></script>
+<script src="{% static 'assets/js/hummingbird-treeview-1.3.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/pages/client/createcampaign.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'assets/css/style.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'assets/css/jquery-ui.css' %}" />
+<script src="{% static 'assets/js/jquery-ui.js' %}"></script>
+<script src="{% static 'assets/js/fieldChooser.js' %}"></script>
+<script src="{% static 'assets/js/fieldChooser.js' %}"></script>
+
+<!-- Include Editor JS files. -->
+<script type="text/javascript" src="{% static 'assets/js/froala_editor.pkgd.min.js' %}"></script>
+{% endblock %}
+
+{% block scripts1 %}
+<style>
+        ul,
+        ol {
+            list-style-type: none;
+        }
+
+        #treeview ul,
+        li {
+            padding: 0px;
+        }
+
+        .headfont {
+            font-size: 21px;
+        }
+
+        .headfont1 {
+            font-size: 15px;
+        }
+
+        .accordion .card-header:after {
+            font-family: 'FontAwesome';
+            content: "\f068";
+            float: right;
+        }
+
+        .accordion .card-header.collapsed:after {
+            /* symbol for "collapsed" panels */
+            content: "\f067";
+        }
+
+        .panel {
+            border-width: 0;
+            color: #333333;
+            -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+            box-shadow: 0 2px 6px rgba(51, 51, 51, 0.54), 0 1px 2px rgba(0, 0, 0, 0.24);
+        }
+
+    /*Custon Field*/
+
+           #dropdiv ul {
+           display: inline-block !important;
+           float: left;
+       }
+       #dragdiv ul {
+           margin-top:20px;
+       }
+
+       /*panel height*/
+          .panel-height
+        {
+            min-height: 100vh;
+        }
+
+       /*panel height*/
+
+
+
+        .tree,
+        .tree ul {
+            margin: 0;
+            padding: 0;
+            list-style: none
+        }
+
+        .tree ul {
+            margin-left: 1em;
+            position: relative
+        }
+
+        .tree ul ul {
+            margin-left: .5em
+        }
+
+        .tree ul:before {
+            content: "";
+            display: block;
+            width: 0;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            border-left: 1px solid
+        }
+
+        .tree li {
+            margin: 0;
+            padding: 0 1em;
+            line-height: 2em;
+            color: #369;
+            font-weight: 700;
+            position: relative
+        }
+
+        .tree ul li:before {
+            content: "";
+            display: block;
+            width: 10px;
+            height: 0;
+            border-top: 1px solid;
+            margin-top: -1px;
+            position: absolute;
+            top: 1em;
+            left: 0
+        }
+
+        .tree ul li:last-child:before {
+            background: #fff;
+            height: auto;
+            top: 1em;
+            bottom: 0
+        }
+
+        .indicator {
+            margin-right: 5px;
+        }
+
+        .tree li a {
+            text-decoration: none;
+            color: #369;
+        }
+
+        .tree li button,
+        .tree li button:active,
+        .tree li button:focus {
+            text-decoration: none;
+            color: #369;
+            border: none;
+            background: transparent;
+            margin: 0px 0px 0px 0px;
+            padding: 0px 0px 0px 0px;
+            outline: 0;
+        }
+
+
+        .nav-pills > li.active > a,
+        .nav-pills > li.active > a:hover,
+        .nav-pills > li.active > a:focus {
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+
+        .nav-pills > li.active > a,
+        .nav-pills > li.active > a:hover,
+        .nav-pills > li.active > a:focus {
+            color: #fff;
+            background-color: #2196F3;
+        }
+
+        .scroll {
+            height: 150px;
+            width: 100%;
+            overflow: scroll;
+            overflow-x: hidden;
+            overflow-y: scroll;
+        }
+
+        .nav > li > a {
+            position: relative;
+            display: block;
+            padding: 9px 20px;
+        }
+
+
+        .qt1{
+           padding-right: 0px;
+           margin-right: 0px;
+        }
+
+
+/* draggable targets */
+[data-draggable="target"]
+{
+    float:left;
+    list-style-type:none;
+
+    width:42%;
+    height:10.5em;
+    overflow-y:auto;
+
+    margin:0 0.5em 0.5em 0;
+    padding:0.5em;
+
+    border:2px solid #888;
+    border-radius:0.2em;
+    font-size:14px;
+    color:#555;
+}
+
+/* drop target state */
+[data-draggable="target"][aria-dropeffect="move"]
+{
+    border-color:#68b;
+
+    background:#fff;
+}
+
+/* drop target focus and dragover state */
+[data-draggable="target"][aria-dropeffect="move"]:focus,
+[data-draggable="target"][aria-dropeffect="move"].dragover
+{
+    outline:none;
+
+    box-shadow:0 0 0 1px #fff, 0 0 0 3px #68b;
+}
+
+/* draggable items */
+[data-draggable="item"]
+{
+    display:block;
+    list-style-type:none;
+
+    margin:0 0 2px 0;
+    padding:0.2em 0.4em;
+
+    border-radius:0.2em;
+
+    line-height:1.3;
+}
+
+/* items focus state */
+[data-draggable="item"]:focus
+{
+    outline:none;
+
+    box-shadow:0 0 0 2px #68b, inset 0 0 0 1px #ddd;
+}
+
+/* items grabbed state */
+[data-draggable="item"][aria-grabbed="true"]
+{
+    background:#8ad;
+    color:#fff;
+}
+
+
+.textbox{
+float:right;
+padding-left:22px;
+}
+
+.textbox1{
+float:right !important;
+
+}
+
+.tb10 {
+    background-image:url(images/form_bg.jpg);
+    background-repeat:repeat-x;
+    border:1px solid #d1c7ac;
+    width: 230px;
+    color:#333333;
+
+    font-family:tahoma, arial, sans-serif;
+}
+#font14
+{
+    font-size: 14px;
+}
+    #marginleft10
+    {
+        margin-left: 10px;
+    }
+    #paddingright20
+    {
+        padding-right:20px;
+    }
+    </style>
+    {% endblock%}
+
+{% block content %}
+
+<!-- Main sidebar -->
+  {% include "side/clientside.html" %}
+<!-- /main sidebar -->
+    <!-- Main content -->
+    <div class="content-wrapper">
+        <div class="content">
+            <!-- Main charts -->
+            <div class="row">
+
+                <!-- Traffic sources -->
+                <div class="panel panel-flat">
+                    <div class="panel-heading text-center">
+                        <h1 class="panel-title">Create Campaign</h1>
+                    </div>
+
+                    <ul style="margin-left: 10px;" class="nav nav-tabs nav-pills  vnav">
+                        <li class="active"><a data-toggle="tab" href="#home">Create</a></li>
+                        <li><a data-toggle="tab" href="#home1">Specs</a></li>
+                        <li><a data-toggle="tab" href="#menu1">Mapping</a></li>
+                        <li><a data-toggle="tab" href="#menu2">Terms</a></li>
+                        <li><a data-toggle="tab" href="#menu3">Delivery</a></li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div id="home" class="tab-pane fade in active">
+                            <div class='row'>
+                                <div class='col-sm-8 col-md-8'>
+                                    <form class="form-horizontal" action="#">
+                                        <fieldset class="content-group">
+                                            <div class='row createcampaign'>
+                                                <div class='col-md-12 col-sm-12'>
+
+                                                    <div class="form-group">
+                                                        <label class="control-label col-lg-3">Campaign Name:</label>
+                                                        <div class="col-lg-6">
+                                                            <input title='<span class="headfont1">Campaign Name</span>' type="text" class="form-control" placeholder='Campaign Name'>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class='col-md-12 col-sm-12'>
+                                                    <div class="form-group">
+                                                        <label class="control-label col-lg-3">Campaign Description</label>
+                                                        <div class="col-lg-6">
+                                                            <textarea rows="2" cols="2" class="form-control" placeholder="Default textarea"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class='col-md-12 col-sm-12'>
+                                                    <div class="form-group">
+                                                        <label class="control-label col-lg-3">Techconnectr IO Number:</label>
+                                                        <div class="col-lg-6">
+                                                            <input type="text" class="form-control" placeholder='Campaign Name'>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class='col-md-12 col-sm-12'>
+                                                    <div class="form-group">
+                                                        <label class="control-label col-lg-3">Client PO Number:</label>
+                                                        <div class="col-lg-6">
+                                                            <input type="text" class="form-control" placeholder='Enter Client PO Number'>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class='col-md-12 col-sm-12'>
+                                                    <div class="form-group">
+                                                        <label class="control-label col-lg-3">CPL</label>
+
+                                                        <div class="col-lg-6">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon">$</span>
+                                                                <input type="number" min='0' class="form-control" placeholder="Amount">
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class='col-md-12 col-sm-12'>
+                                                    <div class="form-group">
+                                                        <label class="control-label col-lg-3">Start Date:</label>
+                                                        <div class="col-lg-6">
+                                                            <input type="date" class="form-control datepicker">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class='col-md-12 col-sm-12'>
+                                                    <div class="form-group">
+                                                        <label class="control-label col-lg-3">End Date:</label>
+                                                        <div class="col-lg-6">
+                                                            <input type="date" class="form-control datepicker">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+
+
+                                </div>
+                                <div class='col-sm-12 col-md-4' style="padding-right:20px;">
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading headfont">Getting Started Tips</div>
+                                        <div class="panel-body">
+                                            <strong>All The Fields Are Mandatory</strong></div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div id="home1" class="tab-pane fade in">
+                            <div class='row'>
+                                <div class='col-sm-8 col-md-8'>
+                                    <div class='row'>
+
+                                        <div class='col-md-9 col-sm-12'>
+                                            <div class="panel-group panel-group-control content-group-lg" id="accordion-control">
+                                                <div class="panel">
+                                                    <div class="panel-heading">
+                                                        <h6 class="panel-title">
+													<a data-toggle="collapse" id="accordion" data-parent="#accordion-control" href="#accordion-control-group1">Select Product/ category</a>
+                    								    </h6>
+                                                    </div>
+                                                    <div id="accordion-control-group1" class="panel-collapse collapse ">
+                                                        <div class="panel-body">
+
+																<div class=''>
+																	<label><input id='chk4' type='checkbox'/>Use As Text</label>
+																</div>
+
+
+                                                            <div class="form-group">
+
+                                                                <!-- Leads,Survey,Appointment,Data -->
+                                                                <div class="radio">
+                                                                    <label>
+                                                                        <input type="checkbox" name="unstyled-radio-left" checked="checked"> Leads
+                                                                    </label>
+																	<input type='text' class='tb3 form-control-inline pull-right tb10' value='Leads'>
+                                                                </div>
+
+                                                                <div class="radio">
+                                                                    <label>
+                                                                        <input type="checkbox" name="unstyled-radio-left"> Survey
+                                                                    </label>
+																	<input type='text' class='tb3 form-control-inline pull-right tb10' value='Survey'>
+                                                                </div>
+
+                                                                <div class="radio">
+                                                                    <label>
+                                                                        <input type="checkbox" name="unstyled-radio-left"> Appointment
+                                                                    </label>
+																	<input type='text' class='tb3 form-control-inline pull-right tb10' value='Appointment'>
+                                                                </div>
+
+                                                                <div class="radio">
+                                                                    <label>
+                                                                        <input type="checkbox" name="unstyled-radio-left"> Data
+                                                                    </label>
+																	<input type='text' class='tb3 form-control-inline pull-right tb10' value='Data'>
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class='col-md-9 col-sm-12'>
+                                            <div class="panel-group panel-group-control content-group-lg" id="accordion-control1">
+                                                <div class="panel">
+                                                    <div class="panel-heading">
+                                                        <h6 class="panel-title">
+											<a data-toggle="collapse" data-parent="#accordion-control1" href="#accordion-control-group2">Select Your Target Quantity</a>
+										</h6>
+                                                    </div>
+                                                    <div id="accordion-control-group2" class="panel-collapse collapse ">
+                                                        <div class="panel-body">
+
+                                                            <div class="form-group">
+                                                                <div class="col-lg-6">
+                                                                    <input type='number' placeholder="Enter Quantity" name="select" class="form-control">
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div class='col-md-9 col-sm-12'>
+                                            <div class="panel-group panel-group-control content-group-lg" id="accordion-control2">
+                                                <div class="panel">
+                                                    <div class="panel-heading">
+                                                        <h6 class="panel-title">
+											<a data-toggle="collapse" data-parent="#accordion-control2" href="#accordion-control-group3">Select Pacing</a>
+										</h6>
+                                                    </div>
+                                                    <div id="accordion-control-group3" class="panel-collapse collapse">
+                                                        <div class="panel-body">
+
+
+														<div class=''>
+															<label>
+																<input id='chk5' type='checkbox'/>Use As Text
+															 </label>
+														</div>
+
+                                                            <div class="form-group">
+                                                                <div class="radio">
+                                                                    <label>
+                                                                        <input type="checkbox" name="unstyled-radio-left" checked="checked"> real time
+                                                                    </label><input type='text' class='tb4 form-control-inline pull-right tb10' value='Real Time'>
+                                                                </div>
+
+                                                                <div class="radio">
+                                                                    <label>
+                                                                        <input type="checkbox" name="unstyled-radio-left"> Daily
+                                                                    </label><input type='text' class='tb4 form-control-inline pull-right tb10' value='Daily'>
+                                                                </div>
+
+                                                                <div class="radio">
+                                                                    <label>
+                                                                        <input type="checkbox" name="unstyled-radio-left"> Weekly
+                                                                    </label><input type='text' class='tb4 form-control-inline pull-right tb10' value='Weekly'>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div class='col-md-9 col-sm-12'>
+                                            <div class="panel-group panel-group-control content-group-lg" id="accordion-control4">
+                                                <div class="panel">
+                                                    <div class="panel-heading">
+                                                        <h6 class="panel-title">
+												<a data-toggle="collapse" data-parent="#accordion-control4" href="#accordion-control-group4">Select Touchbase Meeting</a>
+											</h6>
+                                                    </div>
+                                                    <div id="accordion-control-group4" class="panel-collapse collapse ">
+                                                        <div class="panel-body">
+
+														<div>
+															<label><input id='chk6' type='checkbox'/>Use As Text</label>
+														</div>
+
+                                                            <div class="form-group">
+                                                                <div class="radio">
+                                                                    <label>
+                                                                        <input type="checkbox" name="weekdays" checked="checked"> Monday
+                                                                    </label><input type='text' class='tb5 form-control-inline pull-right tb10' value='Monday'>
+                                                                </div>
+
+                                                                <div class="radio">
+                                                                    <label>
+                                                                        <input type="checkbox" name="weekdays"> Tuesday
+                                                                    </label><input type='text' class='tb5 form-control-inline pull-right tb10' value='Tuesday'>
+                                                                </div>
+
+                                                                <div class="radio">
+                                                                    <label>
+                                                                        <input type="checkbox" name="weekdays"> Wednesday
+                                                                    </label><input type='text' class='tb5 form-control-inline pull-right tb10' value='Wednesday'>
+                                                                </div>
+
+                                                                <div class="radio">
+                                                                    <label>
+                                                                        <input type="checkbox" name="weekdays"> Thursday
+                                                                    </label><input type='text' class='tb5 form-control-inline pull-right tb10' value='Thursday'>
+                                                                </div>
+
+                                                                <div class="radio">
+                                                                    <label>
+                                                                        <input type="checkbox" name="weekdays"> Friday
+                                                                    </label><input type='text' class='tb5 form-control-inline pull-right tb10' value='Friday'>
+                                                                </div>
+
+
+
+
+
+
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- account based marketing-->
+                                        <div class='col-md-9 col-sm-12'>
+                                            <div class="panel-group panel-group-control content-group-lg" id="accordion-control5">
+                                                <div class="panel">
+                                                    <div class="panel-heading">
+                                                        <h6 class="panel-title">
+                                                            <a data-toggle="collapse"
+                                                               data-parent="#accordion-control5" href="#accordion-control-group5">
+                                                                Account Based Marketing
+                                                            </a>
+                                                        </h6>
+                                                    </div>
+                                                    <div id="accordion-control-group5" class="panel-collapse collapse ">
+                                                        <div class="panel-body">
+                                                            <p>Note: The target account list must contain 5x the number of leads you want to generate.
+                                                                By uploading a target account list, you will not be able to select a company size or industry filter.
+                                                            </p>
+
+                                                            <label>Upload Your ABM List: </label>
+                                                            <label class="radio-inline">
+                                                                <input type="checkbox" id="radio_abm_yes" name="radio-abm-list">
+                                                                Yes
+                                                            </label>
+                                                            <label class="radio-inline">
+                                                                <input type="checkbox" id="radio_abm_no" name="radio-abm-list">
+                                                               No
+                                                            </label>
+                                                            <button type="button" id="button_abm_upload" class="btn btn-info btn-xs legitRipple">Upload</button>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /account based marketing-->
+
+                                        <!-- account supression-->
+                                        <div class='col-md-9 col-sm-12'>
+                                            <div class="panel-group panel-group-control content-group-lg" id="accordion-control6">
+                                                <div class="panel">
+                                                    <div class="panel-heading">
+                                                        <h6 class="panel-title">
+                                                            <a data-toggle="collapse"
+                                                               data-parent="#accordion-control6" href="#accordion-control-group6">
+                                                                Account Supression
+                                                            </a>
+                                                        </h6>
+                                                    </div>
+                                                    <div id="accordion-control-group6" class="panel-collapse collapse ">
+                                                        <div class="panel-body">
+                                                            <p>Note: The account suppression list may contain a maximum of 100 companies.</p>
+
+                                                            <label>Upload Your Account Suppression List: </label>
+                                                            <label class="radio-inline">
+                                                                <input type="checkbox" id="radio_acc_suppression_yes" name="radio-supression_list">
+                                                                Yes
+                                                            </label>
+                                                            <label class="radio-inline">
+                                                                <input type="checkbox" id="radio_acc_suppression_no" name="radio-supression_list">
+                                                               No
+                                                            </label>
+                                                            <button type="button" id="button_acc_supression" class="btn btn-info btn-xs legitRipple">Upload</button>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /account supression-->
+
+                                    </div>
+
+                                </div>
+                                <div class='col-sm-12 col-md-4' style="padding-right:20px;">
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading headfont">Getting Started Tips</div>
+                                        <div class="panel-body">
+                                            <strong>All The Fields Are Mandatory</strong></div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="menu1" class="tab-pane fade in">
+                            <div class='row'>
+                                <div class='col-sm-8 col-md-8'>
+                                    <div class='row'>
+
+
+                                        <div class='col-md-9 col-sm-12'>
+                                            <div class="panel-group panel-group-control content-group-lg" id="accordion-control7">
+                                                <div class="panel">
+                                                    <div class="panel-heading">
+                                                        <h6 class="panel-title">
+												<a data-toggle="collapse" data-parent="#accordion-control7" href="#accordion-control-group77">Select Industry Type</a>
+											</h6>
+                                                    </div>
+                                                    <div id="accordion-control-group77" class="panel-collapse collapse ">
+                                                        <div class="panel-body">
+															<div class='pull-right'>
+																<label><input type='checkbox' id='selecttxt'>Use As Text</label>
+															</div>
+                                                    <ul class='scroll ' id="treeview">
+                                                                <li>
+                                                                    <ul class='treelist'>
+                                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                <label>
+                                                                                    <input id="xnode-0" data-id="custom-0-1" type="checkbox" /> Select All</label>
+
+                                                                                <ul>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-1" data-id="custom-0-1-1" type="checkbox" /> Advertising
+                                                                                        </label><input type='text' value='Advertising/Media/Publishing' class='form-control-inline pull-right textbox tb10'>
+                                                                                    </li>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Aerospace & Aviation</label>
+																							<input type='text' class='form-control-inline pull-right textbox tb10' value='Aerospace & Aviation '>
+                                                                                    </li>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Agriculture & Forestry</label>
+																							<input type='text' class='form-control-inline pull-right textbox tb10' value='Agriculture & Forestry'>
+                                                                                    </li>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Banking
+                                                                                        </label><input type='text' class='form-control-inline pull-right textbox tb10' value='Banking/Accounting/Financial'>
+                                                                                    </li>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Biotechnology
+                                                                                        </label><input type='text' class='form-control-inline pull-right textbox tb10' value='Biotechnology'>
+                                                                                    </li>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Computer & Technology</label>
+																							<input type='text' class='form-control-inline pull-right textbox tb10' value='Computer & Technology'>
+                                                                                    </li>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Engineering & Construction</label>
+																							<input type='text' class='form-control-inline pull-right textbox tb10' value='Engineering & Construction'>
+                                                                                    </li>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Entertainment
+                                                                                        </label><input type='text' class='form-control-inline pull-right textbox tb10' value='Entertainment'>
+                                                                                    </li>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Food & Beverage</label>
+																							<input type='text' class='form-control-inline pull-right textbox tb10' value='Food & Beverage'>
+                                                                                    </li>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Healthcare
+                                                                                        </label>
+																						<input type='text' class='form-control-inline pull-right textbox tb10' value='Healthcare'>
+                                                                                    </li>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Insurance
+                                                                                        </label><input type='text' class='form-control-inline pull-right tb10' value='Insurance'>
+                                                                                    </li>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Legal Solutions</label>
+																							<input type='text' class='form-control-inline pull-right textbox tb10' value='Legal Solutions'>
+                                                                                    </li>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Marketing
+                                                                                        </label><input type='text' class='form-control-inline pull-right textbox  tb10' value='Marketing'>
+                                                                                    </li>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Non profit Organizations</label>
+																							<input type='text' class='form-control-inline pull-right textbox tb10' value='Non profit Organizations'>
+                                                                                    </li>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Other Industry Not Listed</label>
+																							<input type='text' class='form-control-inline pull-right textbox tb10' value='Other Industry Not Listed'>
+                                                                                    </li>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Public Relations</label>
+																							<input type='text' class='form-control-inline pull-right textbox tb10' value='Public Relations'>
+                                                                                    </li>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Real Estate</label>
+																							<input type='text' class='form-control-inline pull-right textbox tb10' value='Real Estate'>
+                                                                                    </li>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Retail & Wholesale</label>
+																							<input type='text' class='form-control-inline pull-right textbox tb10' value='Retail & Wholesale'>
+                                                                                    </li>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Telecommunications
+                                                                                        </label>
+																						<input type='text' class='form-control-inline pull-right textbox tb10' value='Telecommunications'>
+                                                                                    </li>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Transportation & Shipping</label>
+																							<input type='text' class='form-control-inline pull-right textbox tb10' value='Transportation & Shipping'>
+                                                                                    </li>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Utilities
+                                                                                        </label>
+																						<input type='text' class='form-control-inline pull-right textbox tb10' value='Utilities'>
+                                                                                    </li>
+                                                                                </ul>
+                                                                            </li>
+                                                                    </ul>
+                                                                    </li>
+                                                            </ul>
+
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                         <div class='col-md-9 col-sm-12'>
+                                            <div class="panel-group panel-group-control content-group-lg" id="accordion-control111">
+                                                <div class="panel">
+                                                    <div class="panel-heading">
+                                                        <h6 class="panel-title">
+                                            <a data-toggle="collapse" data-parent="#accordion-control111" href="#accordion-control-group222">Select Job Title</a>
+                                        </h6>
+                                                    </div>
+                                                    <div id="accordion-control-group222" class="panel-collapse collapse ">
+                                                        <div class="panel-body">
+
+                                                            <div class="form-group">
+                                                                <div class="col-lg-6">
+                                                                    <input type='number' placeholder="Job title" name="select" class="form-control">
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+
+                                         <div class='col-md-9 col-sm-12'>
+                                            <div class="panel-group panel-group-control content-group-lg" id="accordion-control00">
+                                                <div class="panel">
+                                                    <div class="panel-heading">
+                                                        <h6 class="panel-title">
+                                                <a data-toggle="collapse" data-parent="#accordion-control00" href="#accordion-control-group00">Select Job Level</a>
+                                            </h6>
+                                                    </div>
+                                                    <div id="accordion-control-group00" class="panel-collapse collapse ">
+                                                        <div class="panel-body ">
+														<div class='pull-right'>
+															<label><input type='checkbox' id='check1' class='form-control-inline'>Use As Text</label>
+														</div>
+                                                    <ul id="treeview8" class='scroll'>
+                                                                <li>
+                                                                    <ul class='treelist'>
+                                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                <label>
+                                                                                    <input id="xnode-0" data-id="custom-0-1" type="checkbox" /> Select All</label>
+                                                                                <ul>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-1" data-id="custom-0-1-1" type="checkbox" /> C- Level
+
+																						</label>
+																						<input type='text' class='form-control-inline pull-right tb10 txtb1' value='C-Level'>
+
+
+                                                                                    </li>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> VP </label>
+																							<input type='text' class='form-control-inline pull-right tb10 txtb1' value='VP'>
+
+                                                                                    </li>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Head Director
+																							</label>
+																							<input type='text' class='form-control-inline pull-right tb10 txtb1' value='Head Director'>
+                                                                                    </li>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" />Manager
+                                                                                        </label>
+																						<input type='text' class='form-control-inline pull-right tb10 txtb1' value='Manager'>
+                                                                                    </li>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Other
+                                                                                        </label>
+																						<input type='text' class='form-control-inline pull-right tb10 txtb1' value='Other'>
+                                                                                    </li>
+
+
+                                                                                </ul>
+                                                                            </li>
+                                                                    </ul>
+                                                                    </li>
+                                                            </ul>
+
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class='col-md-9 col-sm-12'>
+                                            <div class="panel-group panel-group-control content-group-lg" id="accordion-control000">
+                                                <div class="panel">
+                                                    <div class="panel-heading">
+                                                        <h6 class="panel-title">
+                                                <a data-toggle="collapse" data-parent="#accordion-control000" href="#accordion-control-group000">Select Job Function</a>
+                                            </h6>
+                                                    </div>
+                                                    <div id="accordion-control-group000" class="panel-collapse collapse">
+                                                        <div class="panel-body">
+
+														<div class='pull-right'>
+															<label><input type='checkbox' id='check2'/>Use As Text</label>
+														</div>
+
+                                                    <ul class='scroll' id="treeview9">
+                                                                <li>
+                                                                    <ul class='treelist'>
+                                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                <label>
+                                                                                    <input id="xnode-0" data-id="custom-0-1" type="checkbox" /> Select All</label>
+                                                                                <ul>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-1" data-id="custom-0-1-1" type="checkbox" />
+                                                                                                Business
+                                                                                                </label>
+																								<input type='text' class='form-control-inlines pull-right tb10 txtb2' value='Business'>
+																								<div>
+
+                                                                                    </li>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Finance & Admin
+																							</label>
+																							<input type='text' class='form-control-inlines pull-right tb10 txtb2' value='Finance & Admin'>
+                                                                                    </li>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> HR
+																							</label>
+																							<input type='text' class='form-control-inlines pull-right tb10 txtb2' value='HR'>
+                                                                                    </li>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> IT
+                                                                                        </label>
+																						<input type='text' class='form-control-inlines pull-right tb10 txtb2' value='IT'>
+                                                                                    </li>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Legal
+                                                                                        </label>
+																						<input type='text' class='form-control-inlines pull-right tb10 txtb2' value='Legal'>
+                                                                                    </li>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Operations
+																							</label>
+																							<input type='text' class='form-control-inlines pull-right tb10 txtb2' value='Operations'>
+                                                                                    </li>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Other
+																							</label>
+																							<input type='text' class='form-control-inlines pull-right tb10 txtb2' value='Other'>
+                                                                                    </li>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" />
+                                                                                            Procurement
+                                                                                        </label>
+																						<input type='text' class='form-control-inlines pull-right tb10 txtb2' value='Procurement'>
+                                                                                    </li>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Marketing
+																							</label>
+																							<input type='text' class='form-control-inlines pull-right tb10 txtb2' value='Marketing'>
+                                                                                    </li>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Sales
+                                                                                        </label>
+																						<input type='text' class='form-control-inlines pull-right tb10 txtb2' value='Sales'>
+                                                                                    </li>
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox"/>
+                                                                                            Support
+                                                                                        </label>
+																						<input type='text' class='form-control-inlines pull-right tb10 txtb2' value='Support'>
+                                                                                    </li>
+                                                                            </li>
+                                                                    </ul>
+                                                                    </li>
+                                                            </ul>
+
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class='col-md-9 col-sm-12'>
+                                            <div class="panel-group panel-group-control content-group-lg" id="accordion-control7">
+                                                <div class="panel">
+                                                    <div class="panel-heading">
+                                                        <h6 class="panel-title">
+												<a data-toggle="collapse" data-parent="#accordion-control7" href="#accordion-control-group7">Select Country</a>
+											</h6>
+                                                    </div>
+                                                    <div id="accordion-control-group7" class="panel-collapse collapse ">
+                                                        <div class="panel-body">
+                                                            <div class='pull-right'>
+															<label><input type="checkbox" class="chk" name="chk">Use As Text</label>
+                                                            </div>
+															<ul id="treeview1" class='scroll treelist'>
+                                                                <li>
+                                                                    <label>
+                                                                        <input id="xnode-0" data-id="custom-0" type="checkbox" /> Select All</label>
+                                                                    <ul>
+                                                                        <li>
+                                                                            <label>
+                                                                                <input id="xnode-0-1" data-id="custom-0-1" type="checkbox" /> United States</label>
+																				<input type="text" class="form-control-inline pull-right text-center qt1 tb10" value="USA" name="">
+                                                                            <ul>
+
+                                                                                <li>
+                                                                                    <label>
+                                                                                        <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> California
+                                                                                    </label>
+                                                                                    <input type="text" class="form-control-inline  text-center pull-right qt1 tb10" value="CAL" name="">
+                                                                                </li>
+                                                                            </ul>
+                                                                        </li>
+                                                                        <li>
+                                                                            <label>
+                                                                                <input id="xnode-0-2" data-id="custom-0-2" type="checkbox" /> India
+
+                                                                            </label>
+                                                                            <input type="text" class="form-control-inline pull-right text-center qt1 tb10" value="IND" name="">
+                                                                            <ul>
+                                                                                <li>
+                                                                                    <label>
+                                                                                        <input class="hummingbirdNoParent" id="xnode-0-2-1" data-id="custom-0-2-1" type="checkbox" /> Maharashtra
+                                                                                    </label><input type="text" class="form-control-inline  text-center pull-right qt1 tb10" value="MAH" name="">
+                                                                                </li>
+                                                                                <li>
+                                                                                    <label>
+                                                                                        <input class="hummingbirdNoParent" id="xnode-0-2-2" data-id="custom-0-2-2" type="checkbox" /> Punjab
+                                                                                    </label>
+                                                                                    <input type="text" class="form-control-inline  text-center pull-right qt1 tb10" value="PNJ" name="">
+                                                                                </li>
+                                                                            </ul>
+                                                                        </li>
+                                                                    </ul>
+                                                                </li>
+                                                            </ul>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class='col-md-9 col-sm-12'>
+                                            <div class="panel-group panel-group-control content-group-lg" id="accordion-control10">
+                                                <div class="panel">
+                                                    <div class="panel-heading">
+                                                        <h6 class="panel-title">
+											<a data-toggle="collapse" id="accordion" data-parent="#accordion-control10" href="#accordion-control-group10">Select Company Size</a>
+										</h6>
+                                                    </div>
+                                                    <div id="accordion-control-group10" class="panel-collapse collapse ">
+                                                        <div class="panel-body ">
+															<div class='pull-right'>
+																<label><input id='chk1' type='checkbox'/>Use As Text</label>
+                                                            </div>
+															<ul id="treeview4" class='treelist scroll'>
+                                                                <li>
+                                                                    <label>
+                                                                        <input id="xnode-0" data-id="custom-0" type="checkbox" /> Select All</label>
+                                                                    <ul>
+                                                                        <li>
+                                                                            <label>
+                                                                                <input id="xnode-0-1" data-id="custom-0-1" type="checkbox" />1-100
+                                                                            </label>
+																			<input type='text' class='form-control-inline pull-right textbox2 tb10' value='1-100'>
+
+                                                                            <li>
+                                                                                <label>
+                                                                                    <input class="hummingbirdNoParent" id="xnode-0-1-1" data-id="custom-0-1-1" type="checkbox" /> 101-500
+                                                                                </label>
+																				<input type='text' class='form-control-inline pull-right textbox2 tb10' value='101-500'>
+                                                                            </li>
+                                                                            <li>
+                                                                                <label>
+                                                                                    <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> 501-1000
+                                                                                </label>
+																				<input type='text' class='form-control-inline pull-right textbox2 tb10' value='501-1000'>
+                                                                            </li>
+
+                                                                        </li>
+                                                                        <li>
+                                                                            <label>
+                                                                                <input id="xnode-0-2" data-id="custom-0-2" type="checkbox" /> 1001-10000
+                                                                            </label>
+																			<input type='text' class='form-control-inline pull-right textbox2 tb10' value='1001-10000'>
+
+                                                                            <li>
+                                                                                <label>
+                                                                                    <input class="hummingbirdNoParent" id="xnode-0-2-1" data-id="custom-0-2-1" type="checkbox" /> 10000+
+                                                                                </label>
+																				<input type='text' class='form-control-inline pull-right textbox2 tb10' value='10000+'>
+                                                                            </li>
+
+                                                                    </ul>
+                                                                    </li>
+                                                            </ul>
+                                                            </li>
+                                                            </ul>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <div class='col-sm-12 col-md-4' style="padding-right:20px;">
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading headfont">Getting Started Tips</div>
+                                        <div class="panel-body">
+                                            <strong>All The Fields Are Mandatory</strong></div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="menu2" class="tab-pane fade in ">
+                            <div class='row'>
+                                <div class='col-sm-8 col-md-8'>
+                                    <form class="form-horizontal" action="#">
+                                        <fieldset class="content-group">
+                                            <div class='row'>
+                                                <div class='col-md-9 col-sm-12'>
+                                                    <div class="panel-group panel-group-control content-group-lg" id="accordion-control12">
+                                                        <div class="panel">
+                                                            <div class="panel-heading">
+                                                                <h6 class="panel-title">
+												<a data-toggle="collapse" data-parent="#accordion-control12" href="#accordion-control-group12">Select Source In Touches</a>
+											</h6>
+                                                            </div>
+                                                            <div id="accordion-control-group12" class="panel-collapse collapse ">
+                                                                <div class="panel-body">
+
+																<div class='pull-right'>
+																	<label><input type='checkbox' id='check3'>Use As Text</label>
+																</div>
+
+                                                                    <ul class='scroll' id="treeview3">
+                                                                        <li>
+                                                                            <ul class='treelist'>
+                                                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input id="xnode-0" data-id="custom-0-1" type="checkbox" /> Select All</label>
+                                                                                        <ul>
+                                                                                            <li>
+                                                                                                <label>
+                                                                                                    <input class="hummingbirdNoParent" id="xnode-0-1-1" data-id="custom-0-1-1" type="checkbox" /> Email
+																									</label>
+
+																										<input type='text'/ class='form-control-inline pull-right tb10 txtb3' value='Email'>
+
+                                                                                            </li>
+                                                                                            <li>
+                                                                                                <label>
+                                                                                                    <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Tele
+																									</label>
+																									<input type='text'/ class='form-control-inline pull-right tb10 txtb3' value='Tele'>
+                                                                                            </li>
+                                                                                            <li>
+                                                                                                <label>
+                                                                                                    <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Social
+																									</label>
+																									<input type='text'/ class='form-control-inline pull-right tb10 txtb3' value='Social'>
+                                                                                            </li>
+                                                                                            <li>
+                                                                                                <label>
+                                                                                                    <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Digital
+																									</label>
+																									<input type='text'/ class='form-control-inline pull-right tb10 txtb3' value='Digital'>
+                                                                                            </li>
+                                                                                            <li>
+                                                                                                <label>
+                                                                                                    <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Hybrid </label>
+																									<input type='text'/ class='form-control-inline pull-right tb10 txtb3' value='Hybrid'>
+                                                                                            </li>
+                                                                                        </ul>
+                                                                                    </li>
+                                                                            </ul>
+                                                                            </li>
+                                                                    </ul>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class='col-md-9 col-sm-12'>
+                                                    <div class="panel-group panel-group-control content-group-lg" id="accordion-control13">
+                                                        <div class="panel">
+                                                            <div class="panel-heading">
+                                                                <h6 class="panel-title">
+												<a data-toggle="collapse" data-parent="#accordion-control13" href="#accordion-control-group13"> Level Of Intent</a>
+											</h6>
+                                                            </div>
+                                                            <div id="accordion-control-group13" class="panel-collapse collapse ">
+                                                                <div class="panel-body">
+
+																<div class='pull-right'>
+																	<label><input id='check4' type='checkbox'>Use As Text</label>
+																</div>
+
+                                                                    <ul class='scroll' id="treeview5">
+                                                                        <li>
+                                                                            <ul class='treelist'>
+                                                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input id="xnode-0" data-id="custom-0-1" type="checkbox" /> Select All</label>
+                                                                                        <ul>
+                                                                                            <li>
+                                                                                                <label>
+                                                                                                    <input class="hummingbirdNoParent" id="xnode-0-1-1" data-id="custom-0-1-1" type="checkbox" /> Verified Data </label>
+																									<input type='text' value='Verified Data' class='txtb4 pull-right tb10 text-center'/>
+                                                                                            </li>
+                                                                                            <li>
+                                                                                                <label>
+                                                                                                    <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> MQL </label>
+																									<input type='text' value='MQL' class='txtb4 pull-right tb10 text-center'/>
+                                                                                            </li>
+                                                                                            <li>
+                                                                                                <label>
+                                                                                                    <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> HQL </label>
+																									<input type='text' value='HQL' class='txtb4 pull-right tb10 text-center'/>
+                                                                                            </li>
+                                                                                            <li>
+                                                                                                <label>
+                                                                                                    <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> SQL </label>
+																									<input type='text' value='SQL' class='txtb4 pull-right tb10 text-center'/>
+                                                                                            </li>
+                                                                                            <li>
+                                                                                                <label>
+                                                                                                    <input class="hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Appointment </label>
+																									<input type='text' value='Appointment' class='txtb4 pull-right tb10 text-center'/>
+                                                                                            </li>
+                                                                                        </ul>
+                                                                                    </li>
+                                                                            </ul>
+                                                                            </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class='col-md-9 col-sm-12'>
+                                                    <div class="panel-group panel-group-control content-group-lg" id="accordion-control14">
+                                                        <div class="panel">
+                                                            <div class="panel-heading">
+                                                                <h6 class="panel-title">
+																																	<a data-toggle="collapse" data-parent="#accordion-control14" href="#accordion-control-group14">Waterfall</a>
+																																  <div class="pull-right">
+																																			<input type='checkbox' id='watercheck' class='form-control-inline'>
+																																	</div>
+																																</h6>
+
+                                                            </div>
+                                                            <div id="accordion-control-group14" class="panel-collapse collapse ">
+                                                                <div class="panel-body">
+                                                                    <div class="form-group">
+                                                                    </div>
+
+                                                                    <table class='table' id="waterfalltable">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>Level</th>
+                                                                                <th>Volume</th>
+                                                                                <th>CPL</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td>Verified Data</td>
+                                                                                <td>
+                                                                                    <input type='number' class='form-control' placeholder='Volume'>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <input type='number' class='form-control' placeholder='CPL'>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class='col-md-9 col-sm-12'>
+                                                    <div class="panel-group panel-group-control content-group-lg" id="accordion-control15">
+                                                        <div class="panel">
+                                                            <div class="panel-heading">
+                                                                <h6 class="panel-title">
+												<a data-toggle="collapse" data-parent="#accordion-control15" href="#accordion-control-group15">Assets</a>
+											</h6>
+                                                            </div>
+                                                            <div id="accordion-control-group15" class="panel-collapse collapse ">
+                                                                <div class="panel-body">
+
+																	<div class=''>
+																		<label><input type='checkbox' id='chk7' />Use As Text</label>
+																	</div>
+
+                                                                    <div class="form-group">
+
+                                                                        <div class="radio">
+                                                                            <label>
+                                                                                <input type="checkbox" name="weekdays"> E-books
+                                                                            </label>
+																			<input type='text' class='pull-right textbox3 tb10' value='E-books'>
+                                                                        </div>
+
+                                                                        <div class="radio">
+                                                                            <label>
+                                                                                <input type="checkbox" name="weekdays"> White Paper
+                                                                            </label>
+																			<input type='text' class='pull-right textbox3 tb10' value='White Paper'>
+                                                                        </div>
+
+                                                                        <div class="radio">
+                                                                            <label>
+                                                                                <input type="checkbox" name="weekdays"> NewsLetter
+                                                                            </label>
+																			<input type='text' class='pull-right textbox3 tb10' value='NewsLetter'>
+                                                                        </div>
+
+                                                                        <div class="radio">
+                                                                            <label>
+                                                                                <input type="checkbox" name="weekdays"> Guides
+                                                                            </label>
+																			<input type='text' class='pull-right textbox3 tb10' value='Guides'>
+                                                                        </div>
+
+                                                                        <div class="radio">
+                                                                            <label>
+                                                                                <input type="checkbox" name="weekdays"> Reports
+                                                                            </label>
+																			<input type='text' class='pull-right textbox3 tb10' value='Reports'>
+                                                                        </div>
+
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+                                </div>
+                                <div class='col-sm-12 col-md-4' style="padding-right:20px;">
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading headfont">Getting Started Tips</div>
+                                        <div class="panel-body">
+                                            <strong>All The Fields Are Mandatory</strong></div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="menu3" class="tab-pane fade in ">
+                            <div class='row'>
+                                <div class='col-sm-8 col-md-8'>
+                                    <form class="form-horizontal" action="#">
+                                        <fieldset class="content-group">
+                                            <div class='row'>
+                             <div class='col-md-9 col-sm-12'>
+                                                    <div class="panel-group panel-group-control content-group-lg" id="accordion-control18">
+                                                        <div class="panel">
+                                                            <div class="panel-heading">
+                                                                <h6 class="panel-title">
+												<a data-toggle="collapse" data-parent="#accordion-control18" href="#accordion-control-group18">Data Header</a>
+											</h6>
+                                                            </div>
+                                                            <div id="accordion-control-group18" class="panel-collapse collapse ">
+                                                                <div class="panel-body">
+
+                                                                    <ul style="display: none;" class='list-group list-inline scroll' id="treeview55">
+                                                                        <li>
+                                                                            <ul class='treelist'>
+                                                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                        <label>
+                                                                                            <input class="sa" id="xnode-0" data-id="custom-0-1" type="checkbox" /> Select All</label>
+                                                                                        <ul>
+                                                                                            <li>
+                                                                                                <label>
+                                                                                                    <input value="Email" name='sport' class="slt hummingbirdNoParent" id="xnode-0-1-1" data-id="custom-0-1-1" type="checkbox" /> Email </label>
+                                                                                            </li>
+                                                                                            <li>
+                                                                                                <label>
+                                                                                                    <input value="Tele" name='sport' class="slt hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Tele </label>
+                                                                                            </li>
+                                                                                            <li>
+                                                                                                <label>
+                                                                                                    <input value="Social" name='sport' class="slt hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Social </label>
+                                                                                            </li>
+                                                                                            <li>
+                                                                                                <label>
+                                                                                                    <input value="Digital" name='sport' class="slt hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Digital </label>
+                                                                                            </li>
+                                                                                            <li>
+                                                                                                <label>
+                                                                                                    <input value="Hybrid" name='sport' class="slt hummingbirdNoParent" id="xnode-0-1-2" data-id="custom-0-1-2" type="checkbox" /> Hybrid </label>
+                                                                                            </li>
+                                                                                        </ul>
+                                                                                    </li>
+                                                                            </ul>
+                                                                            </li>
+                                                                    </ul>
+                                                                    <div >
+                                                                        <span class="txt"></span>
+                                                                        <table class="table table-light table-striped" border="1"><tr class='slt1'></tr></table>
+                                                                    </div>
+
+                                                                    <div class="row" style='display:none;'>
+                                                                    <div id="fieldChooser" tabIndex="1">
+                                                                        <div id="sourceFields">
+                                                                            <div>Email</div>
+                                                                            <div>Tele</div>
+                                                                            <div>Hybrid</div>
+                                                                            <div>Social</div>
+                                                                            <div>Digital</div>
+
+                                                                        </div>
+                                                                        <div id="destinationFields">
+                                                                        </div>
+                                                                    </div>
+                                                            </div>
+															<div class='row'>
+															<ol data-draggable="target" >
+
+
+
+  	<li data-draggable="item" >Email</li>
+	  <li data-draggable="item" >Tele</li>
+  	<li data-draggable="item" >Hybrid</li>
+  	<li data-draggable="item" >Digital</li>
+  	<li data-draggable="item" >Social</li>
+</ol>
+
+<ol data-draggable="target" id='myUL'>
+
+</ol>
+
+
+															</div>
+								<div class='row'>
+								<table class='table table-light table-striped' border="1">
+								<caption><label class='label label-primary'>Selected Header</label></caption>
+								<thead>
+								<tr id='dynamic'>
+								</tr>
+								</thead>
+								</table>
+								</div>
+
+															<hr>
+
+																  <table>
+
+																<thead class='table'>
+																	<th>
+																		<label class='label label-primary'>
+																		Select File
+																		</label>
+																	</th>
+																</thead>
+
+																<tbody>
+																	<td><input  type="file" class="file-input" data-show-caption="false" data-show-upload="false" data-browse-class="btn btn-primary btn-lg" data-remove-class="btn btn-default btn-lg">
+															</td>
+																</tbody>
+
+															</table>
+								<hr>
+
+								<table class='table'>
+									<thead>
+										<th>Add New Data Header</th>
+										<th>Action</th>
+									</thead>
+									<tbody>
+										<td><input type='text' class='form-control'></td>
+										<td><button class='btn btn-primary'>ADD</button></td>
+									</tbody>
+								</table>
+
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                            </div>
+
+
+
+
+
+                                                <div class='col-md-9 col-sm-12'>
+                                                    <div class="panel-group panel-group-control content-group-lg" id="accordion-control19">
+                                                        <div class="panel">
+                                                            <div class="panel-heading">
+                                                                <h6 class="panel-title">
+												<a data-toggle="collapse" data-parent="#accordion-control19" href="#accordion-control-group19">Custom Field</a>
+											</h6>
+                                                            </div>
+                                                            <div id="accordion-control-group19" class="panel-collapse collapse ">
+                                                                <div class="panel-body">
+
+                                                                    <div class="form-group">
+                                                                        <div class="col-lg-10">
+
+
+
+        <textarea id="dropdiv" class="form-control" type="text" placeholder="Select the Question or Type your own" /></textarea>
+
+        <div id="dragdiv">
+                                    <ul id="allItems" class="list-group">
+                                                <li class="list-group-item" id="node" runat="server">
+                            <label class='label label-primary pull-left'>What is your country?</label>                           </li>
+                                                <li class="list-group-item" id="node" runat="server">
+                         <label class='label label-primary pull-left'>What area best describes your job in your company?</label>                        </li>
+                                                <li class="list-group-item" id="node" runat="server">
+                           <label class='label label-primary pull-left'>What is your job level in your company?</label>                        </li>
+                                        </ul>
+
+        </div>
+
+
+
+
+
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>-
+
+                                                <div class='col-md-9 col-sm-12'>
+                                                    <div class="panel-group panel-group-control content-group-lg" id="accordion-control20">
+                                                        <div class="panel">
+                                                            <div class="panel-heading">
+                                                                <h6 class="panel-title">
+												<a data-toggle="collapse" data-parent="#accordion-control20" href="#accordion-control-group20"> Delivery Method</a>
+											</h6>
+                                                            </div>
+                                                            <div id="accordion-control-group20" class="panel-collapse collapse ">
+                                                                <div class="panel-body">
+
+																	<div class=''>
+																		<label><input id='chk2' type='checkbox'>Use As Text</label>
+																	</div>
+
+                                                                    <div class="form-group">
+
+
+
+
+
+                                                                        <div class="radio">
+                                                                            <label>
+                                                                                <input type="checkbox" name="weekdays"> Excel
+                                                                            </label>
+																			<input type='text' class='pull-right tb1 tb10' value='Excel'>
+                                                                        </div>
+
+                                                                        <div class="radio">
+                                                                            <label>
+                                                                                <input type="checkbox" name="weekdays"> API Transfer
+                                                                            </label>
+																			<input type='text' class='pull-right tb1 tb10' value='API Transfer'>
+                                                                        </div>
+
+                                                                        <div class="radio">
+                                                                            <label>
+                                                                                <input type="checkbox" name="weekdays"> FTP
+                                                                            </label>
+																			<input type='text' class='pull-right tb1 tb10' value='FTP'>
+                                                                        </div>
+
+                                                                        <div class="radio">
+                                                                            <label>
+                                                                                <input type="checkbox" name="weekdays"> CRM
+                                                                            </label>
+																			<input type='text' class='pull-right tb1 tb10' value='CRM'>
+                                                                        </div>
+
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class='col-md-9 col-sm-12'>
+                                                    <div class="panel-group panel-group-control content-group-lg" id="accordion-control21">
+                                                        <div class="panel">
+                                                            <div class="panel-heading">
+                                                                <h6 class="panel-title">
+												<a data-toggle="collapse" data-parent="#accordion-control21" href="#accordion-control-group21"> Delivery Timing</a>
+											</h6>
+                                                            </div>
+                                                            <div id="accordion-control-group21" class="panel-collapse collapse ">
+                                                                <div class="panel-body">
+
+																	<div class='' >
+																		<label><input id='chk3' type='checkbox'>Use As Text</label>
+																	</div>
+
+                                                                    <div class="form-group">
+
+                                                                        <div class="radio">
+                                                                            <label>
+                                                                                <input class='delivery_timing' value='Real Time' type="checkbox" name="delivery_timing"> Real Time
+                                                                            </label>
+																			<input type='text' class='pull-right tb2 tb10' value='Real Time'>
+                                                                        </div>
+
+                                                                        <div class="radio">
+                                                                            <label>
+                                                                                <input class='delivery_timing' value='Batch' type="checkbox" name="delivery_timing"> Batch
+                                                                            </label>
+																			<input type='text' class='pull-right tb2 tb10' value='Batch'>
+                                                                        </div>
+
+                                                                    </div>
+																	<table class='table table-light table-striped tbl'>
+																	<thead>
+																	<th>Select Day</th>
+																	<th>Select Time</th>
+																	<th>Select TimeZone</th>
+																	</thead>
+																	<tbody>
+																	<tr>
+																	<td>
+																		<select class='form-control'>
+																			<option>Monday</option>
+																			<option>Tuesday</option>
+																			<option>Wednesday</option>
+																			<option>Friday</option>
+																			<option>Saturday</option>
+																			<option>Sunday</option>
+																		</select>
+																	</td>
+																	<td><input type='time' class='form-control'></td>
+																	<td>
+																	<select class='from-control'>
+																	<option>EST</option>
+																	<option>CST</option>
+																	<option>MST</option>
+																	<option>PST</option>
+																	</select>
+																	</td>
+																	</tr>
+																	</tbody>
+																	</table>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class='col-md-9 col-sm-12'>
+
+												<center>
+                                                    <button class='btn btn-primary'>Submit</button>
+												</center>
+                                                </div>
+
+                                            </div>
+                                </div>
+                                <div class='col-sm-12 col-md-4' style="padding-right:20px;">
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading headfont">Getting Started Tips</div>
+                                        <div class="panel-body">
+                                            <strong>All The Fields Are Mandatory</strong></div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        </fieldset>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- /main charts -->
+
+            </div>
+            <!-- /main content -->
+        </div>
+    </div>
+    <!-- /page content -->
+
+    </div>
+    <!-- /page container -->
+{% include "dashboard/createcampaignjs.html" %}
+{% endblock %}

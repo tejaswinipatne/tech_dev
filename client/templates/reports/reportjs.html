@@ -1,0 +1,228 @@
+<script>
+
+  $(".top-pie").click(function(){
+
+		$(".table").hide();
+    $("#chartdiv").show();
+    $("#chartdiv1").show();
+    $("#chartdiv2").show();
+    $(".chartbox").show();
+    $(".chartbox1").show();
+    $(".chartbox3").show();
+
+
+  });
+
+    $(".top-table").click(function(){
+    $(".table").show();
+    $("#chartdiv1").hide();
+    $("#chartdiv").hide();
+    $("#chartdiv2").hide();
+    $(".hide").show();
+  });
+
+
+</script>
+<script>
+
+// Themes begin
+am4core.useTheme(am4themes_animated);
+// Themes end
+
+// Create chart instance
+var chart = am4core.create("chartdiv1", am4charts.XYChart);
+
+
+// Add data
+
+chart.data = [{
+  "Campaign": "Cisco Routers Q1",
+  "HipSolution": 25,
+  "TcMachBizz": 20,
+  "Vlms Global Solution": 21,
+  // "lamerica": 0.3,
+  // "meast": 0.2,
+  // "africa": 0.1
+}, {
+  "Campaign": "demofeb7",
+  "AK-Soluction pvt ltd": 26,
+  // "namerica": 2.7,
+  // "asia": 2.2,
+  // "lamerica": 0.3,
+  // "meast": 0.3,
+  // "africa": 0.1
+},{
+  "Campaign": "FireEye Event Reg",
+  "Vlms Global Solution": 26,
+  "TcMachBizz": 27,
+  "MachBizzo": 22,
+  "ClientDem": 30,
+  // "meast": 0.3,
+  // "africa": 0.1
+},
+ {
+  "Campaign": "demoLeadValidation",
+  "AK-Soluction pvt ltd": 28,
+  "SuryaSolution": 29,
+  // "asia": 2.4,
+  // "lamerica": 0.3,
+  // "meast": 0.3,
+  // "africa": 0.1
+}];
+
+// Create axes
+var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+categoryAxis.dataFields.category = "Campaign";
+categoryAxis.renderer.grid.template.location = 0;
+
+
+var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+valueAxis.renderer.inside = true;
+valueAxis.renderer.labels.template.disabled = true;
+valueAxis.min = 0;
+
+// Create series
+function createSeries(field, name) {
+
+  // Set up series
+  var series = chart.series.push(new am4charts.ColumnSeries());
+  series.name = name;
+  series.dataFields.valueY = field;
+  series.dataFields.categoryX = "Campaign";
+  series.sequencedInterpolation = true;
+
+  // Make it stacked
+  series.stacked = true;
+
+  // Configure columns
+  // series.columns.template.width = am4core.percent(60);
+  series.columns.template.tooltipText = "[bold]{name}[/]\n[font-size:14px]{categoryX}: {valueY}";
+
+  // Add label
+  var labelBullet = series.bullets.push(new am4charts.LabelBullet());
+  labelBullet.label.text = "{name}";
+  labelBullet.locationY = 0.5;
+
+  return series;
+}
+
+createSeries("HipSolution", "HipSolution");
+createSeries("TcMachBizz", "TcMachBizz");
+createSeries("Vlms Global Solution", "Vlms Global Solution");
+createSeries("AK-Soluction pvt ltd", "AK-Soluction pvt ltd");
+createSeries("ClientDemo", "ClientDemo");
+createSeries("MachBizzo", "MachBizzo");
+createSeries("SuryaSolution", "SuryaSolution");
+// Legend
+chart.legend = new am4charts.Legend();
+</script>
+
+
+<script>
+// Themes begin
+am4core.useTheme(am4themes_animated);
+// Themes end
+
+// Create chart instance
+var chart = am4core.create("chartdiv", am4charts.PieChart);
+
+// Add data
+chart.data = [ {
+  "Status": "Pending",
+  "number": 5
+}, {
+  "Status": "Assing",
+  "number": 1
+}, {
+  "Status": "Live",
+  "number": 6
+}, {
+  "Status": "Completed",
+  "number": 2
+},
+  ];
+
+
+
+// Add and configure Series
+var pieSeries = chart.series.push(new am4charts.PieSeries());
+pieSeries.dataFields.value = "number";
+pieSeries.dataFields.category = "Status";
+pieSeries.slices.template.stroke = am4core.color("#fff");
+pieSeries.slices.template.strokeWidth = 2;
+pieSeries.slices.template.strokeOpacity = 1;
+
+// This creates initial animation
+pieSeries.hiddenState.properties.opacity = 1;
+pieSeries.hiddenState.properties.endAngle = -90;
+pieSeries.hiddenState.properties.startAngle = -90;
+
+
+</script>
+
+<!-- Chart code -->
+<script>
+// Themes begin
+am4core.useTheme(am4themes_animated);
+// Themes end
+
+// Create chart instance
+var chart = am4core.create("chartdiv2", am4charts.XYChart);
+chart.scrollbarX = new am4core.Scrollbar();
+
+// Add data
+chart.data = [{
+  "country": "Cisco Routers Q1",
+  "visits": 70
+}, {
+  "country": "demofeb7",
+  "visits": 30
+}, {
+  "country": "FireEye Event Reg ",
+  "visits": 50
+}, {
+  "country": "demoLeadValidation",
+  "visits": 90
+}, ];
+
+// Create axes
+var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+categoryAxis.dataFields.category = "country";
+categoryAxis.renderer.grid.template.location = 0;
+categoryAxis.renderer.minGridDistance = 30;
+categoryAxis.renderer.labels.template.horizontalCenter = "right";
+categoryAxis.renderer.labels.template.verticalCenter = "middle";
+categoryAxis.renderer.labels.template.rotation = 270;
+categoryAxis.tooltip.disabled = true;
+categoryAxis.renderer.minHeight = 110;
+
+var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+valueAxis.renderer.minWidth = 50;
+
+// Create series
+var series = chart.series.push(new am4charts.ColumnSeries());
+series.sequencedInterpolation = true;
+series.dataFields.valueY = "visits";
+series.dataFields.categoryX = "country";
+series.tooltipText = "[{categoryX}: bold]{valueY}[/]";
+series.columns.template.strokeWidth = 0;
+
+series.tooltip.pointerOrientation = "vertical";
+
+series.columns.template.column.cornerRadiusTopLeft = 10;
+series.columns.template.column.cornerRadiusTopRight = 10;
+series.columns.template.column.fillOpacity = 0.8;
+
+// on hover, make corner radiuses bigger
+var hoverState = series.columns.template.column.states.create("hover");
+hoverState.properties.cornerRadiusTopLeft = 0;
+hoverState.properties.cornerRadiusTopRight = 0;
+hoverState.properties.fillOpacity = 1;
+
+series.columns.template.adapter.add("fill", (fill, target)=>{
+  return chart.colors.getIndex(target.dataItem.index);
+})
+
+// Cursor
+chart.cursor = new am4charts.XYCursor();
+</script>

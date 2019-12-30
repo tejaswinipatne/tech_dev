@@ -1,0 +1,270 @@
+ {% extends "header/cheader.html" %}
+{% load static %}
+{% block scripts %}
+  {% include "campaign/campaignreportshead.html" %}
+{% endblock %}
+
+{% block scripts1 %}
+        
+        {% include "campaign/css/campaignreports.css" %}
+         
+    {% endblock %}
+        
+{% block content %}
+
+<!-- Main sidebar -->
+  {% include "side/clientside.html" %}
+<!-- /main sidebar -->
+
+ <!-- Main content -->
+            <div class="content-wrapper">
+
+                <!-- Content area -->
+                <div class="content">
+                    <div class="row">
+                    <!-- Top Clients List -->
+                    <div class="panel panel-height panel-flat">
+                        <div class="panel-heading">
+                                <h1 class="panel-title">Campaign reports </h1><br>
+                                <p id="font14"> Download or view your campaign summary report for meaningful insights that will allow you to quickly optimize your campaign.</p> 
+                        </div>
+                             <div class="table-responsive-sm">
+                            <table class="table datatable-column-search-inputs DataTables">
+                                <thead>
+                                    <tr>
+                                        <th>Campaign Name</th>
+                                        <th>Type</th>
+                                        <th>Status</th>
+                                        <th>Last Updated</th>
+                                        <th>Report Download Link</th>
+                                        <th>Web Report</th>
+                                       
+                                    </tr>
+                                </thead>
+                                <tfoot id='datatfootfilter'>
+                                    <tr>
+
+                                        <td rowspan="1" colspan="1">
+                                            <input type="text" class="form-control input-sm" placeholder="Search Company">
+                                        </td>
+
+                                        <td rowspan="1" colspan="1">
+                                            <input type="text" class="form-control input-sm" placeholder="Search Person">
+                                        </td>
+
+                                        <td rowspan="1" colspan="1">
+                                            <input type="text" class="form-control input-sm" placeholder="Search Category">
+                                        </td>
+
+                                        
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                    <tr style="display: none;">
+                                        <td>Test</td>
+                                        <td>25</td>
+                                        <td><span class="label label-info">Completed</span></td>
+                                            <td>HQL</td>
+                                        <td>30/08/2018</td>
+                                         <td class="text-center">
+                                            web report
+                                    </td>
+                                   </tr> 
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <div id="padding20">
+                        <h5>
+Our reports, campaign activity and message trackers help you stay in control of all your campaign details.
+</h5>
+
+<ul id="font14">
+<li><strong>Campaign Reports:</strong> Download or view your campaign summary report for meaningful insights that will allow you to quickly optimize your campaign.</li>
+
+<li><strong>Schedule Reports:</strong> Schedule to receive your campaign summary reports on a daily, weekly, or monthly basis.</li>
+<li><strong>Vendor Reports:</strong> Download or view your report for meaningful insights that will allow you to quickly optimize reports.</li>
+
+<li><strong>Campaign Activity:</strong> View all activity for campaigns created.</li>
+</ul>
+
+</div>
+                    </div>
+                    <!-- /highlighting rows and columns -->
+
+                    <!-- Footer -->
+                    <div class="footer text-muted" style="display: none;">
+                        &copy; 2018. <a href="#">Trigensoft</a> by <a href="Trigensoft.com" target="_blank">Eugene Kopyov</a>
+                    </div>
+                    <!-- /footer -->
+                </div>
+                </div>
+                <!-- /content area -->
+
+            </div>
+            <!-- /main content -->
+
+        </div>
+        <!-- /page content -->
+
+    </div>
+    <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" onclick="closeModel()"  class="close" >&times;</button>
+          <h4 class="modal-title">On Boarding</h4>
+        </div>
+        <div class="modal-body">
+          <ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#home">Client</a></li>
+    <li><a data-toggle="tab" href="#menu1">Vendor</a></li>
+  </ul>
+
+  <div class="tab-content">
+    <div id="home" class="tab-pane fade in active">
+      
+                        <div class="panel panel-flat">
+                        <table id="data" class="table datatable-show-all">
+                            <thead>
+                                <tr>
+                                    <th>Company Name</th>
+                                    <th>Stage</th>
+                                    <th>Status</th>
+                                    <th>Next Step</th>
+                                    <th>Last Update</th>
+                                    <th>History</th>
+                                </tr>
+                                
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Marth</td>
+                                    <td>1</td>
+                                    <td><span class="label label-info">Warm</span></td>
+                                    <td>3</td>
+                                    <td>16-June-2018</td>
+                                    <td><button type="button" class="btn btn-info btn-float btn-rounded legitRipple" data-toggle="modal" data-target="#modal_iconified"><i class="glyphicon glyphicon-search"></i></button></td>
+                                </tr>
+                                <tr>
+                                    <td>Jackelyn</td>
+                                    <td>--</td>
+                                    <td>--</td>
+                                    <td>--</td>
+                                    <td>16-June-2018</td>
+                                    <td><button type="button" class="btn btn-info btn-float btn-rounded legitRipple" data-toggle="modal" data-target="#modal_iconified"><i class="glyphicon glyphicon-search"></i></button></td>
+                                    
+                                </tr>
+                                    <tr>
+                                    <td>Jackelyn</td>
+                                    <td>--</td>
+                                    <td>--</td>
+                                    <td>--</td>
+                                    <td>16-June-2018</td>
+                                    <td><button type="button" class="btn btn-info btn-float btn-rounded legitRipple" data-toggle="modal" data-target="#modal_iconified"><i class="glyphicon glyphicon-search"></i></button></td>
+                                    
+                                </tr>
+                                
+                                </tbody>
+                        </table>
+                            
+                    </div>
+                    </div>
+                      <div class="panel panel-flat">
+                        <table class="table datatable-show-all">
+                            <thead>
+                                <tr>
+                                    <th>Company Name</th>
+                                    <th>Stage</th>
+                                    <th>Status</th>
+                                    <th>Next Step</th>
+                                    <th>Last Update</th>
+                                    <th>History</th>
+                                </tr>
+                                
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Marth</td>
+                                    <td>--</td>
+                                    <td>--</td>
+                                    <td>--</td>
+                                    <td>16-June-2018</td>
+                                    <td><button type="button" class="btn btn-info btn-float btn-rounded legitRipple" data-toggle="modal" data-target="#modal_iconified"><i class="glyphicon glyphicon-search"></i></button></td>
+                                </tr>
+                                <tr>
+                                    <td>Jackelyn</td>
+                                    <td>--</td>
+                                    <td>--</td>
+                                    <td>--</td>
+                                    <td>16-June-2018</td>
+                                    <td><button type="button" class="btn btn-info btn-float btn-rounded legitRipple" data-toggle="modal" data-target="#modal_iconified"><i class="glyphicon glyphicon-search"></i></button></td>
+                                    
+                                </tr>
+                                
+                                </tbody>
+                        </table>
+
+                    </div>
+                        
+                            
+                    </div>
+                </div>
+                <div class="modal-footer" style="display: none;">
+        <button type="button" style="background-color:#00BCD4;" class="btn btn-default" onclick="closeModel()">Close</button>
+      </div>
+</div>
+</div>
+</div>
+</div>
+    <!-- /page container -->
+<div id="modal_iconified" class="modal fade">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h5 class="modal-title">History</h5>
+                                    <hr>
+                                </div>
+
+                                <div class="modal-body">
+                            
+                                    <div class="row">
+                                        <table class="table datatable-show-all">
+                                            <thead>
+                                                <tr>
+                                                    <th>Sr No.</th>
+                                                    <th>Date</th>
+                                                    <th>Time</th>
+                                                    <th>Activity</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                <td>1</td>
+                                                <td>16-May-2018</td>
+                                                <td>5:24 PM</td>
+                                                <td>Project Started</td>
+                                                </tr>
+                                                 <tr>
+                                                <td>2</td>
+                                                <td>17-May-2018</td>
+                                                <td>5:24 PM</td>
+                                                <td>Project Completed</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                            
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button class="btn btn-link" data-dismiss="modal"><i class="icon-cross"></i> Close</button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% include "campaign/js/campaignreportsjs.html" %}
+                    {% endblock %}

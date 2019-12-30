@@ -1,0 +1,337 @@
+{% extends "common/base.html" %}
+
+{% load static %}
+
+
+{% block title %} Vendors Comparison  {% endblock %}
+
+<!--
+    page code must be start in block content
+    inside block content
+-->
+{% block content %}
+
+<!-- Main content -->
+<div class="content-wrapper">
+
+ <!-- Content area -->
+ <div class="content">
+
+   <!-- main row -->
+   <div class="row">
+    <div class="col-md-12">
+        <div class="well-sm pull-right">
+            <div class="btn-group">
+                <a href="#" id="list" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-th-list">
+                </span>List
+            </a> 
+            <a href="#" id="grid" class="btn btn-default btn-sm">
+                <span
+                    class="glyphicon glyphicon-th">
+                </span>Grid
+            </a>
+            </div>
+        </div>
+    </div>
+   </div>
+
+    <div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-body">
+            <div class="col-md-12">
+                <label><span class="text-semibold fg-color-light-blue">
+                    Filter
+                </label>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label><span>Sweet Spot</label>
+                    <div class="multi-select-full">
+                        <select class="multiselect-filtering" multiple="multiple">
+                            {% for sweet_spot in all_sweet_spots %}
+                            <option value="{{ sweet_spot.name }}">{{ sweet_spot.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label><span>Database Size</label>
+                    <div class="multi-select-full">
+                        <select class="multiselect" multiple="multiple">
+                            <option value="1-10">1 - 10 </option>
+                            <option value="11-100">11-100</option>
+                            <option value="101-1000">101-1000</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label><span>Marketing Method</label>
+                    <div class="multi-select-full">
+                        <select class="multiselect-filtering" multiple="multiple">
+                            {% for marketing_method in all_marketing_methods %}
+                            <option value="{{ marketing_method }}">{{ marketing_method }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label><span>Languages</label>
+                    <div class="multi-select-full">
+                        <select class="multiselect-filtering" multiple="multiple">
+                            {% for lang in all_languages %}
+                            <option value="{{ lang }}">{{ lang }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label><span>Lead Capacity</label>
+                    <div class="multi-select-full">
+                        <select class="multiselect-filtering" multiple="multiple">
+                            
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="pt-20">
+                    <button type="button" class="btn btn-primary btn-rounded legitRipple">
+                        <b><i class="icon-cross2"></i></b> Clear Filters
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+    <!-- Detached content -->
+    <div class="container-detached">
+        <div class="">
+            
+            <div id="content">
+                <div id="products" class="row equal list-group">
+                    
+                    {% for vendor in final_vendors %}
+                    <div class="item grid-group-item col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                        <div class="thumbnail">
+                            <div class="img-container">
+                                    
+                                <div class="img-holder">
+                                    {% if vendor.logo_url %}
+                                        <img class="group list-group-image" src="{{ vendor.logo_url }}" alt="" />
+                                    {% else %}
+                                        <img class="group list-group-image" src="{% static 'client/logos/no-logo.png' %}" alt="" />
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="caption">
+                                <h4 class="group inner list-group-item-heading">
+                                    <a class="vendor-name limit-chars trigger-overlay"
+                                        title="{{ vendor.name }}">
+                                    {{ vendor.name }}
+                                    </a>
+                                </h4>
+                                <div class="row border-bt-light-grey">
+                                    <div class="col-xs-12 col-md-12 p-10">
+                                        <p class="group inner">
+                                        <span class="fg-color-light-blue">Sweet Spot:</span>
+                                        </p>
+                                        <span title="{{ vendor.sweet_spot_text }}" rel="tooltip">
+                                        {{ vendor.sweet_spot_text }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row border-bt-light-grey">
+                                    <div class="col-xs-12 col-md-12">
+                                        <p class="group inner list-group-item-text pt-5 vendor-info">
+                                         <span class="fg-color-light-blue">Database Size:</span>
+                                         <span>{{ vendor.database_overall_size|default_if_none:"---" }}</span>
+                                        </p> 
+                                    </div>
+                                </div>
+
+                                <div class="row border-bt-light-grey">
+                                    <div class="col-xs-12 col-md-12 p-10">
+                                        <p class="group inner">
+                                        <span class="fg-color-light-blue">Marketing Method:</span>
+                                        </p>
+                                        <span>
+                                        {{ vendor.marketing_method|default_if_none:"---"  }}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="row border-bt-light-grey">
+                                    <div class="col-xs-12 col-md-12">
+                                        <p class="group inner list-group-item-text pt-5 vendor-info">
+                                         <span class="fg-color-light-blue">Language supported:</span>
+                
+                                        </p> 
+                                         <span>{{ vendor.language_supported|default_if_none:"-" }}</span>
+                                    </div>
+                                </div>
+                                
+
+                                <div class="row border-bt-light-grey">
+                                    <div class="col-xs-12 col-md-12 p-10">
+                                        <p class="group inner">
+                                        <span class="fg-color-light-blue">Lead Gen Capacity:</span>
+                                        </p>
+                                        <span title="{{ vendor.lead_gen_capacity }}" rel="tooltip">
+                                        {{ vendor.lead_gen_capacity|default_if_none:"-" }}
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    {% endfor %}
+                                                        
+                </div>
+            
+            </div>
+
+
+            <!-- Pagination -->
+            <div id="page" class="m-pagination mb-60"></div>
+            <!-- /pagination -->
+
+
+        </div>
+    </div>
+    <!-- /detached content -->
+
+   <!-- main row -->
+
+ </div>
+ <!-- /content area -->
+
+</div>
+<!-- /main content -->
+
+<!-- open/close -->
+<div class="overlay overlay-hugeinc">
+    <button type="button" class="overlay-close">Close</button>
+</div>
+
+<link rel="stylesheet" type="text/css" href="{% static 'client/plugins/FullscreenOverlayStyles/css/style1.css' %}?ver=1.1" />
+<script src="{% static 'client/plugins/FullscreenOverlayStyles/js/modernizr.custom.js' %}?ver=1.1"></script>
+
+<link href="{% static 'client/plugins/pagignation/mricode.pagination.css' %}?ver=1.1" rel="stylesheet" />
+<script src="{% static 'client/plugins/pagignation/mricode.pagination.js' %}?ver=1.1"></script>
+<!-- text truncate -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/trunk8/1.3.3/trunk8.min.js"></script>
+
+<script src="{% static 'client/plugins/FullscreenOverlayStyles/js/classie.js' %}?ver=1.1"></script>
+<script src="{% static 'client/plugins/FullscreenOverlayStyles/js/demo1.js' %}?ver=1.1"></script>
+
+<!-- responsive tooltip-->
+<link href="{% static 'client/css/tooltip-responsive.css' %}?v=1.1" rel="stylesheet" />
+<script src="{% static 'client/js/tooltip-responsive.js' %}?ver=1.1"></script>
+
+<link href="{% static 'client/css/boxes.css' %}?ver=1.1" rel="stylesheet" />
+<link href="{% static 'client/css/vendors_list.css' %}?ver=1.1" rel="stylesheet" />
+
+<!-- content loders -->
+<script type="text/javascript" src="{% static 'assets/js/plugins/loaders/progressbar.min.js' %}?ver=1.1"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/ui/ripple.min.js' %}?ver=1.1"></script>
+<script type="text/javascript" src="{% static 'assets/js/pages/components_loaders.js' %}?ver=1.1"></script>
+
+<!-- multiselect -->
+<script type="text/javascript" src="{% static 'assets/js/plugins/forms/styling/uniform.min.js' %}?ver=1.1"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/notifications/pnotify.min.js' %}?ver=1.1"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/forms/selects/bootstrap_multiselect.js' %}?ver=1.1"></script>
+<script type="text/javascript" src="{% static 'assets/js/pages/form_multiselect.js' %}?ver=1.1"></script>
+
+
+<script>
+$(document).ready(function(){
+    
+    $("#page").pagination({
+        pageIndex: 0,
+        pageSize: 10,
+        total: {{ final_vendors|length }},
+        debug: true,
+        showInfo: true,
+        showJump: true,
+        showPageSizes: true,
+        pageElementSort: ['$page', '$size', '$jump', '$info']
+    });
+
+    $("#page").on("pageClicked", function (event, data) {
+        console.log('EventName = pageClicked , pageIndex = ' + data.pageIndex + '<br />');
+    })
+    .on('jumpClicked', function (event, data) {
+        console.log('EventName = jumpClicked , pageIndex = ' + data.pageIndex + '<br />');
+    })
+    .on('pageSizeChanged', function (event, data) {
+        console.log('EventName = pageSizeChanged , pageSize = ' + data.pageSize + '<br />');
+    });
+});
+</script>
+
+<script>
+$(document).ready(function() {
+    /* convert between list and grid view */
+    $('#list').click(function(event){
+        event.preventDefault();
+        $('#products .item').removeClass('grid-group-item').addClass('list-group-item');
+    });
+    $('#grid').click(function(event){
+        event.preventDefault();
+        $('#products .item').removeClass('list-group-item').addClass('grid-group-item');
+    });
+});
+</script>
+
+<script>
+
+$(document).ready(function() {
+
+    $('.vendor-info').trunk8({
+        lines:4
+    });
+
+});
+</script>
+{% endblock %}
+
+
+<!-- ============================ -->
+<!--        page level scripts    -->
+<!-- =========================== -->
+{% block page_level_scripts %}
+<script>
+    $(function () {
+        /*change li active*/
+        /*add active class to li*/
+        $("#explore-vendors").addClass("active");
+        //$("#campaign-create").addClass("active");
+    });
+
+    // global variable
+    var DEBUG = true; // false or true
+</script>
+
+
+{% endblock %}
+<!--       page level scripts    -->
+<!-- /=========================== -->

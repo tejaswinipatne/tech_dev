@@ -1,0 +1,24 @@
+<!-- template of creating categories -->
+<div id="ex_product_category" class="component_data">
+    <article class="beefup">
+        <h6 class="panel-title beefup__head"><span>Select Product Categories</span>
+        <button type="button" class="close remove_component">×</button>
+        </h6>
+        <div class="beefup__body">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 mb-5 mt-5">
+                    <label class="pointer">
+                        <input type='checkbox' class="pointer chk_bx_select_all" />Select All
+                    </label>
+                    <label class="pointer pull-right">
+                        <input class="pointer chkbx_use_as_txt" data-parent="beefup__body" type='checkbox' />Use As Text
+                    </label>
+                </div>
+            </div>
+            <div class="form-group checkbox_container">
+              
+            </div>
+        </div>
+    </article>
+</div>
+

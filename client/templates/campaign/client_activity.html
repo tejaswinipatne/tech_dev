@@ -1,0 +1,293 @@
+   {% extends "header/cheader.html" %}
+{% load static %}
+{% block scripts %}
+  {% include "campaign/client_activityhead.html" %}
+{% endblock %}
+
+{% block scripts1 %}
+    
+         {% include "campaign/css/client_activity.css" %}
+
+    {% endblock%}
+
+{% block content %}
+
+<!-- Main sidebar -->
+  {% include "side/clientside.html" %}
+<!-- /main sidebar -->
+
+      <!-- Main content -->
+            <div class="content-wrapper">
+
+            <!-- Content area -->
+        <div class="content">
+                     <div class="row">
+                        <div class="col-md-12"  id="paddingleft0">
+                            <div class="panel panel-height panel-flat">
+                                <div class="panel-heading">
+                                    <h1 class="panel-title"><span class="text-semibold"></span> Activity </h1>
+                                    <h6>Search activity by date or Keyword</h6>
+                                </div>
+                              <br>
+
+                                <div class="panel-body">
+                                  
+                                    <div class="row">
+                                        <div class="col-md-12" >
+                                            
+                                                  <div class="col-lg-6">
+                                                  <div class="wrap">
+                                                 <div class="search" >
+                                                    <input type="text" class="searchTerm" placeholder="Search by Keyword">
+                                                    <button type="submit" class="searchButton">
+                                                      <i class="fa fa-search"></i>
+                                                   </button>
+                                                 </div>
+                                              </div>
+
+                                              </div>
+                                              <div class="col-lg-6">
+                                                  <div class="wrap">
+                                                 <div class="search" >
+                                                    <input type="date" class="searchTerm" placeholder="Search by date">
+                                                    <button type="submit" class="searchButton">
+                                                      <i class="fa fa-search"></i>
+                                                   </button>
+                                                 </div>
+                                              </div>
+
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <br>
+                                        <div class="col-md-8">
+                                            <div class="frst-container content-left-align">
+                                                <!-- frst-left-align/frst-right-align/frst-alternate/frst-date-opposite-->
+                                                <div class="frst-timeline frst-timeline-style-7 frst-left-align frst-date-opposite">
+                                                    <div class="frst-timeline-block frst-odd-item" data-animation="slideInUp">
+                                                        <div class="frst-timeline-img"> <span></span> </div>
+                                                        <!-- frst-timeline-img -->
+                                                        <div class="frst-timeline-content zoomInLeft animated hingeLeft" id="positionrelative">
+                                                            <div class="frst-timeline-content-inner"><span class="frst-date">26-6-2018</span>
+                                                             
+                                                                <div class="">
+                                                                        <ul class="media-list dropdown-content-body width-350">
+                                                                            <li class="media">
+                                                                                <div class="media-left">
+                                                                                    <a href="#" class="btn bg-success-400 btn-rounded btn-icon btn-xs legitRipple"><i class="glyphicon glyphicon-user"></i></a>
+                                                                                </div>
+                                            
+                                                                                <div class="media-body">
+                                                                                    <a href="#">Taylor Swift</a> mentioned you in a post "Angular JS. Tips and tricks"
+                                                                                    <div class="media-annotation">4 minutes ago</div>
+                                                                                </div>
+                                                                            </li>
+                                            
+                                                                            <li class="media">
+                                                                                <div class="media-left">
+                                                                                    <a href="#" class="btn bg-pink-400 btn-rounded btn-icon btn-xs legitRipple"><i class="glyphicon glyphicon-user"></i></a>
+                                                                                </div>
+                                                                                
+                                                                                <div class="media-body">
+                                                                                    Special offers have been sent to subscribed users by <a href="#">Donna Gordon</a>
+                                                                                    <div class="media-annotation">36 minutes ago</div>
+                                                                                </div>
+                                                                            </li>
+                                            
+                                                                            <li class="media">
+                                                                                <div class="media-left">
+                                                                                    <a href="#" class="btn bg-blue btn-rounded btn-icon btn-xs legitRipple"><i class="glyphicon glyphicon-user"></i></a>
+                                                                                </div>
+                                                                                
+                                                                                <div class="media-body">
+                                                                                    <a href="#">Chris Arney</a> created a new <span class="text-semibold">Design</span> branch in <span class="text-semibold">Limitless</span> repository
+                                                                                    <div class="media-annotation">2 hours ago</div>
+                                                                                </div>
+                                                                            </li>
+                                            
+                                                                            <li class="media">
+                                                                                <div class="media-left">
+                                                                                    <a href="#" class="btn bg-purple-300 btn-rounded btn-icon btn-xs legitRipple"><i class="glyphicon glyphicon-user"></i></a>
+                                                                                </div>
+                                                                                
+                                                                                <div class="media-body">
+                                                                                    Shipping cost to the Netherlands has been reduced, database updated
+                                                                                    <div class="media-annotation">Feb 8, 11:30</div>
+                                                                                </div>
+                                                                            </li>
+                                            
+                                                                            <li class="media">
+                                                                                <div class="media-left">
+                                                                                    <a href="#" class="btn bg-warning-400 btn-rounded btn-icon btn-xs legitRipple"><i class="glyphicon glyphicon-user"></i></a>
+                                                                                </div>
+                                                                                
+                                                                                <div class="media-body">
+                                                                                    New review received on <a href="#">Server side integration</a> services
+                                                                                    <div class="media-annotation">Feb 2, 10:20</div>
+                                                                                </div>
+                                                                            </li>
+                                            
+                                                                            <li class="media">
+                                                                                <div class="media-left">
+                                                                                    <a href="#" class="btn bg-warning-400 btn-rounded btn-icon btn-xs legitRipple"><i class="glyphicon glyphicon-user"></i></a>
+                                                                                </div>
+                                                                                
+                                                                                <div class="media-body">
+                                                                                    <strong>January, 2016</strong> - 1320 new users, 3284 orders, $49,390 revenue
+                                                                                    <div class="media-annotation">Feb 1, 05:46</div>
+                                                                                </div>
+                                                                            </li>
+                                                                        </ul>
+                                                                </div>
+
+                                                            </div>
+                                                            <!-- frst-timeline-content-inner -->
+                                                        </div>
+                                                        <!-- frst-timeline-content -->
+                                                    </div>
+                                                    
+                                                    <!-- frst-timeline-block -->
+                                                    <div class="frst-timeline-block frst-even-item" data-animation="slideInUp">
+                                                        <div class="frst-timeline-img"> <span></span> </div>
+                                                        <!-- frst-timeline-img -->
+                                                        <div class="frst-timeline-content zoomInLeft animated hingeLeft" id="positionrelative">
+                                                            <div class="frst-timeline-content-inner"><span class="frst-date">22-6-2018</span>
+                                                               
+                                                                
+                                                                <div class="">
+                                                                        <ul class="media-list dropdown-content-body width-350">
+                                                                            <li class="media">
+                                                                                <div class="media-left">
+                                                                                    <a href="#" class="btn bg-success-400 btn-rounded btn-icon btn-xs legitRipple"><i class="glyphicon glyphicon-user"></i></a>
+                                                                                </div>
+                                            
+                                                                                <div class="media-body">
+                                                                                    <a href="#">Taylor Swift</a> mentioned you in a post "Angular JS. Tips and tricks"
+                                                                                    <div class="media-annotation">4 minutes ago</div>
+                                                                                </div>
+                                                                            </li>
+                                            
+                                                                            <li class="media">
+                                                                                <div class="media-left">
+                                                                                    <a href="#" class="btn bg-pink-400 btn-rounded btn-icon btn-xs legitRipple"><i class="glyphicon glyphicon-user"></i></a>
+                                                                                </div>
+                                                                                
+                                                                                <div class="media-body">
+                                                                                    Special offers have been sent to subscribed users by <a href="#">Donna Gordon</a>
+                                                                                    <div class="media-annotation">36 minutes ago</div>
+                                                                                </div>
+                                                                            </li>
+                                            
+                                                                            <li class="media">
+                                                                                <div class="media-left">
+                                                                                    <a href="#" class="btn bg-blue btn-rounded btn-icon btn-xs legitRipple"><i class="glyphicon glyphicon-user"></i></a>
+                                                                                </div>
+                                                                                
+                                                                                <div class="media-body">
+                                                                                    <a href="#">Chris Arney</a> created a new <span class="text-semibold">Design</span> branch in <span class="text-semibold">Limitless</span> repository
+                                                                                    <div class="media-annotation">2 hours ago</div>
+                                                                                </div>
+                                                                            </li>
+                                            
+                                                                            <li class="media">
+                                                                                <div class="media-left">
+                                                                                    <a href="#" class="btn bg-purple-300 btn-rounded btn-icon btn-xs legitRipple"><i class="glyphicon glyphicon-user"></i></a>
+                                                                                </div>
+                                                                                
+                                                                                <div class="media-body">
+                                                                                    Shipping cost to the Netherlands has been reduced, database updated
+                                                                                    <div class="media-annotation">Feb 8, 11:30</div>
+                                                                                </div>
+                                                                            </li>
+                                            
+                                                                            <li class="media">
+                                                                                <div class="media-left">
+                                                                                    <a href="#" class="btn bg-warning-400 btn-rounded btn-icon btn-xs legitRipple"><i class="glyphicon glyphicon-user"></i></a>
+                                                                                </div>
+                                                                                
+                                                                                <div class="media-body">
+                                                                                    New review received on <a href="#">Server side integration</a> services
+                                                                                    <div class="media-annotation">Feb 2, 10:20</div>
+                                                                                </div>
+                                                                            </li>
+                                            
+                                                                            <li class="media">
+                                                                                <div class="media-left">
+                                                                                    <a href="#" class="btn bg-warning-400 btn-rounded btn-icon btn-xs legitRipple"><i class="glyphicon glyphicon-user"></i></a>
+                                                                                </div>
+                                                                                
+                                                                                <div class="media-body">
+                                                                                    <strong>January, 2016</strong> - 1320 new users, 3284 orders, $49,390 revenue
+                                                                                    <div class="media-annotation">Feb 1, 05:46</div>
+                                                                                </div>
+                                                                            </li>
+                                                                        </ul>
+                                                                </div>
+
+
+                                                            </div>
+                                                            <!-- frst-timeline-content-inner -->
+                                                        </div>
+                                                        <!-- frst-timeline-content -->
+                                                    </div>
+                                                    
+                                                    
+                                                    <!-- frst-timeline-block -->
+                                                    <div class="frst-timeline-block frst-even-item" data-animation="slideInUp">
+                                                            <div class="frst-timeline-img"> <span></span> </div>
+                                                            <!-- frst-timeline-img -->
+                                                            <div class="frst-timeline-content zoomInLeft animated hingeLeft" id="positionrelative">
+                                                                <div class="frst-timeline-content-inner"><span class="frst-date"></span>
+                                                                   
+                                                                </div>
+                                                                <!-- frst-timeline-content-inner -->
+                                                            </div>
+                                                            <!-- frst-timeline-content -->
+                                                        </div>
+                                                        
+                                                     
+                                                 
+                                                </div>
+                                                <!-- frst-timeline -->
+                                            </div>
+
+                                        </div>
+                                            <div class="col-lg-4">
+                                              <br>
+                                              <br>
+                                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h6 class="panel-title">Info</h6>
+                                
+
+                                </div>
+
+                                <div class="panel-body">
+                                    Activities
+                                </div>
+                            </div>
+
+                                  </div>
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                     </div>
+    
+                       
+                    </div>
+                    <!-- /content area -->
+            
+            </div>
+            <!-- /main content -->
+
+        </div>
+        <!-- /page content -->
+
+    </div>
+    <!-- /page container -->
+{% include "campaign/js/client_activityjs.html" %}
+{% endblock %}

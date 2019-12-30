@@ -1,0 +1,75 @@
+{% extends "header/apiexportheader.html" %}
+{% block content %}
+<!-- Main sidebar -->
+{% load static %}
+{% include 'side/apiclientside.html' %}
+<!-- /main sidebar -->
+<!-- Main content -->
+<style>
+.vendor_card{
+   height: 27%;
+}
+.card_image{
+    height: 12ch!important;
+}
+</style>
+{% load humanize %}
+<div class="content-wrapper">
+		<!-- Content area -->
+		<div class="content">
+				<!-- tech connector data-->
+				<div class="row">
+						<div class="col-md-12">
+								<div>
+										<div class="row">
+												<div class="panel panel-height panel-flat">
+														<div class="panel-body">
+																<div id="welcome">
+																		<h1 id="welcome">
+																				Welcome to the TechConnectr Marketplace for B2B Marketers
+																		</h1>
+																		<p id="welcome">
+																				TechConnectr is a one-stop marketplace of and for best-of-breed B2B marketers, agencies, publishers, and b2b lead generation
+																				solution providers
+																		</p>
+																</div>
+														</div>
+														<div class="panel-body">
+															<div class="row">
+																<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+																		<div class="panel-body" id="centertext">
+																				<p id="quickview">Get API Content</p>
+																		</div>
+																</div>
+																		<br>
+																		<form class="form-inline" action="{% url 'json' %}" method="post">
+																			{% csrf_token %}
+																		  <div class="form-group mx-sm-3 mb-2">
+																				<input type="hidden" name="client_id" class="form-control" id="inputPassword2" value="{{client_id}}" >
+																		    <input type="hidden" name="email" class="form-control" id="inputPassword2" value="{{request.session.email}}" >
+																		    <input type="text" name="campaign_id" class="form-control" id="inputPassword2" placeholder="Enter Campaign ID" required>
+																		  </div>
+																			<button type="submit" class="btn btn-primary mb-2">Get Json</button>
+																		</form>
+																</div>
+																<br>
+																<div style="height:100%;width:100%;">
+																	{% if content %}
+																<p>	{{ content }}</p>
+																	{% endif %}
+																</div>
+														</div>
+													</div>
+										</div>
+								</div>
+						</div>
+				</div>
+				<!-- /tech connector data-->
+		</div>
+</div>
+</div>
+<!-- /page content -->
+</div>
+<!-- /page container -->
+{% include "dashboard/clientdashbordjs.html" %}
+{% endblock %}

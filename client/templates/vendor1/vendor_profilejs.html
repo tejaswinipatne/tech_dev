@@ -1,0 +1,47 @@
+<script>
+
+$("#show_campaign_section").click(function(){
+        $("#campaign_stastics").hide();
+        $("#campaign_section").show();
+});
+
+$("#return_campaign_stastics").click(function(){
+        $("#campaign_stastics").show();
+        $("#campaign_section").hide();
+});
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+$('#vendor_suggest').click(function(){
+  var campaign_id=$('#campaign_id').val();
+  var vendor_id=$('#vendor_id').val();
+  token = getCookie('csrftoken');
+  $.ajax({
+          type: 'POST',
+          url: '/vendor/vendor_suggest/',
+          data: {campaign_id:campaign_id,vendor_id:vendor_id,csrfmiddlewaretoken:token},
+          success:function(data)
+          {
+              if(data.success==1)
+              {
+                swal({title: "Vendor Suggestion", text:'Vendors Suggested To Superadmin', type:
+                            "success",icon: "success"}).then(function(){
+                            location.reload();});
+              }
+          }
+  });
+
+});
+</script>

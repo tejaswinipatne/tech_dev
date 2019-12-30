@@ -1,0 +1,200 @@
+{% extends "common/base.html" %}
+
+{% load static %}
+
+
+{% block title %} Create Campaign {% endblock %}
+{% load widget_tweaks %}
+<!--
+    page code must be start in block content
+    inside block content
+-->
+{% block content %}
+
+<!-- Main content -->
+<div class="content-wrapper">
+
+    <!-- Content area -->
+    <div class="content" style="margin-top: 4px;">
+
+        <!-- main row -->
+        <div class="row">
+            <div class="col-md-12 ">
+                <!-- Top Clients List -->
+                <div class="panel panel-height panel-flat">
+                    <div class="panel-heading ml-20">
+                        <center>
+                            <h1 class="panel-title">Select Campaign Type</h1>
+                        </center>
+
+                        <form class="form-horizontal" id="validate_campaign" action="" method="post">
+                            {% csrf_token %}
+                            <!-- some hidden fields -->
+                            <!-- client id-->
+
+
+                            <fieldset class="content-group">
+                                <legend class="text-bold"></legend>
+                                <div class="col-md-8">
+
+
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3">Campaign Type</label>
+                                        <div class="col-lg-9">
+                                            <div class="row">
+                                                <div class="col-md-8">
+                                                    <!--  <select{ campaigntype.type.name }}"
+                                                class="form-control"
+                                                onfocus="changeInfo('camp_type')" required>
+                                            {% for val, text in campaigntype.campaign_type.field.choices %}
+                                              <option>RFQ Campaign</option>
+                                            {% endfor %}
+                                        </select> -->
+
+
+                                                    <!-- Select Campaign Types  -->
+                                                    <select name="" class="form-control" id="my-dropdown"
+                                                        name="my-dropdown">
+                                                        <option value="0" selected>Please Select</option>
+                                                        <option value="2">RFQ</option>
+                                                        <option value="1">Campaign Set-up</option>
+
+                                                    </select>
+
+                                                    <script type="text/javascript">
+                                                        $(function () {
+                                                            $('.go-btn').on('click', function () {
+                                                                var selected = $('#my-dropdown option:selected');
+                                                                console.log(selected);
+
+                                                                // alert(selected.val());
+                                                                if (selected.val() == 1) {
+                                                                    $(this).attr('href', '/client/create-campaign/');
+
+
+                                                                }
+                                                                else if (selected.val() == 2) {
+                                                                    $(this).attr('href', '/client/create-rfq-campaign/')
+
+
+                                                                } else if (selected.val() == 0) {
+                                                                    swal({
+                                                                        title: "Select Campaign Type", text: "Select Any One Campaign", type:
+                                                                            "success"
+                                                                    }).then(function () {
+                                                                        location.reload();
+                                                                    });
+
+                                                                }
+
+                                                            });
+                                                        });
+                                                    </script>
+
+
+                                                    <span class="label label-block label-primary text-left"></span>
+                                                    <!--                                         {{ campaigntype.campaign_type }}
+ -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3"></label>
+                                        <div class="col-lg-10">
+                                            <div class="row mt-20 mb-20">
+                                                <div id="centertext" style="padding-bottom: 10px;">
+                                                    <a class="go-btn">
+                                                        <button type="button"
+                                                            class="btn btn-primary btn-raised bt12">Create
+                                                            Campaign</button>
+                                                    </a>
+                                                </div>
+                                                <!-- <div class="col-md-2">
+                                        <button type="reset" id="btn_reset" class="btn btn-danger legitRipple pull-right">Reset<span class="legitRipple-ripple"></span></button>
+                                    </div> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <h6 class="panel-title" id="field_info">Info</h6>
+
+                                        </div>
+                                        <div class="panel-body">
+                                            <ul id="field_desc" style="font-size: 14px;font-weight: 500;">
+                                                <li>You can select only one type of campaign</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+                <!-- /highlighting rows and columns -->
+
+            </div>
+            <!-- main row -->
+
+        </div>
+        <!-- /content area -->
+    </div>
+</div>
+<!-- /main content -->
+
+{% endblock %}
+
+
+<!-- ============================ -->
+<!--        page level scripts    -->
+<!-- =========================== -->
+{% block page_level_scripts %}
+<script>
+    $(function () {
+        /*change li active*/
+        /*add active class to li*/
+        $("#campaign").addClass("active");
+        $("#CreateCampaign").addClass("active");
+    });
+
+    // global variable
+    var DEBUG = true; // false or true
+</script>
+
+<style>
+    .multiselect-container .checkbox .checker {
+        top: 18px !important;
+    }
+</style>
+
+<!-- panel-tab color-->
+<link href="{% static 'client/css/createcampaign.css' %}?ver=1.1" rel="stylesheet" type="text/css">
+
+
+<script type="text/javascript" src="{% static 'assets/js/core/libraries/jasny_bootstrap.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/forms/selects/select2.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/forms/selects/bootstrap_multiselect.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/forms/selects/bootstrap_select.min.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'assets/js/core/libraries/jquery_ui/core.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/forms/selects/selectboxit.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/forms/styling/uniform.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/forms/inputs/autosize.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/forms/inputs/formatter.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/forms/tags/tagsinput.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/forms/tags/tokenfield.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/forms/inputs/touchspin.min.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'assets/js/plugins/ui/moment/moment.min.js' %}"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+
+{% endblock %}
+<!--       page level scripts    -->
+<!-- /=========================== -->

@@ -1,0 +1,336 @@
+{% extends "header/cheader.html" %}
+
+{% block scripts %}
+{% include "vendor1/vendor_list_head.html" %}
+{% endblock %}
+
+{% block scripts1 %}
+{% include "campaign/manage_campaign.css" %}
+{% endblock %}
+{% block content %}
+<!-- Main sidebar -->
+{% include "side/clientside.html" %}
+{% load static %}
+<!-- Main content -->
+<div class="content-wrapper">
+
+
+
+
+    <!-- Content area -->
+    <div class="content" style="margin-top: 4px;">
+        <div class="row">
+        <div class="col-md-12 ">
+            <!-- Top Clients List -->
+            <div class="panel panel-height panel-flat">
+                <div class="panel-heading">
+                    <h1 class="panel-title">Vendor List
+                        <button type="button" id="databtn" class="btn btn-filter-tb btn-labeled pull-right" style="display:none">
+                            <b><span id="filter_icon" class="glyphicon glyphicon-filter"></span></b>
+                            Filter
+                        </button>
+                    </h1><br>
+                    <p id="font14">
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#lead_header" camp_id="{{camp}}"><span
+                                class="glyphicon glyphicon-plus"></span> Add Vendor</button>
+                    </p>
+                    <p id="font14">
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#export_lead" camp_id="{{camp}}"><span
+                                class="glyphicon glyphicon-plus"></span> Export</button>
+                    </p>
+                </div>
+                <div class="table-responsive-sm">
+                    <table class="table datatable-column-search-inputs DataTables">
+                        <thead>
+                            <tr>
+                                <th>UserName</th>
+                                <th>Email</th>
+                                <!-- <th>Avg. conv. Month</th>
+                                           <th>Avg.launch time</th>
+                                           <th>Geo</th>-->
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tfoot id="datatfootfilter" style="display:none">
+                            <tr>
+
+                                <td rowspan="1" colspan="1">
+                                    <input type="text" class="form-control input-sm" placeholder="Search Company">
+                                </td>
+                                <td rowspan="1" colspan="1">
+                                    <input type="text" class="form-control input-sm" placeholder="Search Category">
+                                </td>
+                                <!--
+                                           <td rowspan="1" colspan="1">
+                                               <input type="text" class="form-control input-sm" placeholder="Search Type">
+                                           </td>
+
+                                           <td rowspan="1" colspan="1">
+                                               <input type="text" class="form-control input-sm" placeholder="Search Billing">
+                                           </td>
+
+                                        <td rowspan="1" colspan="1">
+                                          <input type="text" class="form-control input-sm" placeholder="Status">
+                                        </td>-->
+                                <td rowspan="1" colspan="1"></td>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            {% for vendor in vendor_list%}
+                            <tr>
+                                <td><a href="#">{{ vendor.user_name}}</a></td>
+                                <td>{{ vendor.email}}</td>
+                                <!--<td><span class="label label-primary">24,526</span></td>
+   									<td><span class="label label-success">2</span></td>
+   									<td><span class="label label-info">{{ vendor.geo_loc.name}}US</span></td>-->
+
+                                <td class="text-center">
+                                    <ul class="icons-list">
+                                        <li class="dropdown">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                                <i class="icon-menu9"></i>
+                                            </a>
+
+
+                                            <!--<li><a href="#"><i class="icon-file-pdf"></i> Export to .pdf</a></li>
+   													<li><a href="#"><i class="icon-file-excel"></i> Export to .csv</a></li>
+   													<li><a href="#"><i class="icon-file-word"></i> Export to .doc</a></li>-->
+                                    </ul>
+                                    </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            {%endfor%}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- /highlighting rows and columns -->
+
+
+
+
+
+            <!-- Footer -->
+            <div class="footer text-muted" style="display: none;">
+                &copy; 2018. <a href="#">Trigensoft</a> by <a href="Trigensoft.com" target="_blank">Eugene Kopyov</a>
+            </div>
+            <!-- /footer -->
+        </div>
+    </div>
+    <!-- /content area -->
+
+</div>
+<!-- /main content -->
+
+</div>
+<!-- /page content -->
+
+</div>
+<div class="modal fade" id="export_lead" role="dialog">
+    <div class="modal-dialog modal-sm">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Export </h4>
+            </div>
+            <div class="modal-body">
+                <form name="frm" id="export_lead1" action="#" method="post">
+                    {% csrf_token %}
+                    <section>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <div class="col-lg-9">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                              <input type="hidden" name="user" class="form-control" value="{{request.session.userid}}">
+                                              <span class="help-block"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <!-- <label class="control-label col-lg-3">
+                                        <h5>Email</h5>
+                                    </label> -->
+                                    <div class="col-lg-9">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <input type="email" name="email" class="form-control " placeholder="Email"
+                                                    required>
+                                                <span class="help-block"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <!-- <label class="control-label col-lg-3">
+                                        <h5>Password</h5>
+                                    </label> -->
+                                    <div class="col-lg-9">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <input type="password" class="form-control" name="password" placeholder="Password"
+                                                    required>
+                                                <span class="help-block"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <!-- <label class="control-label col-lg-3">
+                                        <h5>Confirm Password</h5>
+                                    </label> -->
+                                    <div class="col-lg-9">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <input type="password" class="form-control" name="password2" placeholder="Confirm Password"
+                                                    required>
+                                                <span class="help-block"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% if apilinks %}
+                            <div class="col-sm-12">-
+                                <div class="form-group">
+                                    <!-- <label class="control-label col-lg-3">
+                                        <h5>Grant Access</h5>
+                                    </label> -->
+                                    <div class="col-lg-9">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                              <div class="form-group ">
+                                                <!-- <label class="control-label col-lg-3">
+                                                    <h5>API</h5>
+                                                </label> -->
+                                                <div class="multi-select-full">
+                                                  <select class="multiselect" id='select' multiple="multiple" name='apis' style="display: none;">
+
+                                                    {% for apilink in apilinks %}
+                                                      <option value="{{apilink.id}}">{{apilink.links}}</option>
+                                                    {% endfor %}
+
+                                                  </select>
+                                                </div>
+                                              </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </section>
+            </div>
+            <div class="modal-footer">
+                <img src="{% static 'assets/images/lg.circle-slack-loading-icon.gif'%}" style="height:50px;display:none"
+                    id="loader1">
+                <input class="btn btn-sm btn-primary sub1" type="submit" value="submit">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="modal fade" id="lead_header" role="dialog">
+    <div class="modal-dialog modal-sm">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Add Vendor </h4>
+            </div>
+            <div class="modal-body">
+                <form name="frm" id="addvendor" action="#" method="post">
+                    {% csrf_token %}
+                    <section>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3">
+                                        <h5>Email</h5>
+                                    </label>
+                                    <div class="col-lg-9">
+                                        <div class="row">
+                                            <div class="col-md-12">
+
+                                                <input type="email" name="email" class="form-control " placeholder="Email"
+                                                    required>
+                                                <span class="help-block"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3">
+                                        <h5>UserName</h5>
+                                    </label>
+                                    <div class="col-lg-9">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <input type="text" name="username" class="form-control " placeholder="Username"
+                                                    required>
+                                                <span class="help-block"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3">
+                                        <h5>Password</h5>
+                                    </label>
+                                    <div class="col-lg-9">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <input type="password" class="form-control" name="pwd" placeholder="Password"
+                                                    required>
+                                                <span class="help-block"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <div class="modal-footer">
+                        <img src="{% static 'assets/images/lg.circle-slack-loading-icon.gif'%}" style="height:50px;display:none"
+                            id="loader">
+                        <input class="btn btn-sm btn-primary sub" type="submit" value="submit">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+                    </div>
+                    </form>  </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- /page container -->
+{% include "vendor1/vendorjs.html" %}
+<script>
+    $(function () {
+        $("#explore-vendors").addClass("active");
+        $("#explore-vendors").find("ul").first().css({ 'display': 'block' })
+        $("#AddVendors").addClass("active");
+    });
+</script>
+{% endblock %}

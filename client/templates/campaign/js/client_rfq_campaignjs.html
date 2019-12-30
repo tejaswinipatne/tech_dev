@@ -1,0 +1,86 @@
+<script>
+$('#DataTables').dataTable({
+    "lengthChange": false
+});
+$("#btnSubmit").click(function(){
+    var tasks = grab_selected();
+    var camp_id=$('#camp_id').text();
+    token = getCookie('csrftoken');
+    if(tasks.length > 0)
+    {
+      $.ajax({
+          type:'post',
+          url:'/client/rfq_vendor_allocation/',
+          data:{'camp_id':camp_id,'ids':tasks,csrfmiddlewaretoken:token},
+          success: function(data) {
+
+            if(data.success==1)
+            {
+              swal({title: "Vendor Allocation", text: "RFQ Campaign Allocate to vendors", type: 
+                        "success"}).then(function(){ 
+                        location.reload();});
+              // alert('RFQ Campaign Allocate to vendors');
+              // location.reload();
+            }
+          },
+          failure: function(error) {
+
+              swal({
+                      title: "Vendor Allocation",
+                      text: "Data not found!...",
+                      icon: "warning",
+                });
+              // alert('data not found');
+          }
+      });
+    }else{
+            swal({
+                      title: "Vendor Allocation",
+                      text: "Please click on checkbox!...",
+                      icon: "warning",
+                });
+      // swal({
+      //     title: "warning!",
+      //     text:'Please click on checkbox!..',
+      //     type: "warning",
+      // });
+    }
+
+});
+function grab_selected()
+{
+  var selectedIds = [];
+  $('input[name="vendor_id_chk"]:checked').each(function() {
+  selectedIds.push(this.value);
+  });
+  return selectedIds;
+}
+$("#update_cpl_client").click(function(){
+  var cpl=$('#cpl').val();
+  var camp_id=$('#camp_id').text();
+
+  token = getCookie('csrftoken');
+  $.ajax({
+      type:'post',
+      url:'/client/update_rfq_cpl/',
+      data:{'camp_id':camp_id,'cpl':cpl,csrfmiddlewaretoken:token},
+      success: function(data) {
+        if(data.success==1)
+        {
+          alert(data.msg);
+          location.reload();
+        }
+      },
+      failure: function(error) {
+          
+          swal({
+                      title: "Vendor Allocation",
+                      text: "Data not found!...",
+                      icon: "warning",
+                });
+
+          // alert('data not found');
+      }
+  });
+});
+</script>

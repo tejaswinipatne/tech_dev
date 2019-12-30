@@ -1,0 +1,849 @@
+{% extends "header/cheader.html" %}
+{% block content %}
+<!-- Main sidebar -->
+  {% include "side/clientside.html" %}
+<!-- /main sidebar -->
+<!-- Main content -->
+{% load range %}
+{% load humanize %}
+<style>
+.vendor_card{
+   height: 27%;
+}
+.card_image{
+    height: 4ch!important;
+}
+</style>
+<script>
+        $(function () {
+            $("#Dashboard").addClass("active");
+        });
+    </script>
+ <!-- <div class="sticky pull-right rotate" id="on_boarding"><span class="btn btn-primary" onclick="openModal()">On Boarding</span></div> -->
+ <a href="/client/client-Bording/" style="color:#fff;"><div class="sticky pull-right rotate"><span class="btn btn-primary">On Boarding</span></div></a>
+            <div class="content-wrapper">
+
+
+
+                <!-- Content area -->
+                <div class="content" style="margin-top: 4px;">
+
+                    <!-- tech connector data-->
+                    <div class="row">
+                        <!-- <div class="col-md-12"> -->
+                          <div class="col-md-12">
+
+                            <!-- <div>
+
+                                <div class="row"> -->
+
+
+                                    <div class="panel panel-height panel-flat">
+                                        <div class="panel-body">
+                                            <div id="welcome">
+                                                <h1 id="welcome">
+                                                    Welcome to the TechConnectr Marketplace for B2B Marketers
+                                                </h1>
+                                                <p id="welcome">
+                                                    TechConnectr is a one-stop marketplace of and for best-of-breed B2B marketers, agencies, publishers, and b2b lead generation
+                                                    solution providers
+                                                </p>
+
+
+                                            </div>
+                                              {% if onBording == 3 %}
+                                            <div id="centertext">
+                                                <a href="/client/campaign_type/">
+                                                    <button id="bt" type="button" class="btn btn-primary btn-raised"> Create Campaign </button>
+                                                </a>
+                                            </div>
+                                            {%endif%}
+                                        </div>
+
+
+                                        <div class="panel-body">
+
+                                            <!-- pie charts-->
+                                            <div class="row">
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+                                                    <div class="panel-body" id="centertext">
+                                                        <p id="quickview">Quick View</p>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                    <div class='panel panel-flat'>
+                                                        <div class='panel-heading' id="padding220">
+                                                            <h6>Top Campaign</h6>
+                                                        </div>
+
+                                                        <table class='table table-bordered table-hover datatable-highlight'>
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Campaign Name</th>
+                                                                    <th>Description</th>
+                                                                    <th>Leads</th>
+                                                                    <th>Cpl</th>
+                                                                    <th>Status</th>
+                                                                    <th>Start Date</th>
+                                                                    <th>End Date</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                               {% for topc in topcampaigns %}
+                                                                    <tr>
+
+                                                                    <td>
+                                                                    {% if topc.status == 1 %}
+                                                                    <a href="/client/live-campaign/">{{topc.name|truncatechars:20}}</a>
+                                                                    {% elif topc.status == 2 %}
+                                                                    <a href="/client/pause-campaign/">{{topc.name|truncatechars:20}}</a>
+                                                                    {% elif topc.status == 3 %}
+                                                                    <a href="/client/pending-campaign/">{{topc.name|truncatechars:20}}</a>
+                                                                    {% elif topc.status == 4 %}
+                                                                    <a href="/client/completed-campaign/">{{topc.name|truncatechars:20}}</a>
+                                                                    {% elif topc.status == 5 %}
+                                                                    <a href="/client/assigned-campaign/">{{topc.name|truncatechars:20}}</a>
+                                                                    {% elif topc.status == 0 %}
+                                                                    <a href="/client/draft-campaign/">{{topc.name|truncatechars:20}}</a>
+                                                                    {% endif %}
+                                                                        <!-- <a href="{% url 'campaign-notebook' %} "> -->
+                                                                        </td>
+                                                                        </a>
+                                                                    <td>
+
+                                                                        {{topc.description|truncatechars:50}}
+                                                                       
+                                                                        </a>
+                                                                    </td>
+                                                                    <td>{{topc.target_quantity}}</td>
+                                                                    <td>  ${{ topc.cpl|floatformat:2 }}</td>
+                                                                    <td>
+                                                                        {% if topc.status == 1 %}
+                                                                        <span class="label label-success">Live</span>
+                                                                        {% elif topc.status == 2 %}
+                                                                        <span class="label label-primary">Paused</span>
+                                                                        {% elif topc.status == 3 %}
+                                                                        <span class="label label-info">Pending</span>
+                                                                        {% elif topc.status == 4 %}
+                                                                        <span class="label label-purple bg-primary">Completed</span>
+                                                                        {% elif topc.status == 5 %}
+                                                                        <span class="label label-purple bg-primary">Assigned</span>
+                                                                        {% elif topc.status == 0 %}
+                                                                        <span class="label label-purple bg-primary">Incomplete</span>
+                                                                        {% endif %}
+
+                                                                    </td>
+                                                                    <td>{{topc.start_date|dateFormate}}</td>
+                                                                    <td>{{topc.end_date|dateFormate}}</td>
+
+                                                                    </tr>
+                                                                {% empty %}
+                                                                <tr>
+                                                                <td colspan="7"><p id="centertext">No Campaign Created</p></td>
+                                                            </tr>
+                                                                {% endfor %}
+                                                                <tr>
+                                                                  <td colspan="6"></td>
+                                                                  <td><p><a href="/client/campaign_status" title="View More"><i
+                                                                    class="fas fa-eye view-more-icon"></i> View More</a></p></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                    <div class='panel panel-flat'>
+                                                        <div class='panel-heading' id="padding220">
+                                                            <h6>Top Vendor</h6>
+                                                        </div>
+
+                                                        <table class='table table-bordered table-hover datatable-highlight'>
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Vendor Name</th>
+                                                                    <th>Website</th>
+                                                                    <th>Country</th>
+                                                                    <!-- <th>CPL</th> -->
+                                                                    <th>Assigned Leads</th>
+                                                                    <th>Revenue</th>
+                                                                    <th>Speciality</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+
+                                                             {% for vendor in vendordetail %}
+
+                                                                    <tr>
+                                                                    <td>{{vendor.vendorname|truncatechars:20}}</td>
+                                                                    <td>{{vendor.website|truncatechars:20}}</td>
+                                                                    <td>{{vendor.country|truncatechars:20}}</td>
+                                                                    <!-- <td>$ {{vendor.CPL}}</td> -->
+                                                                    <td>{{vendor.leads}}</td>
+                                                                    <td>$ {{vendor.revenue|floatformat:2|intcomma}}</td>
+                                                                    <td>{{vendor.speciality|truncatechars:50}}</td>
+                                                                </tr>
+                                                             {% empty %}
+                                                                <tr >
+                                                                <td colspan="7"><p id="centertext">No Vendors Selected</p></td>
+                                                                </tr>
+                                                              {% endfor %}
+
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- /pie charts-->
+                                        </div>
+
+
+<div class="panel-body" id="centertext">
+                                            <h1 id="headng">We provide best-of-breed lead generation vendors</h1>
+                                            <p id="heading">Our Top Vendors </p>
+                                        </div>
+                                        <div class="panel-body">
+
+
+                                            <div class="row">
+                                                <div class="col-md-12">
+
+                                                    <div class="padding-10">
+                                                          {% load static %}
+                                                        <div class="row">
+
+                                                            <!-- first box-->
+                                                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 ">
+                                                                <div class="panel border-grey">
+                                                                    <div class="panel-heading bg-blue-400 firstbox">
+                                                                        <h6 class="panel-title text-center">Email Vendors</h6>
+                                                                    </div>
+                                                                    <div class="panel-body padding-0">
+
+                                                                        {% for vendor in topvendors|vendorlistsplit:'Email'|slice:":3" %}
+                                                                        <!-- 3 box-->
+                                                                        {% if 'Email' in vendor.vendor_type %}
+                                                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 shadow-hover-effect right-side-border vendor_card">
+                                                                            <div class="caption text-center top-margin">
+                                                                                <h6 class="text-semibold no-margin">Rank {{forloop.counter}}
+                                                                                    <small class="display-block"></small>
+                                                                                </h6>
+                                                                            </div>
+                                                                            <div class="thumbnail">
+                                                                                <div class="thumb thumb-padding">
+                                                                                    {% comment %} <div class="circular-container">
+                                                                                        {% if vendor.logo.url %}
+                                                                                        <img class="card_image" src="{{vendor.logo.url}}" alt="">
+                                                                                        {% else %}
+                                                                                        <img src="{% static 'assets/images/client/logo_smaller.jpeg' %}" alt="">
+                                                                                        {% endif %}
+                                                                                    </div> {% endcomment %}
+                                                                                    <div class="image-outer">
+                                                                                        <figure class="image"><img class="bg-hide" src="/media/bg.png" alt=""></figure>
+                                                                                            <div class="bg-image" style="background-image:url('{{vendor.logo.url}}')"></div>
+                                                                                            <div class="bg-layer"></div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="capt text-center">
+                                                                                    <h6 class="text-semibold no-margin">
+                                                                                        <small class="display-block">{{vendor.user_name}}</small>
+                                                                                    </h6>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        {% endif %}
+                                                                        {% endfor %}
+
+                                                                        <!-- <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 shadow-hover-effect right-side-border">
+                                                                            <div class="caption text-center top-margin">
+                                                                                <h6 class="text-semibold no-margin">Rank 1
+                                                                                    <small class="display-block"></small>
+                                                                                </h6>
+                                                                            </div>
+                                                                            <div class="thumbnail">
+                                                                                <div class="thumb thumb-padding">
+                                                                                    <div class="circular-container">
+                                                                                        <img src="{% static 'assets/images/client/selecthub.png' %}" alt="">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="caption text-center">
+                                                                                    <h6 class="text-semibold no-margin">
+                                                                                        <small class="display-block">Select Hub</small>
+                                                                                    </h6>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 shadow-hover-effect right-side-border">
+                                                                            <div class="caption text-center top-margin">
+                                                                                <h6 class="text-semibold no-margin">Rank 1
+                                                                                    <small class="display-block"></small>
+                                                                                </h6>
+                                                                            </div>
+                                                                            <div class="thumbnail">
+                                                                                <div class="thumb thumb-padding">
+                                                                                    <div class="circular-container">
+                                                                                        <img src="{% static 'assets/images/client/logo_smaller.jpeg' %}" alt="">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="caption text-center">
+                                                                                    <h6 class="text-semibold no-margin">
+                                                                                        <small class="display-block">Microsoft</small>
+                                                                                    </h6>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div> -->
+                                                                        <!-- /3 box-->
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!-- /first box-->
+
+                                                            <!-- second box-->
+                                                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 ">
+                                                                <div class="panel">
+                                                                    <div class="panel-heading bg-blue-400 firstbox">
+                                                                        <h6 class="panel-title text-center">Tele Vendors</h6>
+                                                                    </div>
+
+                                                                    <div class="panel-body padding-0">
+                                                                        {% for vendor in topvendors|vendorlistsplit:'Tele'|slice:":3" %}
+                                                                        <!-- 3 box-->
+                                                                        {% if 'Tele' in vendor.vendor_type %}
+                                                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 shadow-hover-effect right-side-border vendor_card">
+                                                                            <div class="caption text-center top-margin">
+                                                                                <h6 class="text-semibold no-margin">Rank {{forloop.counter}}
+                                                                                    <small class="display-block"></small>
+                                                                                </h6>
+                                                                            </div>
+                                                                            <div class="thumbnail">
+                                                                                <div class="thumb thumb-padding">
+                                                                                    {% comment %} <div class="circular-container">
+                                                                                        {% if vendor.logo.url %}
+                                                                                        <img class="card_image" src="{{vendor.logo.url}}" alt="">
+                                                                                        {% else %}
+                                                                                        <img src="{% static 'assets/images/client/logo_smaller.jpeg' %}" alt="">
+                                                                                        {% endif %}
+                                                                                    </div> {% endcomment %}
+                                                                                    <div class="image-outer">
+                                                                                        <figure class="image"><img class="bg-hide" src="/media/bg.png" alt=""></figure>
+                                                                                            <div class="bg-image" style="background-image:url('{{vendor.logo.url}}')"></div>
+                                                                                            <div class="bg-layer"></div>
+                                                                                    </div>
+
+                                                                                </div>
+                                                                                <div class="capt text-center">
+                                                                                    <h6 class="text-semibold no-margin">
+                                                                                        <small class="display-block">{{vendor.user_name}}</small>
+                                                                                    </h6>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        {% endif %}
+                                                                        {% endfor %}
+                                                                        <!-- 3 box
+                                                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 shadow-hover-effect right-side-border">
+                                                                            <div class="caption text-center top-margin">
+                                                                                <h6 class="text-semibold no-margin">Rank 1
+                                                                                    <small class="display-block"></small>
+                                                                                </h6>
+                                                                            </div>
+                                                                            <div class="thumbnail">
+                                                                                <div class="thumb thumb-padding">
+                                                                                    <div class="circular-container">
+                                                                                        <img src="{% static 'assets/images/client/logo_smaller.jpeg' %}" alt="">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="caption text-center">
+                                                                                    <h6 class="text-semibold no-margin">
+                                                                                        <small class="display-block">Microsoft</small>
+                                                                                    </h6>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 shadow-hover-effect right-side-border">
+                                                                            <div class="caption text-center top-margin">
+                                                                                <h6 class="text-semibold no-margin">Rank 1
+                                                                                    <small class="display-block"></small>
+                                                                                </h6>
+                                                                            </div>
+                                                                            <div class="thumbnail">
+                                                                                <div class="thumb thumb-padding">
+                                                                                    <div class="circular-container">
+                                                                                        <img src="{% static 'assets/images/client/logo_smaller.jpeg' %}" alt="">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="caption text-center">
+                                                                                    <h6 class="text-semibold no-margin">
+                                                                                        <small class="display-block">Microsoft</small>
+                                                                                    </h6>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 shadow-hover-effect right-side-border">
+                                                                            <div class="caption text-center top-margin">
+                                                                                <h6 class="text-semibold no-margin">Rank 1
+                                                                                    <small class="display-block"></small>
+                                                                                </h6>
+                                                                            </div>
+                                                                            <div class="thumbnail">
+                                                                                <div class="thumb thumb-padding">
+                                                                                    <div class="circular-container">
+                                                                                        <img src="{% static 'assets/images/client/logo_smaller.jpeg'%}" alt="">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="caption text-center">
+                                                                                    <h6 class="text-semibold no-margin">
+                                                                                        <small class="display-block">Microsoft</small>
+                                                                                    </h6>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div> -->
+
+                                                                        <!-- /3 box-->
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!-- /second box-->
+
+                                                            <!-- Third box-->
+                                                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 ">
+                                                                <div class="panel">
+                                                                    <div class="panel-heading bg-blue-400 firstbox">
+                                                                        <h6 class="panel-title text-center">Data Vendors</h6>
+                                                                    </div>
+
+                                                                    <div class="panel-body padding-0">
+                                                                        {{email_vendors}}
+                                                                        {% for vendor in topvendors|vendorlistsplit:'Data'|slice:":3" %}
+                                                                        <!-- 3 box-->
+                                                                        {% if 'Data' in vendor.vendor_type %}
+                                                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 shadow-hover-effect right-side-border vendor_card">
+                                                                            <div class="caption text-center top-margin">
+                                                                                <h6 class="text-semibold no-margin">Rank {{forloop.counter}}
+                                                                                    <small class="display-block"></small>
+                                                                                </h6>
+                                                                            </div>
+                                                                            <div class="thumbnail">
+                                                                                <div class="thumb thumb-padding">
+                                                                                    {% comment %} <div class="circular-container">
+                                                                                            {% if vendor.logo.url %}
+                                                                                            <img class="card_image" src="{{vendor.logo.url}}" alt="">
+                                                                                            {% else %}
+                                                                                            <img src="{% static 'assets/images/client/logo_smaller.jpeg' %}" alt="">
+                                                                                            {% endif %}
+                                                                                    </div> {% endcomment %}
+                                                                                    <div class="image-outer">
+                                                                                        <figure class="image"><img class="bg-hide" src="/media/bg.png" alt=""></figure>
+                                                                                            <div class="bg-image" style="background-image:url('{{vendor.logo.url}}')"></div>
+                                                                                            <div class="bg-layer"></div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="capt text-center">
+                                                                                    <h6 class="text-semibold no-margin">
+                                                                                        <small class="display-block">{{vendor.user_name}}</small>
+                                                                                    </h6>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        {% endif %}
+                                                                        {% endfor %}
+                                                                        <!-- 3 box-->
+                                                                        <!-- <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 shadow-hover-effect right-side-border">
+                                                                            <div class="caption text-center top-margin">
+                                                                                <h6 class="text-semibold no-margin">Rank 1
+                                                                                    <small class="display-block"></small>
+                                                                                </h6>
+                                                                            </div>
+                                                                            <div class="thumbnail">
+                                                                                <div class="thumb thumb-padding">
+                                                                                    <div class="circular-container">
+                                                                                        <img src="{% static 'assets/images/client/logo_smaller.jpeg' %}" alt="">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="caption text-center">
+                                                                                    <h6 class="text-semibold no-margin">
+                                                                                        <small class="display-block">Microsoft</small>
+                                                                                    </h6>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 shadow-hover-effect right-side-border">
+                                                                            <div class="caption text-center top-margin">
+                                                                                <h6 class="text-semibold no-margin">Rank 1
+                                                                                    <small class="display-block"></small>
+                                                                                </h6>
+                                                                            </div>
+                                                                            <div class="thumbnail">
+                                                                                <div class="thumb thumb-padding">
+                                                                                    <div class="circular-container">
+                                                                                        <img src="{% static 'assets/images/client/logo_smaller.jpeg' %}" alt="">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="caption text-center">
+                                                                                    <h6 class="text-semibold no-margin">
+                                                                                        <small class="display-block">Microsoft</small>
+                                                                                    </h6>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 shadow-hover-effect right-side-border">
+                                                                            <div class="caption text-center top-margin">
+                                                                                <h6 class="text-semibold no-margin">Rank 1
+                                                                                    <small class="display-block"></small>
+                                                                                </h6>
+                                                                            </div>
+                                                                            <div class="thumbnail">
+                                                                                <div class="thumb thumb-padding">
+                                                                                    <div class="circular-container">
+                                                                                        <img src="{% static 'assets/images/client/logo_smaller.jpeg' %}" alt="">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="caption text-center">
+                                                                                    <h6 class="text-semibold no-margin">
+                                                                                        <small class="display-block">Microsoft</small>
+                                                                                    </h6>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div> -->
+
+                                                                        <!-- /3 box-->
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!-- /Third box-->
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+
+                                        </div>
+
+
+
+                                        <!-- <div class="panel-body" id="centertext">
+                                            <h1>Top Resources For Success</h1>
+
+                                        </div> -->
+                                        <div class="panel-body">
+                                            <div class="row">
+
+
+                                            </div>
+
+                                        </div>
+
+
+                                    </div>
+
+
+
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /tech connector data-->
+
+
+
+                </div>
+                <!-- /content area -->
+                <!-- Footer -->
+                <!-- <div class="footer text-muted">
+                        &copy; 2015. <a href="#">Techconnectr</a> by <a href="#" target="_blank">Trigensoft Solutions</a>
+                    </div>
+                     -->
+                <!-- /footer -->
+
+            </div>
+            <!-- /main content -->
+
+        <!-- </div> -->
+        <!-- /page content -->
+
+    <!-- </div> -->
+    <!-- /page container -->
+
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" onclick="closeModel()" class="close">&times;</button>
+                    <h4 class="modal-title">On Boarding</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="panel panel-white">
+                        <div class="panel-heading">
+                            <h6 class="panel-title">Client Sign Up</h6>
+                        </div>
+                        <form class="steps-state-saving" id="onboradingform" action="www.techconnectr" method="post">
+                          {% csrf_token %}
+                          <h6>Company Info</h6>
+                          <fieldset>
+                            <div class="row">
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label>Company:</label>
+                                  <input type="text" value="{{userdetails.user_name}}" name="user_name" placeholder="Company Name" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                  <label>Website:</label>
+                                  <input type="text" value="{{client_vendor.website}}" name="website" placeholder="example:www.example.com" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                  <label>Address Line 1:</label>
+                                  <input type="text" value="{{userdetails.address_line1}}" name="address_line1" placeholder="Address Line 1" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                  <label>Country:</label>
+                                  <select name="country" id="country" data-placeholder="Choose a Country..." class="select">
+                                    <option>Select Country</option>
+                                    <option value="{{ country.id }}" selected>{{ country.name }}</option>
+                                    {% for country in countries.all %}
+                                        <option value="{{ country.id }}">{{ country.name }}</option>
+                                    {% endfor %}
+                                  </select>
+                                </div>
+                                <div class="form-group">
+                                  <label>Industry Type:</label>
+                                  <select name="industry_type_id" id="industry_type_id" data-placeholder="Choose a Country..." class="select">
+                                    <option>Select  Industry Type</option>
+                                    <option value="{{ industry.id }}" selected>{{ industry.type }}</option>
+                                    {% for inds in industry.all %}
+                                        <option value="{{ inds.id }}">{{ inds.type }}</option>
+                                    {% endfor %}
+                                  </select>
+                                </div>
+
+                              </div>
+
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label>Phone:</label>
+                                  <input type="text" value="{{userdetails.contact}}" name="contact" placeholder="Personal Number" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                  <label>Alternate Number:</label>
+                                  <input type="text" value="{{userdetails.contact}}" placeholder="Alternate Number" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                  <label>Address Line 2:</label>
+                                  <input type="text" name="address_line2" value="{{userdetails.address_line2}}" placeholder="Address Line 2" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                  <label>State:</label>
+                                  <select id="state" name="state" data-placeholder="Choose a Country..." class="select">
+                                  <option value="{{ state.id }}" selected>{{ state.name }}</option>
+                                  </select>
+                                </div>
+                                <div class="form-group">
+                                  <label>Speciality:</label>
+                                  <select name="industry_speciality_id" id="industry_speciality_id" data-placeholder="Choose a Country..." class="select">
+                                    <option>Select  Speciality </option>
+                                    <option value="{{ speciality.id }}" selected>{{ speciality.name }}</option>
+                                    {% for exp in expert.all %}
+                                        <option value="{{ exp.id }}">{{ exp.name }}</option>
+                                    {% endfor %}
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+                          </fieldset>
+
+                          <h6>Business Card Info</h6>
+                          <fieldset>
+                            <!-- primary contact-->
+                            <div class="row">
+                              <div class="col-md-12">
+                                <h6 class="panel-title primary-contact">Primary Contact :</h6>
+                              </div>
+
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label>Full Name:</label>
+                                  <input type="text" name="primary_name" value="{{client_vendor.primary_name}}"placeholder="First Name" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                  <label>Designation:</label>
+                                  <input type="text" name="primary_designation" value="{{client_vendor.primary_designation}}" placeholder="Designation" class="form-control">
+                                </div>
+
+                              </div>
+
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label>Direct dial:</label>
+                                  <input type="text" name="primary_directdial" value="{{client_vendor.primary_directdial}}" placeholder="Direct Dial" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                  <label>Email:</label>
+                                  <input type="text" value="{{client_vendor.primary_email}}" name="primary_email" placeholder="Email" class="form-control">
+                                </div>
+                              </div>
+
+                            </div>
+                            <!-- /primary contact-->
+
+                            <!-- Secondary Contact-->
+                            <div class="row">
+                              <div class="col-md-12">
+                                <h6 class="panel-title secondary-contact">Secondary Contact :</h6>
+                              </div>
+
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label>Full Name:</label>
+                                  <input type="text" name="secondary_name" value="{{client_vendor.secondary_name}}" placeholder="First Name" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                  <label>Designation:</label>
+                                  <input type="text" name="secondary_designation" value="{{client_vendor.secondary_designation}}" placeholder="Designation" class="form-control">
+                                </div>
+
+                              </div>
+
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label>Direct dial:</label>
+                                  <input type="text" value="{{client_vendor.secondary_directdial}}" name="secondary_directdial" placeholder="Direct Dial" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                  <label>Email:</label>
+                                  <input type="text" value="{{client_vendor.secondary_email}}" name="secondary_email" placeholder="Email" class="form-control">
+                                </div>
+                              </div>
+
+                            </div>
+                            <!-- /secondary contact-->
+
+                          </fieldset>
+
+                          <h6>Corporate Profile</h6>
+                          <fieldset>
+                            <div class="row">
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label>Address:</label>
+                                  <textarea class="form-control">
+                                    {{userdetails.address_line1 }} , {{ userdetails.address_line2 }}
+                                  </textarea>
+                                </div>
+
+                              </div>
+
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label>Card Details:</label>
+                                  <textarea name="experience-description" rows="4" cols="4" placeholder="Tasks and responsibilities" class="form-control"></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                  <label class="display-block">Upload Company Profile:</label>
+                                  <input name="recommendations" type="file" class="file-styled">
+                                  <span class="help-block">Accepted formats: pdf. Max file size 80Mb</span>
+                                </div>
+                              </div>
+                            </div>
+                          </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="videoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+        <div class="modal-dialog">
+
+            <div class="modal-content">
+
+                <div class="modal-body">
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+
+                    <iframe width="100%" height="350" src="https://www.youtube.com/embed/vlDzYIIOYmM" frameborder="0" allowfullscreen></iframe>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <div id="modal_iconified" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h5 class="modal-title">History</h5>
+                    <hr>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="row">
+                        <table class="table datatable-show-all">
+                            <thead>
+                                <tr>
+                                    <th>Sr No.</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Activity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>16-May-2018</td>
+                                    <td>5:24 PM</td>
+                                    <td>Project Started</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>17-May-2018</td>
+                                    <td>5:24 PM</td>
+                                    <td>Project Completed</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-link" data-dismiss="modal">
+                        <i class="icon-cross"></i> Close</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% include "dashboard/clientdashbordjs.html" %}
+
+{% endblock %}

@@ -1,0 +1,122 @@
+.beefup {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  /* margin: 1em 0; */
+  transition: border .2s ease;
+}
+
+.beefup:first-child {
+  margin-top: 0;
+}
+
+.beefup:hover {
+  border-color: #aaa;
+}
+
+.beefup__head, .beefup__body {
+  padding: 10px 20px;
+}
+
+.beefup__head {
+  cursor: pointer;
+  margin-top: 0;
+  margin-bottom: 0;
+  overflow: hidden;
+  padding-right: 50px;
+  position: relative;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /* border-bottom: 1px solid grey; */
+}
+
+.beefup__head::after {
+  border-style: solid;
+  border-width: 10px 10px 0;
+  border-color: #ddd transparent transparent;
+  content: '';
+  position: absolute;
+  right: 20px;
+  height: 0;
+  margin-top: -5px;
+  top: 50%;
+  transition: border .2s ease;
+  width: 0;
+}
+
+.beefup__body {
+  padding-top: 20px;
+  border-top: 1px solid #8080806b;
+}
+
+.beefup.is-open > .beefup__head::after {
+  border-width: 0 10px 10px;
+  border-color: transparent transparent #ddd;
+}
+.beefup {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  /* margin: 1em 0; */
+  transition: border .2s ease;
+}
+
+.beefup:first-child {
+  margin-top: 0;
+}
+
+.beefup:hover {
+  border-color: #2196f354;
+}
+
+.beefup__head, .beefup__body {
+  /* padding: 10px 20px; */
+  padding: 5px 20px;
+}
+
+.beefup__head {
+  cursor: pointer;
+  /*color: #1f93ef;*/
+  color: #4d5154;
+  margin-top: 0;
+  margin-bottom: 0;
+  overflow: hidden;
+  padding-right: 23px;
+  position: relative;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /* border-bottom: 1px solid grey; */
+}
+
+.beefup__head::after {
+  border-style: solid;
+  border-width: 10px 10px 0;
+  border-color: #ddd transparent transparent;
+  content: '';
+  position: absolute;
+  left: 13px;
+  height: 0;
+  margin-top: -5px;
+  top: 50%;
+  transition: border .2s ease;
+  width: 0;
+}
+
+.beefup__body {
+  padding-top: 20px;
+  border-top: 1px solid #8080806b;
+  cursor: default;
+}
+
+.beefup.is-open > .beefup__head::after {
+  border-width: 0 10px 10px;
+  border-color: transparent transparent #ddd;
+}
+
+h6.panel-title span
+{
+  margin-left: 23px;
+}
+
+.close_dropped
+{
+  font-size: 23px;
+}

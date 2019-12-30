@@ -1,0 +1,150 @@
+{% extends "header/cheader.html" %}
+{% load static %}
+
+      <!-- header uniq file  for chat screen  -->
+      {% block scripts %}
+          {% include "campaign_chat/chat_screen_head.html" %}
+      {% endblock %}
+      <!-- For chat screen purpose -->
+      {% block scripts1 %}
+          {% include "campaign_chat/css/chat_screen.css" %}
+      {% endblock %}
+{% block content %}
+<!-- Main sidebar -->
+{% include "side/clientvendorside.html" %}
+
+
+<div class="content-wrapper">
+  <div class="content">
+
+					<!-- Inside tabs -->
+					<h6 class="content-group text-semibold">
+					Campaign : {{campaign.name}}
+						<small class="display-block"></small>
+					</h6>
+          <div class="row">
+          <div class=" panel panel-flat col-md-3" >
+            <div class="sidebar-category">
+									<div class="category-title">
+										<span>Campaign-List</span>
+										<ul class="icons-list">
+											<li><a href="#" data-action="collapse"></a></li>
+										</ul>
+									</div>
+
+									<div class="category-content">
+										<ul class="media-list">
+                      {% for camp in campaign_list%}
+
+                      <li class="media">
+												<div class="media-left">
+													<img src="{% static 'assets/images/placeholder.jpg' %}" class="img-circle img-sm" alt="">
+												</div>
+
+												<div class="media-body">
+													<a href="/vendor/chat-app/{{camp.campaign_id}}" class="media-heading">
+														<span class="text-semibold">{{camp.campaign.name}}</span>
+													</a>
+													<span class="text-muted">Who knows, maybe that...</span>
+												</div>
+											</li>
+                      {%endfor%}
+										</ul>
+									</div>
+								</div>
+          </div>
+          <div class="col-md-9">
+					<div class="tabbable tab-content-bordered content-group-lg">
+            <div class="panel panel-flat">
+						<div class="panel-heading">
+							<h6 class="panel-title">{{campaign.name}}:</h6>
+							<div class="heading-elements">
+								      <ul class="icons-list">
+			                		<li><a data-action="collapse"></a></li>
+			                		<li><a data-action="reload"></a></li>
+			                		<li><a data-action="close"></a></li>
+			                </ul>
+		                	</div>
+						</div>
+
+						<div class="panel-body">
+							<ul id="chat_box" class="media-list chat-list content-group">
+
+							</ul>
+                <div class="row">
+                  <form method="post" id="send_msg">
+                  {% csrf_token %}
+                      <div class="col-md-10 text-right">
+	                    	<input type="text" id="message" name="message" class="form-control"  required placeholder="Enter your message..." />
+                        <input type="hidden" name="camp_id" id="camp_id" value="{{campaign.id}}" />
+                        <input type="hidden" name="client_id" value="{{campaign.user_id}}" />
+                        <input type="hidden" name="sender_id" id="sender_id"value="{{sender_id}}" />
+                      </div>
+	                    <div class="col-md-2 text-right">
+		                            <button type="submit" class="btn btn-primary"><b><i class="icon-circle-right2"></i></b> Send</button>
+											</div>
+											<div class="col-md-2">
+												<button type="button" data-toggle="modal" data-target="#chat_attach_modal" class="btn btn-primary btn-icon"><i class="icon-menu7"></i></button>
+											</div>
+                  </form>
+	             </div>
+               <div class="row">
+               </div>
+						</div>
+					</div>
+					<!-- /color options -->
+					<!-- Footer -->
+				</div>
+        </div>
+        </div>
+			</div>
+		</div>
+		
+
+<!--attachment to chat -->
+<div class="modal fade" id="chat_attach_modal" role="dialog">
+	<div class="modal-dialog " style="width:45%;">
+			<div class="modal-content">
+					<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h1 class="modal-title">Send Attachment</h1>
+					</div>
+					<form  method="post" id="chat_attach_form" enctype="multipart/form-data">
+							<div class="modal-body">
+
+									{% csrf_token %}
+									<div class="row">
+											<div class="col-md-6">
+													
+																	<div class="form-group">
+																					<label>Enter Title</label>
+																					<input type="text" name="title" class="form-control" placeholder="Enter Title"/>
+																			</div>
+													
+											</div>
+											<div class="col-md-6">
+													
+															<div class="file-field">
+																			<label>Select Your File</label><br/>
+																			<div class="btn btn-primary btn-sm float-left">
+																					<span>Browse</span>
+																					<input type="file" name="filename" required />
+																					<input type="hidden" name="camp_id" id="chat_camp_id" value="{{camp.id}}" />
+																					<input type="hidden" name="client_id" id="chat_attach_sender_id" value="{{sender_id}}" />
+																			</div>
+															</div>
+													
+											</div>
+										
+							<div class="modal-footer">
+									<button type="submit" class="btn btn-primary legitRipple pull-right">Send<span
+													class="legitRipple-ripple"></span></button>
+							</div>
+					</form>
+			</div>
+	</div>
+</div>
+
+
+{% include "campaign_chat/js/vendor_chatjs.html"%}
+{% endblock %}

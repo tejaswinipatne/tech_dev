@@ -1,0 +1,70 @@
+
+<script type="text/javascript">
+
+// global form variable
+$(function(){
+
+  $(document).on('submit', '#form_createc_ampaign', function(e){
+    //console.dir("#create_campaign clicked");
+    e.preventDefault();
+
+    var url = $(this).attr("action");
+    console.dir(url);
+
+    var serialized_data= $(this).serializeArray();
+
+    $.ajax({
+        context: this, // access form inside
+		    url: url, //'/ajax/validate_username/',
+				type: "POST",
+				data: serialized_data,
+				dataType: 'json',
+        success: function (response) {
+          console.dir(response.last_id);
+          console.dir(document.body); //current form passed by context
+
+          console.dir('response : ' + JSON.stringify(response))
+          show_notification(response);
+
+          if(response.success)
+          {
+            // store value in hidden input
+            var element = document.getElementById("id_camapaign_id");
+            console.log("element : ", element)
+
+            element.value = response.last_id;
+            console.log("element value: ", element.value);
+
+            setTimeout(function(){
+              var form_edit_campaign = document.getElementById("form_edit_campaign");
+              console.log("form_edit_campaign: ", form_edit_campaign);
+              form_edit_campaign.submit();
+            },1000);
+          }
+
+
+        },
+    })
+
+  });
+
+});
+
+function show_notification(message)
+{
+	message.type = message.title || 'error'; // store it in type if not null before modification
+	message.title = message.title || 'error';
+  message.title = message.title.charAt(0).toUpperCase() + message.title.substr(1); //uppercase first char
+	message.message = message.message || 'Error while connecting Server';
+
+	new PNotify({
+			title: message.title,//'success',
+			text: message.message,
+			//addclass: 'alert alert-success alert-styled-left alert-arrow-left',
+			addclass: 'alert alert-' +message.type +' alert-styled-left alert-arrow-left',
+			type: message.type,//'success',
+			delay: 3500  // 3.5 seconds
+	});
+}
+
+</script>

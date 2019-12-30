@@ -1,0 +1,376 @@
+<script>
+  //export_approve_leads from store_lead_upload_error_into_database
+  $('#export_aprrove_leads').click(function () {
+    camp_id = $(this).attr('camp_id');
+    vendor_id = $(this).attr('vendor_id');
+    status = $(this).attr('status');
+    camp_name = $(this).attr('camp_name');
+    token = getCookie('csrftoken');
+    $.ajax({
+      type: 'post',
+      url: '/client/ajax/export_data/',
+      data: { 'camp_name': camp_name, 'vendor_id': vendor_id, 'status': status, 'camp_id': camp_id, csrfmiddlewaretoken: token },
+      success: function (data) {
+        if (data.success == 1) {
+          alert("hii");
+        }
+      },
+      failure: function (error) {
+        alert("fail");
+      }
+    });
+  });
+  $('#submit123').click(function () {
+    var someObj = {};
+    someObj.lead_header = [];
+    $("#selected li").each(function () {
+      var $this = $(this);
+      someObj.lead_header.push($this.text());
+    });
+    lead_header = someObj.lead_header;
+    token = getCookie('csrftoken');
+    if (lead_header.length !== 0) {
+      camp_id = $('#camp_id_lead').val();
+      $.ajax({
+        type: 'post',
+        url: '/vendor/ajax/create_custom_header/',
+        data: { 'id': lead_header, 'camp_id': camp_id, csrfmiddlewaretoken: token },
+        success: function (data) {
+          if (data.success == 1) {
+            swal({ title: "", text: data.msg, type: "success" }).then(function () { location.reload(); });
+          }
+        },
+        failure: function (error) {
+          alert("fail");
+        }
+      });
+
+    } else {
+      alert('Please Select Lead Header !...');
+    }
+  });
+</script>
+
+<script>
+
+  //customize datatable design code
+  $(document).ready(function () {
+    $(document).on('click', '.batch_div', function () {
+      batch_id = $(this).data('batch-id')
+      table = $(`#batch_${batch_id}`)
+      // console.log(table)
+
+      table.DataTable({
+        "aoColumnDefs": [{
+          'bSortable': false,
+          'aTargets': [1]
+        }],
+        stateSave: true,
+        buttons: [
+          {
+            extend: 'colvis',
+            text: '<i class="icon-three-bars"></i> <span class="caret"></span>',
+            className: 'btn bg-blue btn-icon',
+            collectionLayout: 'fixed two-column'
+          }
+        ],
+        scrollY: "500px",
+        scrollX: true,
+        destroy: true,
+        scrollCollapse: true,
+        paging: true,
+        fixedColumns: {
+          leftColumns: 1,
+          rightColumns: 1
+        }
+      })
+    $(`.datatfootfilter_${batch_id}`).hide();
+
+      $(`#batch_${batch_id} tfoot th`).not(':last-child').each(function () {
+        var title = $('.datatable-column-search-inputs thead th').eq($(this).index()).text();
+        $(this).html('<input type="text" class="form-control input-sm" placeholder="Search ' + title + '" />');
+      });
+    })
+    // $(`#example tfoot th`).not(':last-child').each(function () {
+    //     var title = $('.datatable-column-search-inputs thead th').eq($(this).index()).text();
+    //     $(this).html('<input type="text" class="form-control input-sm" placeholder="Search ' + title + '" />');
+    //   });
+    // 	var table = $('#example').DataTable( {
+    // 		"aoColumnDefs": [{
+    //       'bSortable': false,
+    //       'aTargets': [1]
+    //   	}],
+    // 		stateSave: true,
+    // 		buttons: [
+    // 				{
+    // 						extend: 'colvis',
+    // 						text: '<i class="icon-three-bars"></i> <span class="caret"></span>',
+    // 						className: 'btn bg-blue btn-icon',
+    // 						collectionLayout: 'fixed two-column'
+    // 				}
+    // 		],
+
+    // 		 scrollY:        "500px",
+    // 		 scrollX:        true,
+    // 		 scrollCollapse: true,
+    // 		 paging:         true,
+    // 	   fixedColumns:{
+    // 										 leftColumns: 1,
+    // 										 rightColumns: 1
+    // 								 }
+
+    //  } );
+    // var allPages = table.cells().nodes();
+    // DataTable
+    $(document).on('click','.allcheck',function () {
+      var allPages = $(`#${$(this).data('table-id')}`).DataTable().cells().nodes()
+      if ($(this).prop("checked")) {
+        $(".checkbox", allPages).prop("checked", true);
+      } else {
+        $(".checkbox", allPages).prop("checked", false);
+      }
+    });
+
+
+    $(document).on('click','.checkbox',function () {
+      // var allPages = $(`#${$(this).data('table-id')}`).DataTable().cells().nodes()
+      if ($(`#${$(this).data('table')}`).find('.checkbox').length == $(`#${$(this).data('table')}`).find('.checkbox:checked').length)  {
+        $(`#${$(this).data('parent')}`).prop("checked", true);
+      } else {
+        $(`#${$(this).data('parent')}`).prop("checked", false);
+      }
+    });
+
+    
+    var theIndex = $('#example tr').first().children().filter(function () {
+      return ($(this).text() == 'date');
+    }).index();
+
+    // $.fn.dataTable.ext.search.push(
+    //   function (settings, data, dataIndex) {
+
+    //     var min = Date.parse($('#startDate').val());
+    //     var max = Date.parse($('#endDate').val());
+    //     var date = Date.parse(data[theIndex]); // use data for the age column
+
+    //     if ((isNaN(min) && isNaN(max)) ||
+    //       (isNaN(min) && date <= max) ||
+    //       (min <= date && isNaN(max)) ||
+    //       (min <= date && date <= max)) {
+    //       return true;
+    //     }
+    //     return false;
+    //   }
+    // );
+
+    //custom date filter
+    $('#startDate, #endDate').change(function () {
+      table.draw();
+    });
+  });
+
+
+
+
+
+  $(document).ready(function () {
+
+
+    $("#filter_btn").click(function () {
+      $(".datefilter").show();
+      $("#startFilter").hide();
+    });
+    $("#cancel_datefilter").click(function () {
+      $(".datefilter").hide();
+      $("#startFilter").show();
+    });
+    // $(".datatfootfilter").hide();
+
+    /**
+     * On click of filter icon in datatable
+     * remove filter icon
+     * -- and---
+     * add remove icon
+     * -- and--
+     * toggle them
+     **/
+    flag_filter_icon = true;
+
+    $(document).on('click','.databtn',function () {
+      /* toggle filters shown in datatable columns*/
+      $(`.datatfootfilter_${$(this).data('batch')}`).toggle();
+
+      /**
+       * if filter icon on button replace with remove icon
+       *----
+       * else remove icon of button replace with filter icon
+       */
+      var table = $(`#batch_${$(this).data('batch')}`).DataTable()
+
+      table.columns().every(function () {
+        var that = this;
+        $('input', this.footer()).on('keyup change', function () {
+          that.search(this.value).draw();
+        });
+      });
+
+      if (flag_filter_icon == true) {
+        //alert('removing icon');
+        $('#filter_icon').removeClass('glyphicon-filter');
+        $('#filter_icon').addClass('glyphicon-remove');
+        flag_filter_icon = false;
+      }
+      else {
+        $('#filter_icon').removeClass('glyphicon-remove');
+        $('#filter_icon').addClass('glyphicon-filter');
+
+        flag_filter_icon = true;
+      }
+    });
+
+
+
+
+
+    $('#approve').click(function () {
+      var someObj = {};
+      someObj.fruitsGranted = [];
+      someObj.fruitsDenied = [];
+      $(document).find(".checkbox").each(function () {
+        var $this = $(this);
+        if ($this.is(":checked")) {
+          someObj.fruitsGranted.push($this.attr("id"));
+        } else {
+          someObj.fruitsDenied.push($this.attr("id"));
+        }
+      });
+      approve = someObj.fruitsGranted;
+      token = getCookie('csrftoken');
+      if (approve.length !== 0) {
+        status = $(this).attr('status');
+        camp_id = $(this).attr('camp_id');
+        $.ajax({
+          type: 'post',
+          url: '/client/ajax/lead_approve/',
+          data: { 'id': approve, 'status': status, 'camp_id': camp_id, csrfmiddlewaretoken: token },
+          success: function (data) {
+            if (data.success == 1) {
+              swal({ title: "", text: data.msg, type: "success" }).then(function () { location.reload(); });
+            }
+          },
+          failure: function (error) {
+            alert("fail");
+          }
+        });
+      }
+      else {
+        swal({
+          title: "Approve Lead", text: "Select Lead", type:
+            "warning", icon: "warning"
+        })
+      }
+    });
+    $(document).on('click', '#Rejected', function () {
+      var someObj = {};
+      someObj.fruitsGranted = [];
+      someObj.fruitsDenied = [];
+      $(document).find(".checkbox").each(function () {
+        var $this = $(this);
+        if ($this.is(":checked")) {
+          someObj.fruitsGranted.push($this.attr("id"));
+        } else {
+          someObj.fruitsDenied.push($this.attr("id"));
+        }
+      });
+      Rejected = someObj.fruitsGranted;
+      token = getCookie('csrftoken');
+      var Reason = $("#leads_rejected_reason").val();
+      var lead_desc = $("#lead_desc").val();
+      if (Rejected.length !== 0) {
+        if (Reason.length !== 0 && lead_desc.length !== 0) {
+          status = $(this).attr('status');
+          camp_id = $(this).attr('camp_id');
+          $.ajax({
+            type: 'post',
+            url: '/client/ajax/lead_rejected/',
+            data: { 'Reason': Reason, 'lead_desc': lead_desc, 'id': Rejected, 'lead_status': 2, 'status': status, 'camp_id': camp_id, csrfmiddlewaretoken: token },
+            success: function (data) {
+              if (data.success == 1) {
+                swal({ title: "", text: data.msg, type: "success" }).then(function () { location.reload(); });
+              }
+            },
+            failure: function (error) {
+              alert("fail");
+            }
+          });
+        } else {
+          swal({ title: "Reject Lead", text: "Select Reason and Enter Description", type: "warning", icon: "warning" })
+        }
+
+      }
+      else {
+        swal({ title: "Reject Lead", text: "Select Lead", type: "warning", icon: "warning" })
+      }
+    });
+    //when client select rectify lead then change status or Description
+    $(document).on('click', '#Rectify', function () {
+      var someObj = {};
+      someObj.fruitsGranted = [];
+      someObj.fruitsDenied = [];
+      $(document).find(".checkbox").each(function () {
+        var $this = $(this);
+        if ($this.is(":checked")) {
+          someObj.fruitsGranted.push($this.attr("id"));
+        } else {
+          someObj.fruitsDenied.push($this.attr("id"));
+        }
+      });
+      Rejected = someObj.fruitsGranted;
+      token = getCookie('csrftoken');
+      var Reason = $("#leads_rectify_reason").val();
+      var lead_desc = $("#lead_rectify_desc").val();
+      if (Rejected.length !== 0) {
+        if (Reason.length !== 0 && lead_desc.length !== 0) {
+          status = $(this).attr('status');
+          camp_id = $(this).attr('camp_id');
+          $.ajax({
+            type: 'post',
+            url: '/client/ajax/lead_rectify/',
+            data: { 'Reason': Reason, 'lead_desc': lead_desc, 'id': Rejected, 'lead_status': 3, 'status': status, 'camp_id': camp_id, csrfmiddlewaretoken: token },
+            success: function (data) {
+              if (data.success == 1) {
+                swal({ title: "", text: data.msg, type: "success" }).then(function () { location.reload(); });
+              }
+            },
+            failure: function (error) {
+              alert("fail");
+            }
+          });
+        } else {
+          swal({ title: "Rectify Lead", text: "Select Reason and Enter Description", type: "warning", icon: "warning" })
+        }
+      }
+      else {
+        swal({ title: "Reject Lead", text: "Select Lead", type: "warning", icon: "warning" })
+      }
+    });
+  });
+  function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      var cookies = document.cookie.split(';');
+      for (var i = 0; i < cookies.length; i++) {
+        var cookie = jQuery.trim(cookies[i]);
+        // Does this cookie string begin with the name we want?
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
+</script>

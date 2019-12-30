@@ -1,0 +1,103 @@
+{% extends "header/vendor_header.html" %}
+
+  {% block scripts %}
+      {% include "leads/leadlisthead.html" %}
+  {% endblock %}
+
+  {% block scripts1 %}
+      {% include "leads/leadlist.css" %}
+  {% endblock%}
+{% block content %}
+<!-- Main sidebar -->
+  {% include "side/clientside.html" %}
+
+
+    <!-- Main content -->
+            <div class="content-wrapper">
+
+
+
+
+                <!-- Content area -->
+                <div class="content">
+                    <div class="row">
+                    <!-- Top Clients List -->
+                    <div class="panel panel-height panel-flat">
+                        <div class="panel-heading">
+                         <h1 class="panel-title " > <a href="/client/lead_list/{{camp_id}}/{{camp_alloc.status}}"><button type="button"
+                            class="btn btn-primary back">
+                            Back</button></a> <label style="margin-left: 40vh;">Enter Lead Details </label></h1><br>
+                           <p id="font14">The Techconnectr Portal is a self-service tool that provides you with full control of the account.</p> <br>
+                            </h1>
+
+                        </div>
+
+                             <div class="row">
+                               <div class="col-lg-7 col-sm-12" style="margin-left: 3%;"> 
+                                 <form method="post" id="user_info_frm" action="/vendor/submited_add_lead/">
+                                   {% csrf_token %}
+                                    <input type="hidden" name="camp_id" value="{{camp_id}}"   >
+                                    <input type="hidden" name="camp_alloc_id" value="{{camp_alloc_id}}"   >
+                                   {% for header in lead_header %}
+                                    <div class="row" id="paddingtop5">
+                                       <div class="col-lg-12">
+                                         <div class="form-group">
+                                           <div class="col-lg-3">
+                                                   <label>{{header}}</label>
+                                            </div>
+                                           <div class="col-lg-6">
+                                             <input type="text" name="{{header}}" value=""  class="form-control col-lg-6" placeholder="Enter {{header}}"  >
+                                           </div>
+                                         </div>
+                                         </div>
+                                     </div>
+
+                                     {%endfor%}
+                                  <div class="text-center form-group" id="paddingtop20">
+                                          <button type="submit" class="btn btn-primary">Submit form <i></i></button>
+                                        </div>
+                                       </form>
+                                   </div>
+
+                                  <div class="col-lg-4">
+                                       <div class="panel panel-primary">
+                                         <div class="panel-heading">
+                                            <h6 class="panel-title">Info</h6>
+                                          </div>
+                                       <div class="panel-body">
+                                          Lead Details
+
+                                          </details>
+                                       </div>
+                                  </div>
+                             </div>
+                           </div>
+                         </div>
+                    <!-- /highlighting rows and columns -->
+
+
+
+
+
+                    <!-- Footer -->
+                    <div class="footer text-muted" style="display: none;">
+                        &copy; 2018. <a href="#">Trigensoft</a> by <a href="Trigensoft.com" target="_blank">Eugene Kopyov</a>
+                    </div>
+                    <!-- /footer -->
+                </div>
+                </div>
+                <!-- /content area -->
+            </div>
+            <!-- /main content -->
+        </div>
+        <!-- /page content -->
+
+    </div>
+    <style type="text/css">
+      .col-lg-6{
+        padding-bottom: 10px;
+      }
+    </style>
+    <!-- /page container -->
+                    {% include "leads/leadlistjs.html" %}
+                    {% endblock %}

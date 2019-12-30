@@ -1,0 +1,265 @@
+{% load static %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<script type="text/javascript" src="{% static 'assets/js/pages/picker_date.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/forms/selects/selectboxit.min.js' %}"></script>
+
+<!--Start dataTables-->
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/tables/datatables/extensions/buttons.min.js'%}"></script>
+<script type="text/javascript" src="{% static 'assets/js/pages/components_buttons.js' %}"></script>
+<script src="{% static 'assets/js/plugins/tables/datatables/extensions/fixed_columns.min.js'%}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/forms/selects/select2.min.js'%}"></script>
+<script type="text/javascript" src="{% static 'assets/js/pages/datatables_extension_fixed_columns.js'%}"></script>
+<script type="text/javascript" src="{% static 'assets/js/pages/datatables_extension_colvis.js'%}"></script>
+<!--End dataTables-->
+
+<!-- Theme JS files -->
+<script type="text/javascript" src="{% static 'assets/js/plugins/notifications/jgrowl.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/ui/moment/moment.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/pickers/daterangepicker.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/pickers/anytime.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/pickers/pickadate/picker.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/pickers/pickadate/picker.date.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/pickers/pickadate/picker.time.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/pickers/pickadate/legacy.js' %}"></script>
+
+
+<script type="text/javascript" src="{% static 'assets/js/plugins/forms/selects/select2.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/forms/selects/bootstrap_multiselect.js' %}"></script>
+
+
+
+
+
+<!--TagInput JS-->
+
+
+<!-- Amcharts -->
+
+
+<script src="https://www.amcharts.com/lib/4/core.js"></script>
+<script src="https://www.amcharts.com/lib/4/charts.js"></script>
+<script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+
+<script>
+$(function() {
+
+
+// Selects
+// ------------------------------
+
+// Basic select2
+// Basic select2
+$('.select').select2({
+	minimumResultsForSearch: Infinity,
+	containerCssClass: 'bg-blue'
+});
+
+
+// Select2 ultiselect item color
+$('.select-item-color').select2({
+	containerCssClass: 'bg-blue'
+});
+
+
+// Select2 dropdown menu color
+$('.select-menu-color').select2({
+	containerCssClass: 'bg-blue',
+	dropdownCssClass: 'bg-blue'
+});
+
+
+// Multiselect
+$('.multiselect').multiselect({
+	buttonClass: 'btn bg-blue',
+	nonSelectedText: 'Select your state',
+	onChange: function() {
+		$.uniform.update();
+	}
+});
+
+});
+</script>
+<style type="text/css">
+	#chartdiv {
+  width: 100%;
+  height: 300px;
+}
+#chartdiv2{
+	width: 100%;
+  height: 300px;
+}
+#chartdiv1{
+	width: 100%;
+  height: 500px;
+}
+
+/* lead_reports */
+#campaign_name_filter_span,#campaign_start_date_filter_span,#campaign_status_filter_span,#campaign_vendor_filter_span,#campaign_tc_status_filter_span,#campaign_geo_filter_span{
+	display: none;
+}
+
+
+.panel{
+	margin-bottom:5px !important
+}
+.select2-dropdown[class*=bg-] .select2-search--dropdown .select2-search__field {
+    background-color: transparent !important;
+    border-bottom-color:#000 !important; 
+    color: #080808 !important;
+}
+	.none {
+				border-bottom: 0px solid #ddd !important;
+	}
+	td{
+		 text-align: center!important;
+	}
+	th{
+		 text-align: center!important;
+	}
+	.col-md-2 label{
+		 text-align: center!important;
+		 font-weight: bold;
+		 padding-top: 20px;
+	}
+	.bg-blue {
+			background-color: #ffffff;
+			border-color: #ddd !important;
+			color: #000;
+	}
+	.top{
+		margin-top: -22px;
+	}
+	.pull-left{
+		font-size: 25px;
+		margin-left: 10px;
+		color: #2196F3 !important;
+	}
+	.pull-left i{
+		padding: 0 10px 0 10px;
+	}
+	.bg-grey-600 {
+			background-color: #fff;
+			border-color: #DDD;
+			color: #000;
+	}
+
+	.lab{
+		background-color: #337ab7b3;
+		color: #fff;
+		padding: 3px;
+		border-radius: 4px;
+
+	}
+	.lab1{
+		background-color: #5cb85cad;
+		color: #fff;
+		padding: 3px;
+		border-radius: 4px;
+
+	}.lab2{
+		background-color: #f0ad4ecf;
+		color: #fff;
+		padding: 3px;
+		border-radius: 4px;
+
+	}.lab3{
+		background-color:  #DDD;
+		color: #000;
+		padding: 3px;
+		border-radius: 4px;
+
+	}.lab4{
+		background-color: #3a77ff;
+		color: #fff;
+		padding: 3px;
+		border-radius: 4px;
+
+	}.lab5{
+		background-color: #c92cbdb8;
+		color: #fff;
+		padding: 3px;
+		border-radius: 4px;
+
+	}.lab6{
+		background-color: #5720ffb8;
+		color: #fff;
+		padding: 3px;
+		border-radius: 4px;
+
+	}.lab7{
+		background-color: #ffeb3bdb;
+		color: #000;
+		padding: 3px;
+		border-radius: 4px;
+
+	}.lab8{
+		background-color: #c92cbdb8;
+		color: #fff;
+		padding: 3px;
+		border-radius: 4px;
+
+	}.lab9{
+		background-color: #20eaff;
+		color: #000;
+		padding: 3px;
+		border-radius: 4px;
+
+	}.lab10{
+		background-color: #ff3b56db;
+		color: #fff;
+		padding: 3px;
+		border-radius: 4px;
+
+	}
+	.col-md-12 span i{
+		padding-left: 8px;
+		font-size: 10px;
+	}
+	.span span{
+		padding-left: 10px;
+		margin-left: 10px;
+	}
+
+	.slidecontainer {
+	width: 100%;
+	}
+
+	.slider {
+	-webkit-appearance: none;
+	width: 100%;
+	height: 15px;
+	border-radius: 5px;
+	background: #d3d3d3;
+	outline: none;
+	opacity: 0.7;
+	-webkit-transition: .2s;
+	transition: opacity .2s;
+	}
+
+	.slider:hover {
+	opacity: 1;
+	}
+
+	.slider::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 25px;
+	height: 25px;
+	border-radius: 50%;
+	background: #4CAF50;
+	cursor: pointer;
+	}
+
+	.slider::-moz-range-thumb {
+	width: 25px;
+	height: 25px;
+	border-radius: 50%;
+	background: #4CAF50;
+	cursor: pointer;
+	}
+</style>
+
+</head>

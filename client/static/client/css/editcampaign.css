@@ -1,0 +1,245 @@
+
+        ul,
+        ol {
+            list-style-type: none;
+        }
+        
+        #treeview ul,
+        li {
+            padding: 0px;
+        }
+        
+        .headfont {
+            font-size: 21px;
+        }
+        
+        .headfont1 {
+            font-size: 15px;
+        }
+        
+        .accordion .card-header:after {
+            font-family: 'FontAwesome';
+            content: "\f068";
+            float: right;
+        }
+        
+        .accordion .card-header.collapsed:after {
+            /* symbol for "collapsed" panels */
+            content: "\f067";
+        }
+        
+        .panel {
+            border-width: 0;
+            color: #333333;
+            -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+            box-shadow: 0 2px 6px rgba(51, 51, 51, 0.54), 0 1px 2px rgba(0, 0, 0, 0.24);
+        }
+
+    /*Custon Field*/
+
+           #dropdiv ul {
+           display: inline-block !important;
+           float: left;
+       }
+       #dragdiv ul {
+           margin-top:20px;
+       }
+
+        /*panel height */
+        .panel-height
+        {
+            min-height:100vh;
+        }
+
+        /*panel height*/
+       
+        
+        .tree,
+        .tree ul {
+            margin: 0;
+            padding: 0;
+            list-style: none
+        }
+        
+        .tree ul {
+            margin-left: 1em;
+            position: relative
+        }
+        
+        .tree ul ul {
+            margin-left: .5em
+        }
+        
+        .tree ul:before {
+            content: "";
+            display: block;
+            width: 0;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            border-left: 1px solid
+        }
+        
+        .tree li {
+            margin: 0;
+            padding: 0 1em;
+            line-height: 2em;
+            color: #369;
+            font-weight: 700;
+            position: relative
+        }
+        
+        .tree ul li:before {
+            content: "";
+            display: block;
+            width: 10px;
+            height: 0;
+            border-top: 1px solid;
+            margin-top: -1px;
+            position: absolute;
+            top: 1em;
+            left: 0
+        }
+        
+        .tree ul li:last-child:before {
+            background: #fff;
+            height: auto;
+            top: 1em;
+            bottom: 0
+        }
+        
+        .indicator {
+            margin-right: 5px;
+        }
+        
+        .tree li a {
+            text-decoration: none;
+            color: #369;
+        }
+        
+        .tree li button,
+        .tree li button:active,
+        .tree li button:focus {
+            text-decoration: none;
+            color: #369;
+            border: none;
+            background: transparent;
+            margin: 0px 0px 0px 0px;
+            padding: 0px 0px 0px 0px;
+            outline: 0;
+        }
+        
+       
+        .nav-pills > li.active > a,
+        .nav-pills > li.active > a:hover,
+        .nav-pills > li.active > a:focus {
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+        
+        .nav-pills > li.active > a,
+        .nav-pills > li.active > a:hover,
+        .nav-pills > li.active > a:focus {
+            color: #fff;
+            background-color: #2196F3;
+        }
+        
+        .scroll {
+            height: 150px;
+            width: 100%;
+            overflow: scroll;
+            overflow-x: hidden;
+            overflow-y: scroll;
+        }
+        
+        .nav > li > a {
+            position: relative;
+            display: block;
+            padding: 9px 20px;
+        }
+
+
+        .qt1{
+           padding-right: 0px;
+           margin-right: 0px;
+        }
+
+		
+/* draggable targets */
+[data-draggable="target"]
+{
+	float:left;
+	list-style-type:none;
+	
+	width:42%;
+	height:10.5em;
+	overflow-y:auto;
+	
+	margin:0 0.5em 0.5em 0;
+	padding:0.5em;
+	
+	border:2px solid #888;
+	border-radius:0.2em;
+	font-size:14px;
+	color:#555;
+}
+
+/* drop target state */
+[data-draggable="target"][aria-dropeffect="move"]
+{
+	border-color:#68b;
+
+	background:#fff;
+}
+
+/* drop target focus and dragover state */
+[data-draggable="target"][aria-dropeffect="move"]:focus,
+[data-draggable="target"][aria-dropeffect="move"].dragover
+{
+	outline:none;
+	
+	box-shadow:0 0 0 1px #fff, 0 0 0 3px #68b;
+}
+
+/* draggable items */
+[data-draggable="item"]
+{
+	display:block;
+	list-style-type:none;
+	
+	margin:0 0 2px 0;
+	padding:0.2em 0.4em;
+	
+	border-radius:0.2em;
+	
+	line-height:1.3;
+}
+
+/* items focus state */
+[data-draggable="item"]:focus
+{
+	outline:none;
+	
+	box-shadow:0 0 0 2px #68b, inset 0 0 0 1px #ddd;
+}
+
+/* items grabbed state */
+[data-draggable="item"][aria-grabbed="true"]
+{
+	background:#8ad;
+	color:#fff;
+}
+#font14
+{
+    font-size: 14px;
+}
+	#marginleft10
+    {
+        margin-left: 10px;
+    }
+    #marginright20
+    {
+        padding-right:20px;
+    }
+    

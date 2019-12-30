@@ -1,0 +1,1105 @@
+{% extends "common/base.html" %}
+
+{% load static %}
+{% load custom_filters %}
+
+{% block title %} Edit RFQ Campaign {% endblock %}
+{% load widget_tweaks %}
+<!--
+    page code must be start in block content
+    inside block content
+-->
+{% block content %}
+
+<!-- Main content -->
+<div class="content-wrapper">
+
+    <!-- Content area -->
+    <div class="content">
+
+        <!-- main row -->
+        <div class="row">
+            <!-- Top Clients List -->
+            <div class="panel panel-height panel-flat">
+                <div class="panel-heading ml-20">
+                    <center>
+                        <h1 class="panel-title">Edit RFQ Campaign</h1>
+                    </center>
+
+                    <form class="form-horizontal" id="validate_campaign"
+                        action="{% url 'update_c_mandatory_fields' campaign.id %}" method="post">
+                        {% csrf_token %}
+                        <!-- some hidden fields -->
+                        <!-- client id-->
+                        <input type="hidden" name="{{ campaignform.user.name }}" id="id_{{ campaignform.user.name }}"
+                            value="{{ request.session.userid }}" />
+
+                        <input type="hidden" name="{{ campaignform.priority.name }}"
+                            id="id_{{ campaignform.priority.name }}" value="3">
+
+                        <input type="hidden" name="{{ campaignform.rfq_status.name }}"
+                            id="id_{{ campaignform.rfq_status.name }}" value="0">
+
+                        <input type="hidden" name="{{ campaignform.raimainingleads.name }}"
+                            id="id_{{ campaignform.raimainingleads.name }}" value="0">
+
+                        <input type="hidden" name="adhoc" id="" value="0" />
+
+
+                        <input type="hidden" name="{{ campaignform.status.name }}"
+                            id="id_{{ campaignform.status.name }}" value="3" />
+                        <input type="hidden" name="{{ campaignform.rfq.name }}" id="id_{{ campaignform.rfq.name }}"
+                            value="1" />
+                        <input type="hidden" id="id_{{ campaignform.cpl.name }}" name="{{ campaignform.cpl.name }}"
+                            value="0" />
+
+                        {% if form.non_field_errors %}
+                        <ul>
+                            {% for error in form.non_field_errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+
+                        {% for hidden_field in form.hidden_fields %}
+                        {% if hidden_field.errors %}
+                        <ul>
+                            {% for error in hidden_field.errors %}
+                            <li>(Hidden field {{ hidden_field.name }}) {{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        {{ hidden_field }}
+                        {% endfor %}
+
+
+                        <fieldset class="content-group">
+                            <legend class="text-bold">Request For quote campaign </legend>
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3">Campaign IO Number</label>
+                                    <div class="col-lg-9">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <input type="number" NAME="{{ campaignform.io_number.name }}"
+                                                    id="id_{{ campaignform.io_number.name }}"
+                                                    onfocus="changeInfo('camp_io')"
+                                                    class="form-control maxlength-label-position id_io_number"
+                                                    placeholder="Campaign IO Number" min=1
+                                                    value="{{ campaign.io_number }}" required>
+                                                <span class="help-block io_alert"></span>
+                                                {{ campaignform.io_number.errors }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group ">
+                                    <label class="col-lg-3 control-label ">Campaign Name <span
+                                            style="color:red">*</span> </label>
+                                    <div class="col-lg-9">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <input type="text" NAME="{{ campaignform.name.name }}"
+                                                    id="id_{{ campaignform.name.name }}"
+                                                    onfocus="changeInfo('camp_name')"
+                                                    class="form-control maxlength-label-position"
+                                                    value="{{ campaign.name }}" placeholder="Campaign Name"
+                                                    maxlength="100" required>
+                                                <span class="help-block"></span>
+                                                {{ campaignform.name.errors }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3">Campaign Description <span
+                                            style="color:red">*</span></label>
+                                    <div class="col-lg-9">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <textarea rows="3" name="{{ campaignform.description.name }}"
+                                                    id="id_{{ campaignform.description.name }}" cols="4"
+                                                    onfocus="changeInfo('camp_desc')" maxlength="240" value=""
+                                                    class="form-control maxlength-label-position elastic elastic-destroy "
+                                                    placeholder="Campaign Description"
+                                                    required>{{ campaign.description }}</textarea>
+                                                <span class="label label-block label-primary text-left"></span>
+                                                {{ campaignform.description.errors }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3">Outreach Method <span
+                                            style="color:red">*</span></label>
+                                    <div class="col-lg-9">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <div class="form-group form-group-material">
+                                                    <div class="multi-select-full" onclick="changeInfo('camp_method')">
+                                                        <select id="id_{{ campaignform.method.name }}"
+                                                            name="{{ campaignform.method.name }}"
+                                                            class="multiselect-campaign-method" multiple="multiple"
+                                                            required="true">
+                                                            <!--<option>Select Campaign fdfgdf Method</option> -->
+                                                            {% for val, text in campaignform.method.field.choices %}
+                                                            {% if text != "---------" %}
+                                                            <option value="{{ val }}"
+                                                                {% if val in all_selected_method %}selected{% endif %}>
+                                                                {{ text }}</option>
+                                                            {% endif %}
+                                                            {% endfor %}
+                                                        </select>
+                                                        {{ campaignform.method.errors }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3">Geo<span style="color:red">*</span></label>
+                                    <div class="col-lg-9">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <textarea rows="3" name="{{ campaignform.geo.name }}"
+                                                    id="id_{{ campaignform.geo.name }}" cols="4"
+                                                    onfocus="changeInfo('camp_geo')"
+                                                    class="form-control dropdown-toggle-sweet_spot"
+                                                    placeholder="Campaign Geo" required>{{campaign.geo}}</textarea>
+                                                <span class="label label-block label-primary text-left"></span>
+                                                <div class="dropdown-menu sweet_spot_toggle"
+                                                    style="width: 120%; display: block;">
+                                                    <div class="col-md-12"
+                                                        style="float:left;overflow-y:auto;height: 300px;">
+                                                        <div class="form-group">
+                                                            {% for region in region_list.all %}
+                                                            <div class="col-md-12" style="padding-top:10px;">
+                                                                <label class="text-semibold">
+                                                                    <input type="checkbox" name="region_check"
+                                                                        class="filled-in styled " data="{{region.name}}"
+                                                                        id="{{region.id}}" value="{{region.id}}" />
+                                                                    <span> {{ region.name }}</span>
+                                                                </label>
+                                                                <div class="col-md-12 country_opt">
+                                                                    {% for country in countries.all %}
+                                                                    {% if region.id == country.region_id %}
+
+                                                                    <div class="col-md-4">
+                                                                        <div class="checkbox">
+                                                                            <label>
+                                                                                {% if country.id|stringformat:"i" in data_assesment.sweet_spot %}
+                                                                                <input type="checkbox"
+                                                                                    name="{{mappingform.country.name}}"
+                                                                                    class="filled-in region_country styled {{region.name}} child_{{region.id}}"
+                                                                                    data="{{ country.name }}"
+                                                                                    data-region="{{region.id}}"
+                                                                                    value="{{country.id}}" checked />
+                                                                                <span> {{ country.name }}</span>
+                                                                                {%else%}
+                                                                                <input type="checkbox"
+                                                                                    name="{{mappingform.country.name}}"
+                                                                                    class="filled-in region_country styled child_{{region.id}}"
+                                                                                    data="{{ country.name }}"
+                                                                                    data-region="{{region.id}}"
+                                                                                    value="{{country.id}}" />
+                                                                                <span> {{ country.name }}</span>
+                                                                                {%endif%}
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    {%endif%}
+                                                                    {%endfor%}
+                                                                </div>
+                                                            </div>
+                                                            {%endfor%}
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12" style="padding-top: 10px;">
+                                                        <button type="button" style="margin-left:5px;"
+                                                            class="btn btn-primary pull-right dropdown-toggle-sweet_spot_close"
+                                                            name="button"> Close</button>
+                                                        <button type="button"
+                                                            class="btn btn-primary pull-right region_country_submite"
+                                                            name="button"> Save</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3">Industry <span
+                                            style="color:red">*</span></label>
+                                    <div class="col-lg-9">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <div class="form-group form-group-material">
+
+                                                    <div class="multi-select-full" onclick="changeInfo('camp_method')">
+                                                        <select id="id_{{ mappingform.industry_type.name }}"
+                                                            name="{{ mappingform.industry_type.name }}"
+                                                            class="multiselect-campaign-industry" multiple="multiple"
+                                                            required="true">
+
+                                                            {% for val in industry_types.all %}
+                                                            <option value="{{ val.type }}"
+                                                                {% if val.type in mapping.industry_type %}selected{% endif %}>
+                                                                {{ val.type }}</option>
+                                                            {% endfor %}
+                                                        </select>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3">Job Title & Function <span
+                                            style="color:red">*</span></label>
+                                    <div class="col-lg-9">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <input type="text" NAME="{{  mappingform.job_title_function.name }}"
+                                                    id="id_{{ mappingform.job_title_function.name }}"
+                                                    onfocus="changeInfo('camp_job_fun')"
+                                                    class="form-control maxlength-label-position" p
+                                                    laceholder="job title & function" maxlength="100"
+                                                    value="{{mapping.job_title_function}}" required>
+                                                <span class="help-block"></span>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3">Emp Size/Rev Size <span
+                                            style="color:red">*</span></label>
+                                    <div class="col-lg-9">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <div class="form-group form-group-material">
+
+                                                    <div class="multi-select-full"
+                                                        onclick="changeInfo('camp_emp_size')">
+                                                        <select id="id_{{ mappingform.company_size.name }}"
+                                                            name="{{ mappingform.company_size.name }}"
+                                                            class="multiselect-campaign-company " multiple="multiple">
+                                                            <!--<option>Select Campaign Method</option> -->
+                                                            {% for val in company_sizes %}
+                                                            <option value="{{ val.range }}"
+                                                                {% if val.range in mapping.company_size %}selected{% endif %}>
+                                                                {{ val.range }}</option>
+                                                            {% endfor %}
+                                                        </select>
+
+                                                    </div>
+                                                    <div class="multi-select-full"
+                                                        onclick="changeInfo('camp_emp_size')">
+                                                        <select id="id_{{ mappingform.revenue_size.name }}"
+                                                            name="{{ mappingform.revenue_size.name }}"
+                                                            class="multiselect-campaign-revenue" multiple="multiple">
+                                                            <!--<option>Select Campaign Method</option> -->
+                                                            {% for val in revenue_size %}
+                                                            <option value="{{ val.range }}"
+                                                                {% if val.range in mapping.revenue_size %}selected{% endif %}>
+                                                                {{ val.range }}</option>
+                                                            {% endfor %}
+                                                        </select>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3">ABM / Suppression</label>
+                                    <div class="col-lg-9">
+                                        <div class="row">
+
+                                            <div class="col-md-2">
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" class="styled" data-alter-on-val="1"
+                                                            data-alter-off-val="0"
+                                                            name="{{specificationform.abm_status.name }}"
+                                                            id="id_{{ specificationform.abm_status.name }}"
+                                                            onfocus="changeInfo('camp_abm')" value="1"
+                                                            {% if specification.abm_status  == 1 %}checked{% endif %}>
+                                                        ABM
+                                                    </label>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" class="styled" data-alter-on-val="1"
+                                                            data-alter-off-val="0"
+                                                            name="{{ specificationform.suppression_status.name }}"
+                                                            id="id_{{ specificationform.suppression_status.name }}"
+                                                            onfocus="changeInfo('camp_abm')" value="1"
+                                                            {% if specification.suppression_status  == 1 %}checked{% endif %}>
+                                                        Suppression
+                                                    </label>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3">Custom Question</label>
+                                    <div class="col-lg-9">
+                                        <div class="row">
+
+                                            <div class="col-md-4">
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" name="cusome_ques" class="styled"
+                                                            value="0" data-alter-on-val="1" data-alter-off-val="0"
+                                                            onfocus="changeInfo('camp_rfq')">
+                                                        Yes
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 custom_question_div">
+                                                <input type="number" min="0" max="9"
+                                                    name="{{ mappingform.custom_question.name }}"
+                                                    id="id_{{ mappingform.custom_question.name }}" class="form-control"
+                                                    min="0" value="0" placeholder="No. of Custom question">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3">Target Quantity</label>
+                                    <div class="col-lg-9">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <div class="input">
+                                                    <input type="number" name="{{ campaignform.target_quantity.name }}"
+                                                        id="id_{{ campaignform.target_quantity.name }}"
+                                                        class="form-control" min="0" placeholder="Target Quantity"
+                                                        value="{{campaign.target_quantity}}">
+                                                    {{ campaignform.target_quantity.errors }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3">Campaign Start Date</label>
+                                    <div class="col-lg-9">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <div class="input">
+                                                    <input class="form-control start_date_selector" type="text"
+                                                        name="{{ campaignform.start_date.name }}"
+                                                        onfocus="changeInfo('camp_date')"
+                                                        id="id_{{ campaignform.start_date.name }}"
+                                                        value="{{ campaign.start_date }}" required />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- RFQ expiry time input -->
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3">Quotation Expiry <span
+                                            style="color:red"></label>
+                                    <div class="col-lg-9">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <div class="input">
+                                                    <input class="form-control" type="text"
+                                                        name="{{ campaignform.rfq_timer.name }}"
+                                                        onfocus="changeInfo('camp_rfq_timer')"
+                                                        id="id_{{ campaignform.rfq_timer.name }}"
+                                                        placeholder="Quotation Expiry" value="{{ campaign.rfq_timer }}" required readonly />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3">Campaign End Date</label>
+                                    <div class="col-lg-9">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <div class="input">
+                                                    <input class="form-control end_date_selector" type="text"
+                                                        name="{{ campaignform.end_date.name }}"
+                                                        onfocus="changeInfo('camp_date')"
+                                                        id="id_{{ campaignform.end_date.name }}"
+                                                        value="{{campaign.end_date}}" required />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3">Speacial Instructions</label>
+                                    <div class="col-lg-9">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <textarea rows="3" name="{{ mappingform.special_instructions.name }}"
+                                                    id="id_{{ mappingform.special_instructions.name }}" cols="4"
+                                                    onfocus="changeInfo('camp_desc')" maxlength="240"
+                                                    class="form-control maxlength-label-position elastic elastic-destroy"
+                                                    placeholder="Campaign Special Instructions">{{mapping.special_instructions}}</textarea>
+                                                <span class="label label-block label-primary text-left"></span>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3">Select Vendor</label>
+
+                                    <div class="col-lg-9" id="container_vendor_type">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" name="{{ campaignform.tc_vendor.name }}"
+                                                            id="id_{{ campaignform.tc_vendor.name }}"
+                                                            data-alter-on-val="1" data-alter-off-val="0"
+                                                            class="styled chk_replace_val"
+                                                            onfocus="changeInfo('camp_vendor')"
+                                                            {% if campaign.tc_vendor  == 1 %}value="1" checked
+                                                            {% else %} value="0" {% endif %}> TC-Vendor
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox"
+                                                            name="{{ campaignform.internal_vendor.name }}"
+                                                            id="id_{{ campaignform.internal_vendor.name }}"
+                                                            data-alter-on-val="1" data-alter-off-val="0"
+                                                            class="styled chk_replace_val"
+                                                            onfocus="changeInfo('camp_vendor')"
+                                                            {% if campaign.internal_vendor  == 1 %}value="1" checked
+                                                            {% else %} value="0" {% endif %}>
+                                                        Internal Vendor
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox"
+                                                            name="{{ campaignform.external_vendor.name }}"
+                                                            id="id_{{ campaignform.external_vendor.name }}"
+                                                            data-alter-on-val="1" data-alter-off-val="0"
+                                                            class="styled chk_replace_val"
+                                                            onfocus="changeInfo('camp_vendor')"
+                                                            {% if campaign.external_vendor  == 1 %}value="1" checked
+                                                            {% else %} value="0" {% endif %}>
+                                                        External Vendor
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            {{ campaignform.vendors.errors }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-lg-2"></label>
+                                    <div class="col-lg-10">
+                                        <div class="row mt-20 mb-20">
+                                            <div class="col-md-3">
+                                                <button type="submit"
+                                                    class="btn btn-primary legitRipple pull-right">Update<span
+                                                        class="legitRipple-ripple"></span></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <h6 class="panel-title" id="field_info">Info</h6>
+                                    </div>
+                                    <div class="panel-body">
+                                        <ul id="field_desc" style="font-size: 14px;font-weight: 500;">
+
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+            <!-- /highlighting rows and columns -->
+
+        </div>
+        <!-- main row -->
+
+    </div>
+    <!-- /content area -->
+
+</div>
+<!-- /main content -->
+
+{% endblock %}
+
+
+<!-- ============================ -->
+<!--        page level scripts    -->
+<!-- =========================== -->
+{% block page_level_scripts %}
+<script>
+    $(function () {
+
+
+        /*change li active*/
+        /*add active class to li*/
+        $("#campaign").addClass("active");
+        $("#campaign-create").addClass("active");
+
+        /* Geo Spot js */
+        $(".dropdown-toggle-sweet_spot").click(function () {
+            $('.sweet_spot_toggle').show();
+        });
+        $(".dropdown-toggle-sweet_spot_close").click(function () {
+            $('.sweet_spot_toggle').hide();
+        });
+        $(".region_country_submite").click(function () {
+            var region_country = [];
+            $(".region_country:checked").each(function () {
+                region_country.push($(this).attr('data'));
+            });
+            $('.dropdown-toggle-sweet_spot').val(region_country);
+            $('.sweet_spot_toggle').hide();
+        });
+    });
+
+    // global variable
+    var DEBUG = true; // false or true
+</script>
+
+<style>
+    .multiselect-container .checkbox .checker {
+        top: 18px !important;
+    }
+</style>
+
+<!-- panel-tab color-->
+<link href="{% static 'client/css/createcampaign.css' %}?ver=1.1" rel="stylesheet" type="text/css">
+
+
+<script type="text/javascript" src="{% static 'assets/js/core/libraries/jasny_bootstrap.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/forms/selects/select2.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/forms/selects/bootstrap_multiselect.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/forms/selects/bootstrap_select.min.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'assets/js/core/libraries/jquery_ui/core.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/forms/selects/selectboxit.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/forms/styling/uniform.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/forms/inputs/autosize.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/forms/inputs/formatter.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/forms/tags/tagsinput.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/forms/tags/tokenfield.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/forms/inputs/touchspin.min.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'assets/js/plugins/ui/moment/moment.min.js' %}"></script>
+
+<script type="text/javascript"
+    src="{% static 'assets/js/plugins/forms/inputs/typeahead/typeahead.bundle.min.js' %}?ver=1.1"></script>
+<script type="text/javascript"
+    src="{% static 'assets/js/plugins/forms/inputs/typeahead/handlebars.min.js' %}?ver=1.1"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/forms/inputs/passy.js' %}?ver=1.1"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/forms/inputs/maxlength.min.js' %}?ver=1.1"></script>
+
+<script type="text/javascript" src="{% static 'client/js/create_campaign/form_floating_labels.js' %}?ver=1.1"></script>
+<script type="text/javascript" src="{% static 'assets/js/pages/form_controls_extended_client.js' %}?ver=1.2"></script>
+
+<script type="text/javascript" src="{% static 'client/js/form_checkboxes_radios.js' %}?ver=1.1"></script>
+
+<script type="text/javascript" src="{% static 'assets/js/plugins/forms/validation/validate.min.js' %}?ver=1.1"></script>
+<script type="text/javascript" src="{% static 'client/js/form_validation.js' %}?ver=1.1"></script>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'client/plugins/flatpicker/material_blue.css' %}?ver=1.1">
+
+
+<script type="text/javascript">
+  var quote_flag = 0;
+  var time;
+    $(document).ready(function () {
+
+        var hour = new Date().getHours();
+        console.log("Hours : ", hour);
+
+        var min_start_dt = new Date();
+
+        // datepicker disable date based on time
+        if (hour >= 13) {
+            min_start_dt.setDate(min_start_dt.getDate() + 3);
+        }
+        else {
+            min_start_dt.setDate(min_start_dt.getDate() + 2);
+        }
+        console.log("min_start_dt : ", min_start_dt);
+
+        // declare variables to hold start and end date
+        var selected_start_date_str = null;
+        var selected_end_date_str = null;
+
+        $(".start_date_selector").flatpickr(
+            {
+                // altInput: true,
+                altFormat: "F j, Y",
+                dateFormat: "Y-m-d",
+                minDate: min_start_dt,
+
+                "disable": [
+                    function (date) {
+                        // return true to disable
+                        // weekday[0] =  "Sunday"; or weekday[6] = "Saturday";
+                        return (date.getDay() === 0 || date.getDay() === 6);
+
+                    }
+                ],
+
+                // events
+                // onValueUpdate gets triggered when the input value is updated with a new date string
+                onValueUpdate: function (selectedDates, dateStr, instance) {
+                    DEBUG && console.log("Selected start date: ", selectedDates)
+                    DEBUG && console.log("Selected start date in string format: ", dateStr)
+                    $("#id_rfq_timer").datetimepicker({
+                        minDate: 0,
+                        dateFormat: "yy-mm-dd",
+                        maxDate: dateStr,
+                    });
+                    quote_flag = 1;
+
+                    // store start date in string format(yyyy-mm-dd)
+                    // selected_start_date_str = dateStr;
+                    selected_start_date_str = $("input[name='start_date']").val(); // to set default value from db
+
+
+                    // compare dates if end date is also selected
+                    if (selected_end_date_str) {
+                        var selected_start_date = new Date(selected_start_date_str);
+                        var selected_end_date = new Date(selected_end_date_str);
+
+                        // if selected date less than end date process fruther
+                        if (selected_start_date < selected_end_date) {
+                            set_priority_and_adhoc_status({
+                                start_date: selected_start_date,
+                                end_date: selected_end_date,
+                            })
+                        }
+                        else {
+                            // clear selected date
+                            instance.clear();
+
+                            DEBUG && console.log("Please select start date lesser than end date");
+
+                            // reset priority and adhoc vals
+                            clear_priority_and_adhoc_status();
+
+                            $.confirm({
+                                title: 'Encountered an error!',
+                                content: "Start date should be less than end date",
+                                type: 'red',
+                                typeAnimated: true,
+                            });
+                        }
+                    }
+                    else {
+                        DEBUG && console.log("Selected end date is undefined so skipping start and end date comparision")
+                    }
+                },
+            });
+
+
+        $(".end_date_selector").flatpickr(
+            {
+                // altInput: true,
+                altFormat: "F j, Y",
+                dateFormat: "Y-m-d",
+                minDate: min_start_dt,
+
+                "disable": [
+                    function (date) {
+                        // return true to disable
+                        // weekday[0] =  "Sunday"; or weekday[6] = "Saturday";
+                        return (date.getDay() === 0 || date.getDay() === 6);
+
+                    }
+                ],
+
+                // events
+                // onValueUpdate gets triggered when the input value is updated with a new date string
+                onValueUpdate: function (selectedDates, dateStr, instance) {
+                    DEBUG && console.log("Selected end date: ", selectedDates)
+                    // console.log("end date instance: ", instance)
+
+                    // store end date in string format(yyyy-mm-dd)
+                    selected_end_date_str = dateStr;
+
+                    // compare dates if start date is also selected
+                    if (selected_start_date_str) {
+                        var selected_start_date = new Date(selected_start_date_str);
+                        var selected_end_date = new Date(selected_end_date_str);
+
+                        // if selected end date greater than start date process fruther
+                        if (selected_end_date > selected_start_date) {
+                            set_priority_and_adhoc_status({
+                                start_date: selected_start_date,
+                                end_date: selected_end_date,
+                            })
+                        }
+                        else {
+                            // clear selected date
+                            instance.clear();
+
+                            DEBUG && console.log("Please select end date greater than start date");
+
+                            // reset priority and adhoc vals
+                            clear_priority_and_adhoc_status();
+
+                            $.confirm({
+                                title: 'Encountered an error!',
+                                content: "End date should be greater than start date",
+                                type: 'red',
+                                typeAnimated: true,
+                            });
+                        }
+                    }
+                    else {
+                        DEBUG && console.log("Campaign start date is undefined so skipping start and end date comparision")
+                    }
+                },
+            });
+
+
+        $(document).on("change", ".chk_replace_val", function () {
+            console.log(" chk_replace_vals replacing values ")
+            var is_checked = $(this).prop('checked');
+            // console.log(" is_checked : ", is_checked);
+
+            if (is_checked) {
+                var val_alter_on = $.trim($(this).data("alter-on-val"));
+                $(this).val(val_alter_on);
+            }
+            else {
+                var val_alter_off = $.trim($(this).data("alter-off-val"));
+                $(this).val(val_alter_off);
+            }
+        })
+
+        // checkbox vendor type selector
+        $(document).on("change", "input[name='vendor_group[]']", function () {
+
+            var ele = this;
+            var values = new Array();
+            $.each($("input[name='vendor_group[]']:checked"), function () {
+                // values.push($(this).val());
+                values.push($(this).val());
+            });
+
+            var str_vendors = values.toString();
+            console.log("selected checkbox group values :", values);
+            console.log("selected checkbox values.toString() :", str_vendors);
+
+            // store in input textbox
+            var data_holder_class = $(ele).data("holder");
+            if ($("." + data_holder_class).length) {
+                $("." + data_holder_class).val(str_vendors);
+                console.log("Data Holder value :", $("." + data_holder_class).val());
+            }
+            else {
+                console.log("Data Holder with class :'", data_holder_class, "' not found");
+            }
+
+        });
+
+        $(document).on("change", "input[name='rfq']", function () {
+            var rfq = $(this).val();
+            console.log("Request For Quote : ", rfq);
+            $('#id_cpl').val('0')
+            $('#id_target_quantity').val('0')
+
+            //$("input[name='rfq_status']").val(rfq);
+            console.log("rfq_status value : ", $("input[name='rfq_status']").val());
+        });
+
+        $(document).on("change", "input[name='target_quantity']", function () {
+            var target_quantity = $(this).val();
+            console.log("target_quantity : ", target_quantity);
+
+            // copy value in raimainingleads
+            $("input[name='raimainingleads']").val(target_quantity);
+            console.log("raimainingleads value : ", $("input[name='raimainingleads']").val());
+        });
+
+        // on rest button Click
+        $(document).on("click", "#btn_reset", function () {
+            // reset bootstrap multiselect element
+            $('.multiselect-campaign-method')
+                .multiselect('deselectAll', false)
+                .multiselect('updateButtonText');
+
+            // uncheck all checkboxes
+            $("input[type='checkbox']").attr('checked', false);
+            $.uniform.update("input:checkbox");
+            //$(this).closest("form").find('input:checkbox').removeAttr('checked');
+
+        });
+if (quote_flag === 0){
+  $("#id_rfq_timer").datetimepicker({
+      minDate: 0,
+      dateFormat: "yy-mm-dd",
+      
+  });
+}
+
+    })
+
+    $(document).on('change', '.checker input[type="checkbox"]:checked', function () {
+
+    })
+
+    $(document).on('change', "input[name='cusome_ques']", function () {
+        $('.custom_question_div').toggle('hidden')
+    })
+    function set_priority_and_adhoc_status(options) {
+        var defaults = {
+            start_date: null,
+            end_date: null,
+
+            err_title: "Encountered an error !",
+            error_msg: "Please select field",
+            msg_type: "red",
+        };
+
+        var params = $.extend({}, defaults, options);
+
+        // console.log(options);
+        // console.log(params);
+
+        var priority = 3; // default 3 for low
+
+        //get differencs
+        var end_date = moment(params.end_date) //moment([2015, 11, 29]);
+        var start_date = moment(params.start_date) //moment([2007, 06, 27]);
+
+        var today = moment().format('YYYY-MM-DD') //moment([2007, 06, 27]);
+        console.log("today :", today);
+
+        var diff_startdate_today = start_date.diff(today, 'days');
+        console.log('Day diffrence between selected startdate and today date : ' + diff_startdate_today);
+
+        // get diffrence between end date and start date
+        var total_days = end_date.diff(start_date, 'days');
+        console.log('Total days difference between selected end and start date: ' + total_days);
+
+        // set prority and adhoc
+        // if enddate-startdate is less tahn or equal to 10 and also check is start date is less than 10 days from today
+        if (total_days >= 0 & total_days <= 10 && diff_startdate_today <= 10) {
+            console.log("Hign priority lead");
+            // 1 for high // defined in choice.py
+            priority = 1;
+
+            // change adhoc campaign hidden input element status
+            console.log("setting adhoc hidden element value to 1 i.e. True");
+            $("input[name='adhoc']").val("1");
+        }
+        else if (total_days > 10 & total_days <= 30) {
+            console.log("Medium priority lead");
+            // 2 for medium // defined in choice.py
+            priority = 2;
+            console.log("setting adhoc hidden element value to 0 i.e. false");
+            $("input[name='adhoc']").val("0");
+        }
+        else if (total_days > 30) {
+            console.log("Low priority lead");
+            // 3 for Low // defined in choice.py
+            priority = 3;
+            console.log("setting adhoc hidden element value to 0 i.e. false");
+            $("input[name='adhoc']").val("0");
+        }
+
+        // set priority to element
+        $("input[name='priority']").val(priority);
+        console.log("This form element priority : ", $("input[name='priority']").val());
+    }
+
+    function clear_priority_and_adhoc_status() {
+        // reset priority
+        $("input[name='priority']").val("")
+
+        // reset is Adhoc
+        // setting adhoc hidden element value to 0 i.e. false
+        $("input[name='priority']").val("0");
+
+        DEBUG && console.log("Priority and adhoc element value resetted")
+    }
+    $(document).on("change", "input[name='region_check']", function () {
+        parent_val = $(this).is(':checked')
+        $(`.child_${$(this).val()}:checkbox`).each(function () {
+            $(this).prop('checked', parent_val)
+            if (parent_val == true) {
+                $(this).closest('span').addClass('checked')
+            } else {
+                $(this).closest('span').removeClass('checked')
+            }
+        })
+    })
+    $(document).on("change", "input[name='country']", function () {
+        // alert()
+        console.log($(this))
+        if ($(this).is(':checked') == true) {
+            $(`#${$(this).data('region')}`).prop('checked', $(this).is(':checked'))
+            $(`#${$(this).data('region')}`).parent().addClass('checked')
+        } else {
+            if ($(`.child_${$(this).data('region')}:checked`).length == 0) {
+                $(`#${$(this).data('region')}`).prop('checked', $(this).is(':checked'))
+                $(`#${$(this).data('region')}`).parent().removeClass('checked')
+            }
+        }
+    })
+    $(document).on('keyup', '.id_io_number', function () {
+        if ($(this).val().length >= 4) {
+            $('#id_io_number-error').hide()
+            $.ajax({
+                type: "GET",
+                url: "/client/check_io/",
+                data: { 'ionumber': $(this).val() },
+                dataType: "json",
+                success: function (data) {
+                    if (data.status == 1) {
+                        $('.io_alert').hide()
+                        $('.io_alert').css('color', 'none')
+                    } else {
+                        $('.io_alert').show()
+                        $('.io_alert').text("IO number already exists")
+                        $('.io_alert').css('color', 'red')
+                    }
+                    console.log(data)
+                }
+            });
+        }
+    })
+</script>
+
+<script>
+    function changeInfo(str) {
+
+        if (str == 'camp_name')
+            campaignNameNote()
+        else if (str == 'camp_desc')
+            campaignDescNote()
+        else if (str == 'camp_type')
+            campaignTypeNote()
+        else if (str == 'camp_method')
+            campaignMothodNote()
+        else if (str == 'camp_cpl')
+            campaignCplNote()
+        else if (str == 'camp_date')
+            campaignDateNote()
+        else if (str == 'camp_rfq')
+            campaignRfqNote()
+        else if (str == 'camp_vendor')
+            campaignVendorNote()
+        else if (str == 'camp_geo')
+            campaignGeo()
+        else if (str == 'camp_ind')
+            campaignindustry()
+        else if (str == 'camp_job_fun')
+            campaignJobFunc()
+        else if (str == 'camp_emp_size')
+            campaignEmpSize()
+        else if (str == 'camp_io')
+            campaignIONote()
+    }
+    function campaignNameNote() {
+        var str = ""
+        $('#field_info').text('Info : Campaign Name');
+        str = "<li>Enter Campaign Name </li><li>Only 100 character Allow for Campaign Name</li>";
+        $('#field_desc').empty().append(str);
+    }
+    function campaignDescNote() {
+        $('#field_info').text('Info : Campaign Description');
+        var str = "<li>Enter Campaign Description </li><li>Only 240 character Allow for Campaign Description</li>";
+        $('#field_desc').empty().append(str);
+    }
+    function campaignTypeNote() {
+        $('#field_info').text('Info : Campaign Type');
+        var str = "<li>Select Campaign Type </li><li>You can select only one type of campaign</li>";
+        $('#field_desc').empty().append(str);
+    }
+    function campaignMothodNote() {
+        $('#field_info').text('Info : Campaign Method');
+        var str = "<li>Choose Campaign Method </li><li>You can select multiple method of campaign</li>";
+        $('#field_desc').empty().append(str);
+    }
+    function campaignCplNote() {
+        $('#field_info').text('Info : Campaign CPL');
+        var str = "<li>Enter Campaign CPL </li><li>CPL means Cost per lead </li><li>you can Enter only Number not character </li><li>CPL in Dollar</li> ";
+        $('#field_desc').empty().append(str);
+    }
+    function campaignDateNote() {
+        $('#field_info').text('Info : Campaign Date');
+        var str = "<li>Select Date of Campaign  </li><li>First Click on start date </li><li>Second Click on End Date</li>";
+        $('#field_desc').empty().append(str);
+    }
+    function campaignRfqNote() {
+        $('#field_info').text('Info : Campaign RFQ');
+        var str = "<li>RFQ means Request for Quote `</li><li>If you are confuse to decide CPL of campaign then you can check rfq so that techconnectr will suggest you.</li>";
+        $('#field_desc').empty().append(str);
+    }
+    function campaignVendorNote() {
+        $('#field_info').text('Info : Choose  your Vendor');
+        var str = "<li>TC-Vendor : Bussiness with techconnectr vendor  </li><li>Internal Vendor : your team </li><li>External Vendor : Bussiness with your vendors </li>";
+        $('#field_desc').empty().append(str);
+    }
+    function campaignGeo() {
+        $('#field_info').text('Info : Campaign Geo');
+        var str = "<li>Select Geo for campaign </li>";
+        $('#field_desc').empty().append(str);
+    }
+    function campaignindustry() {
+        $('#field_info').text('Info : Campaign Geo');
+        var str = "<li>Select Industry for campaign </li>";
+        $('#field_desc').empty().append(str);
+    }
+    function campaignJobFunc() {
+        $('#field_info').text('Info : Campaign Job Title & Function');
+        var str = "<li>Enter Job title or function for campaign </li>";
+        $('#field_desc').empty().append(str);
+    }
+    function campaignEmpSize() {
+        $('#field_info').text('Info : Campaign Employee Size / Revenue Size ');
+        var str = "<li>Select Employee Size   or Revenue Size </li>";
+        $('#field_desc').empty().append(str);
+    }
+
+</script>
+
+{% endblock %}
+<!--       page level scripts    -->
+<!-- /=========================== -->

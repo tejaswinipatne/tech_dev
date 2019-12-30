@@ -1,0 +1,203 @@
+{% extends "header/vendor_header.html" %}
+
+  {% block scripts %}
+      {% include "campaign/create_demo_campaignhead.html" %}
+
+  {% endblock %}
+
+  {% block scripts1 %}
+      {% include "campaign/manage_campaign.css" %}
+  {% endblock %}
+{% block content %}
+<!-- Main sidebar -->
+  {% include "side/clientside.html" %}
+
+          <!-- Main content -->
+            <div class="content-wrapper">
+                <!-- Content area -->
+                <div class="content">
+                    <div class="row">
+                    <!-- Top Clients List -->
+                    <div class="panel panel-height panel-flat">
+                        <div class="panel-heading">
+                    <center><h1 class="panel-title">Create-Campaign</h1></center>
+
+              <form class="form-horizontal" action="#">
+
+                <fieldset class="content-group">
+									<legend class="text-bold">Campaign Mandatory Fields</legend>
+                  <div class="col-md-8">
+									<div class="form-group">
+										<label class="control-label col-lg-3">Campaign Name</label>
+										<div class="col-lg-9">
+											<div class="row">
+												<div class="col-md-8">
+													<input type="text" onfocus="changeInfo('camp_name')" class="form-control maxlength-label-position" placeholder="Campaign Name"  maxlength="20">
+													<span class="help-block"></span>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="control-label col-lg-3">Campaign Description</label>
+										<div class="col-lg-9">
+											<div class="row">
+												<div class="col-md-8">
+													<textarea rows="3" cols="4" onfocus="changeInfo('camp_desc')" maxlength="240" class="form-control maxlength-label-position elastic elastic-destroy" placeholder="Campaign Description"></textarea>
+													<span class="label label-block label-primary text-left"></span>
+												</div>
+										</div>
+										</div>
+									</div>
+
+                  <div class="form-group">
+										<label class="control-label col-lg-3">Campaign Type</label>
+										<div class="col-lg-9">
+											<div class="row">
+												<div class="col-md-8">
+                          <select class="form-control" onfocus="changeInfo('camp_type')">
+                              <option value="AK">Select Campaign Type</option>
+      											  <option value="AK">Lead</option>
+      												<option value="HI">Data</option>
+                              <option value="AK">Survey</option>
+      												<option value="HI">Appointment</option>
+										       </select>
+													<span class="label label-block label-primary text-left"></span>
+												</div>
+										</div>
+										</div>
+									</div>
+
+                  <div class="form-group">
+										<label class="control-label col-lg-3">Campaign Method</label>
+										<div class="col-lg-9">
+											<div class="row">
+												<div class="col-md-8">
+                          <div class="form-group form-group-material">
+                            <div class="multi-select-full" onclick="changeInfo('camp_method')">
+                            <select class="multiselect" multiple="multiple" >
+                                  <option value="Email">Email</option>
+          												<option value="Tele">Tele</option>
+          												<option value="Hybrid">Hybrid</option>
+          									</select>
+										    </div>
+									</div>
+										</div>
+										</div>
+									</div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-lg-3">Campaign CPL</label>
+                  <div class="col-lg-9">
+                    <div class="row">
+                      <div class="col-md-8">
+                        <div class="input-group">
+											<span class="input-group-addon"><i class="fas fa-dollar-sign"></i></span>
+											<input type="number" id="cpl"  onfocus="changeInfo('camp_cpl')"class="form-control" value="" placeholder="Campaign CPL">
+										</div>
+                  </div>
+                  </div>
+                </div>
+              </div>
+
+            <div class="form-group">
+              <label class="control-label col-lg-3">Campaign Date</label>
+              <div class="col-lg-9">
+                <div class="row">
+                  <div class="col-md-8">
+                    <div class="input-group">
+											<span class="input-group-addon"><i class="icon-calendar22"></i></span>
+											<input type="text" onfocus="changeInfo('camp_date')" class="form-control daterange-weeknumbers" value="03/18/2013 - 03/23/2013">
+										</div>
+                  </div>
+              </div>
+            </div>
+          </div>
+              <div class="form-group">
+                <label class="control-label col-lg-3">Request For Quote</label>
+                <div class="col-lg-9">
+                  <div class="row">
+                    <div class="col-md-2">
+                      <div class="input-group">
+                        <input type="checkbox" id="rfq" onfocus="changeInfo('camp_rfq')" class="control-success" > RFQ
+                      </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="control-label col-lg-3">Select Vendor</label>
+              <div class="col-lg-9">
+                <div class="row">
+                  <div class="col-md-3">
+                    <div class="input-group">
+                      <input type="checkbox" class="control-success" onfocus="changeInfo('camp_vendor')"> TC-Vendor
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="input-group">
+                      <input type="checkbox" class="control-success" onfocus="changeInfo('camp_vendor')">Internal Vendor
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="input-group">
+                      <input type="checkbox" class="control-success"onfocus="changeInfo('camp_vendor')">External Vendor
+                    </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-lg-2"></label>
+            <div class="col-lg-10">
+              <div class="row">
+                <div class="col-md-5">
+                <button type="button" class="btn btn-primary btn-raised legitRipple pull-right">Submit<span class="legitRipple-ripple" ></span></button>
+              </div>
+            </div>
+          </div>
+        </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h6 class="panel-title" id="field_info">Info</h6>
+                </div>
+                <div class="panel-body">
+                  <ul  id="field_desc" style="font-size: 14px;font-weight: 500;">
+
+                  </ul>
+                </div>
+            </div>
+        </div>
+								</fieldset>
+              </form>
+              </div>
+            </div>
+                    <!-- /highlighting rows and columns -->
+
+
+
+</div>
+
+                    <!-- Footer -->
+                    <div class="footer text-muted" style="display: none;">
+                        &copy; 2018. <a href="#">Trigensoft</a> by <a href="Trigensoft.com" target="_blank">Eugene Kopyov</a>
+                    </div>
+                    <!-- /footer -->
+
+                </div>
+                <!-- /content area -->
+
+            </div>
+            <!-- /main content -->
+
+        </div>
+        <!-- /page content -->
+
+    </div>
+
+    <!-- /page container -->
+    {% include "campaign/js/create_demo_campaignjs.html" %}
+    {% endblock %}

@@ -1,0 +1,79 @@
+<script>
+
+    $(function () {
+
+        $(".video").click(function () {
+
+            var theModal = $(this).data("target"),
+
+                videoSRC = $(this).attr("data-video"),
+
+                videoSRCauto = videoSRC + "?modestbranding=1&rel=0&controls=0&showinfo=0&html5=1&autoplay=1";
+
+            $(theModal + ' iframe').attr('src', videoSRCauto);
+
+            $(theModal + ' button.close').click(function () {
+
+                $(theModal + ' iframe').attr('src', videoSRC);
+
+            });
+
+        });
+        //load state with ajax
+        $("#country").change(function () {
+            var countryid = $("#country option:selected").val();
+            token = $("#onboradingform").find('input[name=csrfmiddlewaretoken]').val()
+            $.ajax({
+                type: 'post',
+                url: '/client/ajax/loadstates/',
+                data: { 'id': countryid, csrfmiddlewaretoken: token },
+                success: function (data) {
+                    var options = '<option value=0>Select State </option>';
+                    for (var i = 0; i < data.length; i++) {
+                        options += '<option value="' + data[i]['id'] + '">' + data[i]['name'] + '</option>';
+                    }
+                    $("select#state").html(options);
+                },
+                failure: function (error) {
+                    alert("fail");
+                }
+            });
+        });
+    });
+
+</script>
+<script>
+    $(document).ready(function () {
+
+    });
+    var iScrollPos = 0;
+    $(window).scroll(function () {
+        var iCurScrollPos = $(this).scrollTop();
+        var h = window.innerHeight;
+        var scrolltop = $(window).scrollTop();
+        var scrollBottom = $(window).scrollTop() + $(window).height();
+        var current = $("body").scrollTop();
+        //alert(iScrollPos);
+        if (scrolltop > 1) {
+            //Scrolling Down
+            $("div.sticky").fadeOut('slow');
+            //alert('top');
+        } else {
+            //Scrolling Up
+            $("div.sticky").fadeIn('slow');
+        }
+        iScrollPos = iCurScrollPos;
+    });
+
+    function openModal() {
+        $("#on_boarding").hide();
+        $('#myModal').modal();
+    }
+
+    function closeModel() {
+        $("#on_boarding").show();
+        $('#modal').modal('hide');
+        $('#myModal').modal('hide');
+    }
+
+</script>

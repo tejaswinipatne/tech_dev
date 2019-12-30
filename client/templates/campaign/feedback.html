@@ -1,0 +1,122 @@
+{% extends "header/cheader.html" %}
+{% block content %}
+<!-- Main sidebar -->
+  {% include "side/clientside.html" %}
+<!-- /main sidebar -->
+<!-- Main content -->
+{% load range %}
+
+															
+
+            <div class="content-wrapper">
+
+
+
+                <!-- Content area -->
+                <div class="content">
+
+                    <!-- tech connector data-->
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div>
+                                <div class="row">
+									<div class="panel-body" id="centertext">
+                                        
+                                    </div>
+
+                                   			<div class="modal-dialog">
+													<div class="modal-content">
+														<div class="modal-header">
+															<div class="modal-body">
+																<h1 align="center">Feedback</h1>
+															</div>
+															<form action="/client/feedback/" method="post">
+																{% csrf_token %}
+																
+											
+
+												<style>
+												.checked {
+												    color: orange;
+												}
+												</style>
+												
+												<h4>Vendor Rating:</h4>
+												<span class="fa fa-star checked"></span>
+												<span class="fa fa-star checked"></span>
+												<span class="fa fa-star checked"></span>
+												<span class="fa fa-star"></span>
+												<span class="fa fa-star"></span><br>
+
+												<style>
+												.checked {
+												    color: orange;
+												}
+												</style>
+												
+												<h4>Vendor Performance:</h4>
+												<span class="fa fa-star checked"></span>
+												<span class="fa fa-star checked"></span>
+												<span class="fa fa-star checked"></span>
+												<span class="fa fa-star"></span>
+												<span class="fa fa-star"></span>
+												
+												<br>
+													<label class="label1"><h4>Feedback :</h4></label><br>
+													<textarea id="id_feed" name="feed" class="form-control"></textarea><br>
+												</div>
+												<div class="modal-footer">
+													<button type="submit" class="btn btn-primary legitRipple pull-right">Submit<span class="legitRipple-ripple"></span></button>
+												</div>
+											</form>
+										</div>
+									</div>
+                                </div>
+                            </div>
+
+
+
+{% include "dashboard/clientdashbordjs.html" %}
+{% endblock %}
+	<!-- 
+												<style>
+													.rating
+													{
+														position: absolute;
+														top: 50;
+														left: 50;
+														transform: translate(-50%,-50%);
+														display: flex;
+													}
+													.rating input
+													{
+														display: none;
+													}
+													.rating label
+													{
+														display: block;
+														cursor: pointer;
+														width: 50px;
+														background: #ccc;
+													}
+													.rating label:before
+													{
+														content: '\f005';
+														font-family: fontAwesome;
+														position: relative;
+														display: block;
+														font-size: 50px;
+														color: #101010;
+													}
+													</style>	
+
+												<div class="rating">
+													<input type="radio" name="star" id="starr1"><label for="starr1"></label>
+													<input type="radio" name="star" id="starr2"><label for="starr2"></label>
+													<input type="radio" name="star" id="starr3"><label for="starr3"></label>
+													<input type="radio" name="star" id="starr4"><label for="starr4"></label>
+													<input type="radio" name="star" id="starr5"><label for="starr5"></label>
+													
+												</div>
+ -->

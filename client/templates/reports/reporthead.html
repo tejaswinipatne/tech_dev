@@ -1,0 +1,457 @@
+{% load static %}
+  <link rel="stylesheet" href="https://demos.jquerymobile.com/1.4.2/css/themes/default/jquery.mobile-1.4.2.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script type="text/javascript" src="{% static 'assets/js/pages/picker_date.js' %}"></script>
+	<script type="text/javascript" src="{% static 'assets/js/plugins/forms/selects/selectboxit.min.js' %}"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css" type="text/css" media="all" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" type="text/javascript"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" type="text/javascript"></script>
+	<!-- Theme JS files -->
+	<script type="text/javascript" src="{% static 'assets/js/plugins/notifications/jgrowl.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'assets/js/plugins/ui/moment/moment.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'assets/js/plugins/pickers/daterangepicker.js' %}"></script>
+	<script type="text/javascript" src="{% static 'assets/js/plugins/pickers/anytime.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'assets/js/plugins/pickers/pickadate/picker.js' %}"></script>
+	<script type="text/javascript" src="{% static 'assets/js/plugins/pickers/pickadate/picker.date.js' %}"></script>
+	<script type="text/javascript" src="{% static 'assets/js/plugins/pickers/pickadate/picker.time.js' %}"></script>
+	<script type="text/javascript" src="{% static 'assets/js/plugins/pickers/pickadate/legacy.js' %}"></script>
+
+
+	<script type="text/javascript" src="{% static 'assets/js/plugins/forms/selects/select2.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'assets/js/plugins/forms/selects/bootstrap_multiselect.js' %}"></script>
+
+	<script type="text/javascript" src="{% static 'assets/js/core/libraries/jquery_ui/interactions.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'assets/js/core/libraries/jquery_ui/touch.min.js' %}"></script>
+
+	<script type="text/javascript" src="{% static 'assets/js/pages/colors_grey.js' %}"></script>
+	<script type="text/javascript" src="{% static 'assets/js/pages/components_navs.js' %}"></script>
+
+
+	<script type="text/javascript" src="{% static 'assets/js/charts/echarts/bars_tornados.js' %}"></script>
+	<script type="text/javascript" src="{% static 'assets/js/pages/colors_blue.js' %}"></script>
+	<script type="text/javascript" src="{% static 'assets/js/plugins/ui/ripple.min.js' %}"></script>
+
+
+
+
+	<!-- Styles -->
+<style>
+#chartdiv {
+  width: 100%;
+  height: 500px;
+}
+#chartdiv1 {
+  width: 100%;
+  height: 500px;
+}
+#chartdiv2 {
+  width: 100%;
+  height: 500px;
+}
+/**
+* asRange v0.3.4
+* https://github.com/amazingSurge/jquery-asRange
+*
+* Copyright (c) amazingSurge
+* Released under the LGPL-3.0 license
+*/
+.asRange {
+  position: relative;
+  width: 331px;
+  height: 8px;
+  background-color: #cfcdc7;
+  border-radius: 8px;
+}
+.asRange .asRange-pointer {
+  position: absolute;
+  left: 30%;
+  z-index: 2;
+  width: 8px;
+  height: 8px;
+  margin-left: -4px;
+  background-color: #fff;
+  border-radius: 9px;
+}
+.asRange .asRange-pointer:before {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  bottom: -4px;
+  left: -4px;
+  content: "";
+  background: #6ba1ad;
+  border-radius: inherit;
+}
+.asRange .asRange-pointer:after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  content: "";
+  background: #fff;
+  border-radius: inherit;
+}
+.asRange .asRange-pointer.start {
+  left: 0;
+  margin-left: 4px;
+}
+.asRange .asRange-pointer.stop {
+  left: 100%;
+  margin-left: -12px;
+}
+.asRange .asRange-pointer .asRange-tip {
+  position: absolute;
+  top: -33px;
+  left: 0;
+  width: 36px;
+  height: 20px;
+  margin-left: -15px;
+  font-family: Bpreplay;
+  font-size: 12px;
+  line-height: 20px;
+  color: #fff;
+  text-align: center;
+  background-color: #5d5c58;
+  border: 1px solid #5d5c58;
+  border-radius: 3px;
+  -webkit-transition: opacity .3s ease-in-out 0s;
+  transition: opacity .3s ease-in-out 0s;
+}
+.asRange .asRange-pointer .asRange-tip:before {
+  position: absolute;
+  bottom: -3px;
+  left: 50%;
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  content: "";
+  background-color: #5d5c58;
+  -webkit-transform: rotate(-45deg);
+      -ms-transform: rotate(-45deg);
+          transform: rotate(-45deg);
+}
+.asRange .asRange-selected {
+  position: absolute;
+  left: 30%;
+  z-index: 1;
+  width: 40%;
+  height: 8px;
+  background-color: #7ebdcb;
+  border-radius: 9px;
+}
+.asRange .asRange-scale {
+  display: none;
+}
+
+.asRange-scale {
+  position: relative;
+  width: 331px;
+  height: 8px;
+  background-color: #cfcdc7;
+  border-radius: 8px;
+}
+.asRange-scale .asRange-pointer {
+  position: absolute;
+  left: 30%;
+  z-index: 2;
+  width: 8px;
+  height: 8px;
+  margin-left: -4px;
+  background-color: #fff;
+  border-radius: 9px;
+}
+.asRange-scale .asRange-pointer:before {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  bottom: -4px;
+  left: -4px;
+  content: "";
+  background: #6ba1ad;
+  border-radius: inherit;
+}
+.asRange-scale .asRange-pointer:after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  content: "";
+  background: #fff;
+  border-radius: inherit;
+}
+.asRange-scale .asRange-pointer.start {
+  left: 0;
+  margin-left: 4px;
+}
+.asRange-scale .asRange-pointer.stop {
+  left: 100%;
+  margin-left: -12px;
+}
+.asRange-scale .asRange-pointer .asRange-tip {
+  position: absolute;
+  top: -33px;
+  left: 0;
+  width: 36px;
+  height: 20px;
+  margin-left: -15px;
+  font-family: Bpreplay;
+  font-size: 12px;
+  line-height: 20px;
+  color: #fff;
+  text-align: center;
+  background-color: #5d5c58;
+  border: 1px solid #5d5c58;
+  border-radius: 3px;
+  -webkit-transition: opacity .3s ease-in-out 0s;
+  transition: opacity .3s ease-in-out 0s;
+}
+.asRange-scale .asRange-pointer .asRange-tip:before {
+  position: absolute;
+  bottom: -3px;
+  left: 50%;
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  content: "";
+  background-color: #5d5c58;
+  -webkit-transform: rotate(-45deg);
+      -ms-transform: rotate(-45deg);
+          transform: rotate(-45deg);
+}
+.asRange-scale .asRange-selected {
+  position: absolute;
+  left: 30%;
+  z-index: 1;
+  width: 40%;
+  height: 8px;
+  background-color: #7ebdcb;
+  border-radius: 9px;
+}
+.asRange-scale .asRange-scale {
+  position: absolute;
+  bottom: -22px;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  background: url("../image/scale.png") no-repeat 0 center transparent;
+}
+.asRange-scale .asRange-scale li {
+  position: absolute;
+  top: 18px;
+  width: 30px;
+  height: 20px;
+  padding: 0;
+  margin: 0;
+  margin-left: -15px;
+  text-align: center;
+}
+.asRange-scale .asRange-scale li:first-child {
+  left: 0;
+}
+.asRange-scale .asRange-scale li:nth-child(2) {
+  left: 33.3%;
+}
+.asRange-scale .asRange-scale li:nth-child(3) {
+  left: 66.6%;
+}
+.asRange-scale .asRange-scale li:last-child {
+  left: 100%;
+}
+
+
+</style>
+
+<!-- Resources -->
+<script src="https://www.amcharts.com/lib/4/core.js"></script>
+<script src="https://www.amcharts.com/lib/4/charts.js"></script>
+<script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+
+<script type="text/javascript">
+$('input').popup();
+</script>
+
+	<!-- /theme JS files -->
+    <style type="text/css">
+    	.none {
+			    border-bottom: 0px solid #ddd !important;
+			}
+		td{
+			 text-align: center!important;
+		}
+		th{
+			 text-align: center!important;
+		}
+		.col-md-2 label{
+			 text-align: center!important;
+			 font-weight: bold;
+			 padding-top: 20px;
+		}
+		.bg-blue {
+		    background-color: #ffffff;
+		    border-color: #ddd !important;
+		    color: #000;
+		}
+		.top{
+			margin-top: -27px;
+		}
+		.pull-left{
+			font-size: 25px;
+			margin-left: 10px;
+			color: #2196F3 !important;
+		}
+		.pull-left i{
+			padding: 0 10px 0 10px;
+		}
+		.bg-grey-600 {
+		    background-color: #fff;
+		    border-color: #DDD;
+		    color: #000;
+		}
+	</style>
+	<style type="text/css">
+			.lab{
+				background-color: #337ab7b3;
+				color: #fff;
+				padding: 3px;
+				border-radius: 4px;
+
+			}
+			.lab1{
+				background-color: #5cb85cad;
+				color: #fff;
+				padding: 3px;
+				border-radius: 4px;
+
+			}.lab2{
+				background-color: #f0ad4ecf;
+				color: #fff;
+				padding: 3px;
+				border-radius: 4px;
+
+			}.lab3{
+				background-color:  #DDD;
+				color: #000;
+				padding: 3px;
+				border-radius: 4px;
+
+			}.lab4{
+				background-color: #3a77ff;
+				color: #fff;
+				padding: 3px;
+				border-radius: 4px;
+
+			}.lab5{
+				background-color: #c92cbdb8;
+				color: #fff;
+				padding: 3px;
+				border-radius: 4px;
+
+			}.lab6{
+				background-color: #5720ffb8;
+				color: #fff;
+				padding: 3px;
+				border-radius: 4px;
+
+			}.lab7{
+				background-color: #ffeb3bdb;
+				color: #000;
+				padding: 3px;
+				border-radius: 4px;
+
+			}.lab8{
+				background-color: #c92cbdb8;
+				color: #fff;
+				padding: 3px;
+				border-radius: 4px;
+
+			}.lab9{
+				background-color: #20eaff;
+				color: #000;
+				padding: 3px;
+				border-radius: 4px;
+
+			}.lab10{
+				background-color: #ff3b56db;
+				color: #fff;
+				padding: 3px;
+				border-radius: 4px;
+
+			}
+			.col-md-12 span i{
+				padding-left: 8px;
+				font-size: 10px;
+			}
+			.span span{
+				padding-left: 10px;
+				margin-left: 10px;
+			}
+
+	</style>
+	<style>
+.slidecontainer {
+  width: 100%;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 15px;
+  border-radius: 5px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #4CAF50;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #4CAF50;
+  cursor: pointer;
+}
+</style>
+<style type="text/css">
+	.chartbox{
+		border:1px solid #ddd;
+		padding: 10px;
+		border-right: 0px;
+		margin-top: 10px;
+		display: none;
+	}
+	.chartbox1{
+		border:1px solid #ddd;
+		padding: 10px;
+		margin-top: 10px;
+		display: none;
+	}
+	.chartbox3{
+		border:1px solid #ddd;
+		padding: 10px;
+		margin-top: 20px;
+		margin-bottom: 10px;
+		display: none;
+	}
+</style>

@@ -1,0 +1,52 @@
+body{
+  background-color: #fff;
+}
+.chat-list, .chat-stacked {
+    max-height:28em;
+    overflow: auto;
+}
+.dropdown-menu1 {
+    min-width: 180px;
+    padding: 8px 0;
+    color: #333333;
+    -webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    bottom: 100%;
+    position: absolute;
+    /* top: 100%; */
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    list-style: none;
+    font-size: 13px;
+    text-align: left;
+    background-color: #fff;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    background-clip: padding-box;
+}
+.dropdown-menu1 > li {
+  position: relative;
+  margin-bottom: 7px;
+  list-style: none;
+  font-size: 13px;
+}
+.dropdown-menu1 > li > a {
+    padding: 8px 16px;
+    outline: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.5384616;
+    color: #333333;
+    white-space: nowrap;
+}

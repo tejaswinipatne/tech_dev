@@ -1,0 +1,459 @@
+{% extends "header/vendor_header.html" %}
+
+  {% block scripts %}
+
+      {% include "vendor1/vendor_profilehead.html" %}
+  {% endblock %}
+
+
+{% block content %}
+<!-- Main sidebar -->
+  {% include "side/clientside.html" %}
+  {% load static %}
+    <div class="content-wrapper">
+
+                    <!-- Content area -->
+                  <div class="content">
+                        <div class="row">
+
+                    <!-- Top Clients List -->
+
+                    <div class="panel panel-height panel-flat">
+                      <div class="row">
+                        <div class="col-md-9">
+                        <div class="panel-heading">
+                          <div class="col-md-3">
+                            <button class="btn bg-blue btn-block btn-float btn-float-lg legitRipple" type="button">
+                              <i class="">100%</i>
+                              <span>Acceptance Rate</span>
+                            </button>
+                          </div>
+
+                          <h1 class="panel-title"> Vendor : {{vendor.user.user_name}}</h1>
+                           <p id="font14">
+                             <span class="label label-primar AcceptanceRate">Techconnectr Rating </span>&nbsp&nbsp<span class="label label-info AcceptanceRate">93%</span>
+                             <span class="label label-primar AcceptanceRate">Campaign Develiverd </span>&nbsp&nbsp<span class="label label-info AcceptanceRate">155</span></br>
+                             <span class="label label-primar AcceptanceRate1">Avg monthly Conversion </span>&nbsp&nbsp<span class="label label-info AcceptanceRate1">20,150</span>&nbsp&nbsp&nbsp&nbsp<a data-toggle="modal" data-target="#assign_vendor"><span class="label label-info AcceptanceRate1" >Suggest To Superadmin</span></a>
+                           </p>
+                        </div>
+                        <br/>
+                        <div class="panel-body">
+                            <ul class="nav nav-pills ">
+                                <li class="active"><a data-toggle="tab" href="#home">Descriptions</a></li>
+                                <li><a data-toggle="tab" href="#menu1">Stastics</a></li>
+                                <li><a data-toggle="tab" href="#menu2">Trade Refrences</a></li>
+                            </ul>
+                              <div class="tab-content">
+                                <div id="home" class="tab-pane fade in active">
+                                  <div class="row">
+                                    <div class="col-lg-12 col-sm-12">
+                                          <div class="row">
+                                            <div class="col-lg-9">
+                                              <div class="panel panel-primary">
+                                                <div class="panel-body">
+                                                    Alteration literature to or an sympathize mr imprudence. Of is ferrars subject as enjoyed
+                                                    The him father parish looked has sooner. Attachment frequently gay terminated son
+                                                    The him father parish looked has sooner. Attachment frequently gay terminated son
+                                                    The him father parish looked has sooner. Attachment frequently gay terminated son
+                                                </div>
+                                            </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="menu1" class="tab-pane fade">
+                                  <div class="row">
+                                    <div class="col-lg-12 col-sm-12">
+                                        <div class="col-lg-4 col-md-4">
+                            							<div class="panel panel-body">
+                            								<div class="media">
+                            									<div class="media-body">
+                            										<h6 class="text-semibold no-margin">Launch Time : 2 Day's</h6>
+                                                <h6 class="text-semibold no-margin">Avg.time to first Conversion</h6>
+                            									</div>
+                            								</div>
+                            							</div>
+      						                       </div>
+                                         <div class="col-lg-4 col-md-4">
+                                          <div class="panel panel-body">
+                                            <div class="media">
+                                              <div class="media-body">
+                                                <h6 class="text-semibold no-margin">Active  : 11</h6>
+                                                <h6 class="text-semibold no-margin">Campaign in the last 15 Day's</h6>
+                                              </div>
+                                            </div>
+                                          </div>
+                                         </div>
+                                         <div class="col-lg-4 col-md-4">
+                                          <div class="panel panel-body">
+                                            <div class="media">
+                                              <div class="media-body">
+                                                <h6 class="text-semibold no-margin">Conversion : 24,526</h6>
+                                                <h6 class="text-semibold no-margin">Avarge Conversion</h6>
+                                              </div>
+                                            </div>
+                                          </div>
+                                         </div>
+                                    </div>
+                                  </div>
+                                  <div class="row" id="campaign_stastics">
+                                    <div class="col-md-12">
+                                      <div class="col-lg-4 col-md-4">
+                                            <h4 style="margin-bottom:-2px">History</h4>
+                                              <p>Months Of Techconnectr</p>
+                                      </div>
+                                      <div class="col-lg-4 col-md-4">
+                                        <div style="margin-top:21px">
+                                        <div class="progress">
+                                          <div class="progress-bar bg-teal" style="width: 85%">
+                                            <span>85%</span>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      </div>
+                                      <div class="col-lg-4 col-md-4">
+                                        <h5 style="margin-top: 16px;">9/24 Months</h5>
+                                      </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                      <div class="col-lg-4 col-md-4">
+                                            <h4 style="margin-bottom:-2px">Engagement</h4>
+                                              <p>Months Activity</p>
+                                      </div>
+                                      <div class="col-lg-4 col-md-4">
+                                        <div style="margin-top:21px">
+                                        <div class="progress">
+                                          <div class="progress-bar bg-teal" style="width: 89%">
+                                            <span>89%</span>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      </div>
+                                      <div class="col-lg-4 col-md-4">
+                                        <h5 style="margin-top: 16px;">8/9 Months</h5>
+                                      </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                      <div class="col-lg-4 col-md-4">
+                                            <h4 style="margin-bottom:-2px">Delivery</h4>
+                                              <p>Live Campaign Activity</p>
+                                      </div>
+                                      <div class="col-lg-4 col-md-4">
+                                        <div style="margin-top:21px">
+                                        <div class="progress">
+                                          <div class="progress-bar bg-teal" style="width: 50%">
+                                            <span>50%</span>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      </div>
+                                      <div class="col-lg-4 col-md-4">
+                                        <h5 style="margin-top: 16px;">10/20 Campaign</h5>
+                                      </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                      <div class="col-lg-4 col-md-4">
+                                            <h4 style="margin-bottom:-2px">Return</h4>
+                                              <p></p>
+                                      </div>
+                                      <div class="col-lg-4 col-md-4">
+                                        <div style="margin-top:21px">
+                                        <div class="progress">
+                                          <div class="progress-bar bg-teal" style="width: 10%">
+                                            <span>10%</span>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      </div>
+                                      <div class="col-lg-4 col-md-4">
+                                        <button type="button" class="btn btn-primary btn-sm legitRipple" id="show_campaign_section" >Show Breakdown</button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class='row' id="campaign_section" style="display:none">
+
+                                    <div class='col-sm-8 col-md-8'>
+                                      <div class='row'>
+                                        <div class='col-md-9 col-sm-12'>
+                                          <button type="button" class="btn btn-primary btn-sm legitRipple" id="return_campaign_stastics"  style="margin-bottom:5px;">Show Breakdown</button>
+                                          <div class="panel-group panel-group-control content-group-lg" id="accordion-control">
+                                            <div class="panel">
+                                              <div class="panel-heading">
+                                                <h6 class="panel-title">
+                      													<a data-toggle="collapse" id="accordion" data-parent="#accordion-control" href="#accordion-control-group1">Commarce</a>
+                                          								    </h6>
+                                              </div>
+                                              <div id="accordion-control-group1" class="panel-collapse collapse ">
+                                                <div class="panel-body">
+                                                  <div class="table-responsive">
+                                  									<table class="table table-bordered">
+                                  										<thead>
+                                  											<tr>
+                                  												<th>CID</th>
+                                  												<th>Returned</th>
+                                  												<th>Conversion</th>
+                                  												<th>%</th>
+                                  											</tr>
+                                  										</thead>
+                                  										<tbody>
+                                  											<tr>
+                                  												<td>#101</td>
+                                  												<td>15</td>
+                                  												<td>100</td>
+                                  												<td>85</td>
+                                  											</tr>
+                                  											<tr>
+                                  												<td>#103</td>
+                                  												<td>16</td>
+                                  												<td>160</td>
+                                                          <td>92</td>
+                                  											</tr>
+                                  										</tbody>
+                                  									</table>
+                                  								</div>
+                                              </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                        <div class='col-md-9 col-sm-12'>
+                                          <div class="panel-group panel-group-control content-group-lg" id="accordion-control1">
+                                            <div class="panel">
+                                              <div class="panel-heading">
+                                                <h6 class="panel-title">
+                      											<a data-toggle="collapse" data-parent="#accordion-control1" href="#accordion-control-group2">Couppons/Discount</a>
+                      										</h6>
+                                              </div>
+                                              <div id="accordion-control-group2" class="panel-collapse collapse ">
+                                                <div class="panel-body">
+
+                                                  <div class="table-responsive">
+                                  									<table class="table table-bordered">
+                                  										<thead>
+                                  											<tr>
+                                  												<th>CID</th>
+                                  												<th>Returned</th>
+                                  												<th>Conversion</th>
+                                  												<th>%</th>
+                                  											</tr>
+                                  										</thead>
+                                  										<tbody>
+                                  											<tr>
+                                  												<td>#101</td>
+                                  												<td>15</td>
+                                  												<td>100</td>
+                                  												<td>85</td>
+                                  											</tr>
+                                  											<tr>
+                                  												<td>#103</td>
+                                  												<td>16</td>
+                                  												<td>160</td>
+                                                          <td>92</td>
+                                  											</tr>
+                                  										</tbody>
+                                  									</table>
+                                  								</div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="row" style="display:none">
+                                        <div class="col-lg-8 col-sm-12">
+                                            <div class="row">
+                                             <div class="col-lg-12">
+                                               <table class="table datatable-column-search-inputs DataTables">
+                                                   <thead>
+                                                       <tr>
+                                                           <th>CID</th>
+                                                           <th>Name</th>
+                                                           <th>Descriptions</th>
+                                                           <th>convversion</th>
+
+
+                                                       </tr>
+                                                   </thead>
+                                                   <tfoot id="datatfootfilter">
+                                                       <tr>
+
+                                                           <td rowspan="1" colspan="1">
+                                                               #1452
+                                                           </td>
+
+                                                           <td rowspan="1" colspan="1">
+                                                               Beauty
+                                                           </td>
+
+                                                           <td rowspan="1" colspan="1">
+                                                              The him father parish looked has sooner
+                                                           </td>
+
+                                                           <td rowspan="1" colspan="1">
+                                                              10/100
+                                                           </td>
+
+
+                                                       </tr>
+                                                   </tfoot>
+                                                 </table>
+                                             </div>
+                                           </div>
+                                        </div>
+                                  </div>
+                                </div>
+                              <div id="menu2" class="tab-pane fade">
+                                <div class="row">
+                                  <div class="col-lg-12 col-sm-12">
+                                        <div class="row">
+
+                                          <div class="col-lg-9">
+
+
+                                            <div class="panel panel-primary">
+
+
+                                              <div class="panel-body">
+                                                <div class="input-group col-lg-3">
+                                                <select class='form-control'>
+                                                      <option   value="0" >Select clent</option>
+                                                      <option  name="" value=""></option>
+                                                </select>
+                                              </div>
+                                                <br/>
+                                                <h6 class="text-semibold no-margin">How long work with the client ?</h6>
+                                                    <ul>
+                                                        <li> 2 years</li>
+                                                    </ul>
+                                                <h6 class="text-semibold no-margin">How much Volume,on Avarge,do you purchase from them a month ?</h6>
+                                                    <ul>
+                                                        <li> 2 years</li>
+                                                    </ul>
+                                              <h6 class="text-semibold no-margin">How much Volume,on Avarge,do you purchase from them a month ?</h6>
+                                                    <ul>
+                                                      <li> Great</li>
+                                                    </ul>
+                                            <h6 class="text-semibold no-margin">have there been any  issue/dispute with leads or returns ?</h6>
+                                                    <ul>
+                                                        <li> None</li>
+                                                    </ul>
+                                            <h6 class="text-semibold no-margin">Is there any aditional  information ?</h6>
+                                                      <ul>
+                                                          <li>They are pleasure to work with</li>
+                                                      </ul>
+                                              </div>
+                                          </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div id="menu4" style="display:none;" class="tab-pane fade">
+                              </div>
+                              <div id="menu5" style="display: none;" class="tab-pane fade">
+                              </div>
+                            </div>
+                        </div>
+                      </div>
+                      <div class="col-lg-3">
+                          <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h6 class="panel-title">Vendor Details</h6>
+                                </div>
+                                <div class="panel-body">
+                                	<h6 class="text-semibold no-margin">Verticals</h6>
+                                    <ul>
+                                      <li>Commarce</li>
+                                      <li>Couppons/Discount</li>
+                                      <li>Family</li>
+                                      <li>Health and Medicine</li>
+
+                                    </ul>
+                                    <h6 class="text-semibold no-margin">Marketing Methods</h6>
+                                      <ul>
+                                        <li>Email</li>
+                                        <li>Digital</li>
+                                        <li>Facebook</li>
+                                        <li>Phone</li>
+                                      </ul>
+                                      <h6 class="text-semibold no-margin">Specialization</h6>
+                                          <ul>
+                                            <li>Development</li>
+                                            <li>Digital Marketing</li>
+                                          </ul>
+                                      <h6 class="text-semibold no-margin">Volume per Months</h6>
+                                        <ul>
+                                          <li>10,000</li>
+                                        </ul>
+                                      <h6 class="text-semibold no-margin">Unique Reach per Months</h6>
+                                          <ul>
+                                            <li>1000</li>
+                                          </ul>
+                                      <h6 class="text-semibold no-margin">Employee size</h6>
+                                              <ul>
+                                                <li>1-15</li>
+                                              </ul>
+                                    <h6 class="text-semibold no-margin">In Business For</h6>
+                                              <ul>
+                                                <li>5 years</li>
+                                              </ul>
+                                </div>
+                          </div>
+                    </div>
+                </div>
+                </div>
+                    <!-- /highlighting rows and columns -->
+                    <!-- Footer -->
+                    <div class="footer text-muted" style="display: none;">
+                        &copy; 2018. <a href="#">Trigensoft</a> by <a href="Trigensoft.com" target="_blank">Eugene Kopyov</a>
+                    </div>
+                    <!-- /footer -->
+                </div>
+                <!-- /content area -->
+            </div>
+            <!-- /main content -->
+        </div>
+        <div class="modal fade" id="assign_vendor">
+          <div class="modal-dialog">
+            <div class="modal-content">
+
+              <!-- Modal Header -->
+              <div class="modal-header">
+                <h4 class="modal-title">Suggest Vendor</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+              </div>
+
+              <!-- Modal body -->
+              <div class="modal-body">
+                  <div class="row">
+                      <div class="col-md-6">
+                <div class="form-group">
+                <label for="usr">Select Campaign</label>
+                <select class="form-control" id="campaign_id">
+                  <option value="0" selected>select campaign</option>
+                  {% for row in campaign %}
+                  <option value="{{row.id}}">{{row.name}}</option>
+                  {% endfor%}
+                </select>
+                <input type="hidden" id='vendor_id' value="{{vendor_id}}" />
+            </div>
+              </div>
+
+              </div>
+          </div>
+
+              <!-- Modal footer -->
+              <div class="modal-footer">
+                 <button type="button" id="vendor_suggest" class="btn btn-primary">Submit</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+  {% include "vendor1/vendor_profilejs.html" %}
+{% endblock %}

@@ -1,0 +1,391 @@
+<script>
+
+    //Abhishek #27-3-2019 File Upload js
+    //Global variable for store index of li
+    var li_index = ""
+    var default_li_index = ""
+    var active_user_header = ""
+    var active_default_header = ""
+    var selcted_custom_header_arr_index = []
+    var selcted_default_header_arr_index = []
+    var list_dict = []
+    var $sortableList
+    $(function () {
+        var Upload = function (file) {
+            this.file = file;
+        };
+
+        Upload.prototype.getType = function () {
+            return this.file.type;
+        };
+        Upload.prototype.getSize = function () {
+            return this.file.size;
+        };
+        Upload.prototype.getName = function () {
+            return this.file.name;
+        };
+        Upload.prototype.doUpload = function () {
+            var that = this;
+            var formData = new FormData();
+            // add assoc key values, this will be posts values
+            formData.append("file", this.file, this.getName());
+            formData.append("upload_file", true);
+            formData.append("csrfmiddlewaretoken", getCookie('csrftoken'));
+
+            $.ajax({
+                type: "POST",
+                url: "/client/ajax/get-custom-header-csv/",
+                xhr: function () {
+                    var myXhr = $.ajaxSettings.xhr();
+                    if (myXhr.upload) {
+                        myXhr.upload.addEventListener('progress', that.progressHandling, false);
+                    }
+                    return myXhr;
+                },
+                success: function (data) {
+                    $("#custom_heder_csv").append(data);
+
+                    $('.list-group-sortable-connected').sortable({
+                        placeholderClass: 'custom_header_name',
+                        connectWith: '.connected',
+                    });
+
+
+
+                    //$('#progress-wrp').hide();
+
+                },
+                error: function (error) {
+                    // handle error
+                },
+                async: true,
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                timeout: 60000
+            });
+        };
+
+        Upload.prototype.progressHandling = function (event) {
+            var percent = 0;
+            var position = event.loaded || event.position;
+            var total = event.total;
+            var progress_bar_id = "#progress-wrp";
+            if (event.lengthComputable) {
+                percent = Math.ceil(position / total * 100);
+            }
+            // update progressbars classes so it fits your code
+            $(progress_bar_id + " .progress-bar").css("width", +percent + "%");
+            $(progress_bar_id + " .status").text(percent + "%");
+        };
+        $("#file_upload_btn").on("change", function (e) {
+            var file = $(this)[0].files[0];
+            var upload = new Upload(file);
+            // execute upload
+            $('#progress-wrp').show();
+            upload.doUpload();
+        });
+
+        $("#saveHeaders").click(function () {
+
+
+            //console.log(list_dict)
+            var someObj = {};
+            someObj.lead_header = [];
+            $(".custom_header_name").each(function (index, value) {
+                var $this = $(this);
+                someObj.lead_header.push($this.text().trim());
+            });
+            lead_header = someObj.lead_header;
+            storeHeaderToList(lead_header)
+            if (list_dict.length > 0) {
+                camp_id = $(this).attr('camp_id');
+                $.ajax({
+                    type: "POST",
+                    url: '/client/ajax/save-custom-header/',
+                    data: { 'header': JSON.stringify(list_dict), 'camp_id': camp_id, 'csrfmiddlewaretoken': getCookie('csrftoken') },
+                    success: function (data) {
+                        if (data.success == 1) {
+                            swal({
+                                title: "Custom Header !",
+                                text: data.msg,
+                                icon: "success",
+                                button: "ok",
+                            }).then(function () {
+                                window.location.href = data.url;
+                            });
+                        } else {
+                            swal({
+                                title: "Custom Header !",
+                                text: data.msg,
+                                icon: "warning",
+                                button: "ok",
+                            }).then(function () {
+                                location.reload();
+                            });
+                        }
+                    }
+                });
+            }
+        });
+
+        function storeHeaderToList(list) {
+            for (var j = 0; j < list.length; j++) {
+                Match = 1
+                for (var i = 0; i < list_dict.length; i++) {
+                    if ($.trim(list_dict[i]['user_header']) == $.trim(list[j])) {
+                        Match = 0
+                        list_dict[i]['user_header'] = $.trim(list[j])
+                        list_dict[i]['default_header'] = $.trim(list_dict[i]['default_header'])
+                        list_dict[i]['sort'] = j
+                    }
+                }
+                if (Match == 1) {
+
+                    dict = {
+                        'user_header': $.trim(list[j]),
+                        'sort': j,
+                    }
+                    list_dict.push(dict)
+                    dict = {}
+                }
+            }
+        }
+        //Remove LI from List (Close header JS)
+        $('#custom_heder_csv').on('click', 'li .custom_header_close', function () {
+            var li_index_close = $(this).parents("li").index();
+            var f = 1;
+            if (list_dict.length > 0) {
+                closeDefaultHeader(li_index_close)
+                $(this).closest('li').remove();
+            } else {
+                $(this).closest('li').remove();
+            }
+        });
+
+        //Add Custom header
+        $('.add_custom_header').click(function () {
+            var header = $('#header').val();
+            if(header.length > 0)
+            {
+                html = '<li class="list-group-item list-group-item-info" style="border: 2px solid #fff"><div class="row"><div class="col-md-12 list-group-item list-group-item-info"> <span class="custom_header_name">' + header + ' </span> <i class= "icon-filter3 pull-right  dropdown-toggle-filter-header"></i><i class="glyphicon glyphicon-remove pull-right custom_header_close"></i></div></div></li>';
+            $("#custom_heder_csv").append(html);
+            $('.list-group-sortable-connected').sortable({
+                placeholderClass: 'custom_header_name',
+                connectWith: '.connected',
+            });
+
+            $('#header').val('');
+            new PNotify({
+                title: 'Custom Header Notice',
+                text: ' New Header ' + header + ' Added',
+                addclass: 'alert alert-styled-left',
+                type: 'info'
+            });
+            }else{
+                swal({title: " Custom Header!",text: 'Header Should not be Empty !..',icon: "warning",button: "ok"});
+            }
+
+        });
+
+        //Dropdown Toggle for choose custom header (OPEN)
+        $('#custom_heder_csv').on('click', "li .dropdown-toggle-filter-header", function (e) {
+            $('.dropdown-toggle-filter-header-open').show();
+
+            if (jQuery.inArray(li_index, selcted_custom_header_arr_index) !== -1) {
+                $('#custom_heder_csv li').eq(li_index).css({ 'background-color': '#3c4d68' });
+            }
+            else {
+                $('#custom_heder_csv li').eq(li_index).find('.list-group-item-info').css({ 'background-color': '#3c4d68' });
+            }
+
+            li_index = $(this).parents("li").index();
+            active_user_header = $('#custom_heder_csv li').eq(li_index).find('.custom_header_name').text();
+            $('#custom_heder_csv li').eq(li_index).find('.list-group-item-info').css({ 'background-color': '#00bcd4' });
+            var screenTop = parseInt($(this).offset().top - 165);
+            $('.dropdown-toggle-filter-header-open').css('top', screenTop);
+
+        });
+
+        $("#default_header li").click(function (e) {
+            var cb = $(this).find(":radio")[0];
+            if (e.target != cb) cb.checked = !cb.checked;
+            $(this).toggleClass("selected", cb.checked);
+            active_default_header = $(this).find('.default_header_name').text();
+            default_li_index = $(this).index();
+
+            // if (cb.checked)
+            //     $(this).find("i").css("display", "block");
+            // else
+            //     $(this).find("i").css("display", "none");
+        });
+
+        //comparison with custom header to default header
+        $('.custom_header_submit').click(function () {
+
+            if (jQuery.inArray(li_index, selcted_custom_header_arr_index) !== -1 && list_dict.length > 0) {
+              var check = true;
+                  for (var i = 0; i < list_dict.length; i++) {
+                    console.log(default_li_index)
+                    console.log(list_dict[i]['default_header_index'])
+                    if(list_dict[i]['default_header_index']===default_li_index){
+                      check = false;
+                    }
+                  }
+                if(check==true){
+                for (var i = 0; i < list_dict.length; i++) {
+                    if (li_index == list_dict[i]['user_header_index']) {
+                        console.log("old List");
+                        console.log(list_dict);
+                        index = list_dict[i]['default_header_index']
+                        list_dict[i]['default_header_index'] = default_li_index
+                        list_dict[i]['user_header'] = active_user_header
+                        list_dict[i]['default_header'] = active_default_header
+                        console.log("update List");
+                        console.log(list_dict);
+                        //remove from oldest
+                        $('#default_header li').eq(index).find('.radiobtn').css({ 'display': '' })
+                        $('#default_header li').eq(index).find('.fa-check').css({ 'display': 'none' })
+                        $('#default_header li').eq(index).find('.list-group-item-action').css({ 'background-color': '', 'color': '' })
+                        $('#default_header li').eq(index).find('.list-group-item-action').removeClass('disabled');
+                        //add new component
+                        $('#default_header li').eq(default_li_index).find('.radiobtn').css({ 'display': 'none' })
+                        $('#default_header li').eq(default_li_index).find('.fa-check').css({ 'display': 'block' })
+                        $('#default_header li').eq(default_li_index).find('.list-group-item-action').css({ 'background-color': '#2d9221', 'color': '#fff' })
+                        $('#default_header li').eq(default_li_index).find('.list-group-item-action').addClass('disabled');
+                        html = '<div class="row"><div class="col-md-6 list-group-item list-group-item-info" > <span class="custom_header_name">' + active_user_header + ' </span><i class="icon-filter3 pull-right dropdown-toggle-filter-header"> </i> <i class="glyphicon glyphicon-remove pull-right custom_header_close"></i></div > <div class="col-md-6 list-group-item list-group-item-info" style="background-color:#2d9221;border: 1px solid;"> <span class="default_header_name_on_cmp">' + active_default_header + '</span> <i class="glyphicon glyphicon-remove pull-right default_header_close"></i></div ></div>';
+                        $('#custom_heder_csv li').eq(li_index).html(html);
+                        $('.dropdown-toggle-filter-header-open').hide();
+
+                        new PNotify({
+                            title: 'Custom Header Notice',
+                            text: active_user_header + ' Mapped With ' + active_default_header,
+                            addclass: 'alert alert-styled-left',
+                            type: 'info'
+                        });
+                    }
+                }
+                }else{
+              swal({
+                      title: "Custom Header !",
+                      text: 'Select at least one header!',
+                      icon: "warning",
+                      button: "ok",
+                  })
+            }
+            } else {
+                if (default_li_index === ''){
+                  swal({
+                          title: "Custom Header !",
+                          text: 'Select at least one header!',
+                          icon: "warning",
+                          button: "ok",
+                      })
+                }else{
+                  var check = true;
+                  for (var i = 0; i < list_dict.length; i++) {
+                    console.log(default_li_index)
+                    console.log(list_dict[i]['default_header_index'])
+                    if(list_dict[i]['default_header_index']===default_li_index){
+                      check = false;
+                    }
+                  }
+                if(check==true){
+                if (jQuery.inArray(li_index, selcted_custom_header_arr_index) !== -1) {
+
+                }
+                else {
+                    selcted_custom_header_arr_index.push(li_index);
+                }
+                dict = {
+                    'user_header_index': li_index,
+                    'default_header_index': default_li_index,
+                    'user_header': active_user_header,
+                    'default_header': active_default_header,
+                    'sort': 0,
+                };
+                list_dict.push(dict)
+                console.log("Create New List");
+                console.log(list_dict);
+                console.log(selcted_custom_header_arr_index)
+                $('#default_header li').eq(default_li_index).find('.radiobtn').css({ 'display': 'none' })
+                $('#default_header li').eq(default_li_index).find('.fa-check').css({ 'display': 'block' })
+                $('#default_header li').eq(default_li_index).find('.list-group-item-action').css({ 'background-color': '#2d9221', 'color': '#fff' })
+                $('#default_header li').eq(default_li_index).find('.list-group-item-action').addClass('disabled');
+                html = '<div class="row"><div class="col-md-6 list-group-item list-group-item-info" > <span class="custom_header_name">' + active_user_header + ' </span><i class="icon-filter3 pull-right dropdown-toggle-filter-header"> </i> <i class="glyphicon glyphicon-remove pull-right custom_header_close"></i></div > <div class="col-md-6 list-group-item list-group-item-info" style="background-color:#2d9221;border: 1px solid;"> <span class="default_header_name_on_cmp">' + active_default_header + '</span> <i class="glyphicon glyphicon-remove pull-right default_header_close"></i></div ></div>';
+                $('#custom_heder_csv li').eq(li_index).html(html);
+                $('.dropdown-toggle-filter-header-open').hide();
+                new PNotify({
+                    title: 'Custom Header Notice',
+                    text: active_user_header + ' Mapped With ' + active_default_header,
+                    addclass: 'alert alert-styled-left',
+                    type: 'info'
+                });
+            }else{
+              swal({
+                      title: "Custom Header !",
+                      text: 'Select at least one header!',
+                      icon: "warning",
+                      button: "ok",
+                  })
+            }
+          }
+          }
+        });
+
+        //remove camparison
+        $('#custom_heder_csv').on('click', "li .default_header_close", function () {
+            var li_index_close = $(this).parents("li").index();
+            closeDefaultHeader(li_index_close)
+            new PNotify({
+                title: 'Custom Header Notice',
+                text: 'Removed  Mapping' + active_user_header + ' With ' + active_default_header,
+                addclass: 'alert alert-styled-left',
+                type: 'info'
+            });
+        });
+        function closeDefaultHeader(li_index_close) {
+            for (var i = 0; i < list_dict.length; i++) {
+                if (li_index_close == list_dict[i]['user_header_index']) {
+                    index = list_dict[i]['default_header_index']
+                    //remove dict from list
+                    selcted_custom_header_arr_index.splice($.inArray(li_index_close, selcted_custom_header_arr_index), 1);
+                    list_dict.splice(i, 1)
+                    console.log(selcted_custom_header_arr_index)
+                    console.log(list_dict)
+                    //remove from oldest
+                    $('#default_header li').eq(index).find('.radiobtn').css({ 'display': '' })
+                    $('#default_header li').eq(index).find('.fa-check').css({ 'display': 'none' })
+                    $('#default_header li').eq(index).find('.list-group-item-action').css({ 'background-color': '', 'color': '' })
+                    $('#default_header li').eq(index).find('.list-group-item-action').removeClass('disabled');
+                    var user_header = $('#custom_heder_csv li').eq(li_index_close).find('.custom_header_name').text();
+                    html = '<div class="row"><div class="col-md-12 list-group-item list-group-item-info"> <span class="custom_header_name">' + user_header + ' </span> <i class= "icon-filter3 pull-right  dropdown-toggle-filter-header"></i><i class="glyphicon glyphicon-remove pull-right custom_header_close"></i></div></div>';
+                    $('#custom_heder_csv li').eq(li_index_close).html(html);
+                }
+            }
+        }
+        //Dropdown Toggle for choose custom header (OPEN)
+        $(".dropdown-toggle-filter-header-close").click(function () {
+            $('.dropdown-toggle-filter-header-open').hide();
+        });
+
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        //Bootstrap Select
+
+    });
+</script>

@@ -1,0 +1,364 @@
+{% extends "header/vendorportalheader.html" %}
+
+{% block scripts %}
+{% include "campaign/manage_vendor_campaign.html" %}
+{% endblock %}
+
+{% block scripts1 %}
+{% include "campaign/manage_campaign.css" %}
+{% endblock %}
+{% block content %}
+<!-- Main sidebar -->
+{% include "side/clientvendorside.html" %}
+{% load range %}
+<!-- Main content -->
+<div class="content-wrapper">
+
+
+
+
+    <!-- Content area -->
+    <div class="content">
+        <div class="row">
+            <!-- Top Clients List -->
+            <div class="panel panel-height panel-flat">
+                <div class="panel-heading">
+                    <h1 class="panel-title">Assigned Campaign
+                        <button type="button" class="databtn btn btn-filter-tb btn-labeled pull-right">
+                            <b><span id="filter_icon" class="glyphicon glyphicon-filter"></span></b>
+                            Filter
+                        </button>
+
+                    </h1>
+                    <br>
+                    <p id="font14">View Campaigns created by client at a glance.</p>
+                </div>
+
+
+
+
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12 col-sm-12">
+                            <div class="row">
+
+                                <div class="table-responsive-sm">
+                                    <table class="table datatable-column-search-inputs DataTables">
+                                        <thead>
+                                            <tr>
+                                                <th>Campaign Name</th>
+                                                <th>Status</th>
+                                                <th>campaign Type</th>
+                                                <th>CPL</th>
+                                                <th>Leads</th>
+                                                <th class="hidden"></th>
+                                                <th class="sorting" aria-controls="DataTables_Table_0">Start Date</th>
+                                                <th>End Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tfoot class='datatfootfilter'>
+                                            <tr>
+
+                                                <td rowspan="1" colspan="1">
+                                                    <input type="text" class="form-control input-sm" placeholder="Search Campaign">
+                                                </td>
+
+                                                <td rowspan="1" colspan="1">
+                                                    <input type="text" class="form-control input-sm" placeholder="Search Position">
+                                                </td>
+
+
+                                                <td rowspan="1" colspan="1">
+                                                    <input type="text" class="form-control input-sm" placeholder="Search Type">
+                                                </td>
+
+                                                <td rowspan="1" colspan="1">
+                                                    <input type="text" class="form-control input-sm" placeholder="Search Type">
+                                                </td>
+
+                                                <td rowspan="1" colspan="1">
+                                                    <input type="text" class="form-control input-sm" placeholder="Search Overall">
+                                                </td>
+
+                                                <td rowspan="1" colspan="1">
+                                                    <input type="text" class="form-control input-sm" placeholder="Search Vendors">
+                                                </td>
+
+                                                <td rowspan="1" colspan="1">
+                                                    <input type="text" class="form-control input-sm" placeholder="Search Start Date">
+                                                </td>
+
+                                                <td rowspan="1" colspan="1"></td>
+
+                                            </tr>
+                                        </tfoot>
+                                        <tbody>
+                                            {% for camp in camps %}
+                                            {% if camp.status == 5 %}
+                                            <tr>
+                                                <td>
+                                                    {{ camp.name }}
+                                                </td>
+                                                <td>
+                                                    {% if camp.status == 1 %}
+                                                    <span class="label label-success">Live</span>
+                                                    {% elif camp.status == 2 %}
+                                                    <span class="label label-primary">Paused</span>
+                                                    {% elif camp.status == 3 %}
+                                                    <span class="label label-info">Pending</span>
+                                                    {% elif camp.status == 4 %}
+                                                    <span class="label label-purple bg-primary">Completed</span>
+                                                    {% elif camp.status == 5 %}
+                                                    <span class="label label-purple bg-primary">Assigned</span>
+                                                    {% endif %}
+                                                </td>
+                                                {% if camp.type == 'adhoc' %}
+                                                <td class="priority">ADHOC</td>
+                                                {% else %}
+                                                <td>{{ camp.type }}</td>
+                                                {%endif%}
+                                                <td>{% if camp.cpl == -1 %} RFQ {% elif camp.cpl == 0 %} RFQ {% else %} {{ camp.cpl }} {% endif %}</td>
+                                                <td>{% if camp.leads == -1 %} 0 {% else %} {{ camp.leads }} {% endif %}</td>
+                                                <td class="hidden">{{camp.priority}}</td>
+                                                <td rowspan="1" colspan="1">{{camp.start_date|dateFormate}}</td>
+                                                <td>{{camp.end_date|dateFormate}}</td>
+
+                                            </tr>
+                                            {% endif %}
+                                            {% endfor %}
+
+                                        </tbody>
+
+                                    </table>
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+</div>
+</div>
+<!-- /highlighting rows and columns -->
+<!-- Footer -->
+<div class="footer text-muted" style="display: none;">
+    &copy; 2018. <a href="#">Trigensoft</a> by <a href="Trigensoft.com" target="_blank">Eugene Kopyov</a>
+</div>
+<!-- /footer -->
+</div>
+<!-- Button to Open the Modal -->
+
+
+
+</div>
+<!-- /content area -->
+
+</div>
+<!-- /main content -->
+
+</div>
+<!-- /page content -->
+
+</div>
+<!-- COunter CPL Modal -->
+<div id="counter_cpl_modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Counter Campaign</h4>
+        </div>
+        <div class="modal-body">
+            <form name="cpl_form" action="POST">
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <label for="id_Counter_reason">Counter reason:</label>
+                    <select class="form-control" name="Counter_reason" id="id_Counter_reason">
+                        <option value="">------</option>
+                        <option value="CPL">CPL</option>
+                        <option value="Timings">Timings</option>
+                        <option value="Need clarity of parameters and Deliverables">Need clarity of parameters and Deliverables</option>
+                    </select>
+                </div>
+                <div class="col-md-12 cpl_amount form-group" style="display:none">
+                    <label for="id_req_cpl">Req CPL Amount:</label>
+                    <input class='form-control' type="number" name="req_cpl" required="" id="id_req_cpl">
+                </div>
+                <div class="col-md-12 form-group">
+                    <label for="id_Desc">Desc:</label>
+                    <input class='form-control' type="textarea" name="Desc" maxlength="256" id="id_Desc"></p>
+                </div>
+            </div>
+            </form>
+            <input type="hidden" name="user_id" id="id_user_id" value="">
+            <input type="hidden" name="campaign_allocation" value="" id="id_campaign_allocation">
+            <!-- {{CPL_form.as_p}} -->
+        </div>
+        <div class="modal-footer">
+        <button type="submit" class="btn btn-primary counter_cpl_submit_vendor">Submit</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+<!-- The Modal -->
+
+
+<div class="modal fade" id="counter">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Counter</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="usr">CPL:</label>
+                            <input type="text" class="form-control" id="cpl">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="usr">Leads:</label>
+                            <input type="text" class="form-control" id="volume">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary submit">Submit</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="rfq">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">RFQ</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="usr">Enter CPL:</label>
+                            <input type="number" class="form-control" id="rfqcpl">
+                            <input type="hidden" id="camp_id" value="" />
+                            <input type="hidden" id="camp_alloc_id" value="" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="usr">Leads:</label>
+                            <input type="text" class="form-control" id="rfqvolume">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary clientsubmitrfq">Submit</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" onclick="closeModel()" class="close">&times;</button>
+                <h4 class="modal-title">Upload Lead File</h4>
+            </div>
+            <div class="modal-body">
+                <div id="home">
+
+                    <div class="panel panel-flat">
+                        <form class="form-horizontal" action="#">
+                            <fieldset class="content-group">
+                                <div class="form-group" id="margin5">
+                                    <div class="col-lg-12">
+
+                                        <table class='table'>
+                                            <thead>
+                                                <th>Campaign Name: &nbsp;&nbsp; Test 1</th>
+                                                <th> Status :&nbsp;&nbsp;<span class="label label-info">Completed</span></th>
+                                                <th> Leads Submitted: &nbsp;&nbsp;30</th>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+
+                                        <p id="toppadding">There are two ways to upload lead file</p>
+                                        <p>
+                                            <li>Bulk Upload: upload with csv or excel files</li>
+                                        </p>
+                                        <p>
+                                            <li>Manual Upload: Fill form manually</li>
+                                        </p>
+
+                                    </div>
+                                </div>
+                                <center>
+                                    <div class="form-group" id="paddingleft20">
+                                        <div class="col-lg-3">
+                                            <div class="btn-group btn-justified">
+                                                <div class="btn-group">
+                                                    <a href="/vendor/manual-upload/" data-popup="tooltip" title="Manualupload"
+                                                        data-placement="left"><button type="button" class="btn bg-primary">+</button></a>
+                                                </div>
+
+                                                <div class="btn-group">
+                                                    <a href="/vendor/bulk-upload/" data-popup="tooltip" title="Bulkupload"
+                                                        data-placement="right"><button type="button" class="btn bg-primary">Import</button></a>
+                                                </div>
+
+
+
+
+                                            </div>
+                                        </div>
+
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!-- /page container -->
+{% include "campaign/vendor_managecampaignjs.html" %}
+{% endblock %}

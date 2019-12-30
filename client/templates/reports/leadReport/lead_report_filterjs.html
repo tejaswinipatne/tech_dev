@@ -1,0 +1,164 @@
+
+<script>
+
+var campaign_id=start_date=end_date=status=vendor_id=tc_status=geo=0
+
+// lead filter report js    
+$(document).ready(function() {
+    $('.lead_filter').on('change', function() {
+        filter_id=$(this).attr('id'); //get id of filters
+        selected_id=$(this).val();   // get values from filters  
+        assing_ids(filter_id,selected_id); // assing values in global variables
+        selected_text=$(this).find("option:selected").text(); //get selected text of filters
+        span_filter_id='#'+filter_id+'_span';
+        close_filter_id=filter_id+'_close';
+        selected_text=selected_text+`<span class="close_filter" filter_id="${filter_id}" id="${span_filter_id}"><i class="fa fa-times" aria-hidden="true"></i></span>`;     
+        $(span_filter_id).show();
+        $(span_filter_id).html(selected_text);
+        load_data_table()
+    });
+
+    //close Filter function
+    $('#filter_ul').on('click', '.close_filter', function (event) {
+        close_filter_id=$(this).attr('id');
+        if(filter_id == 'campaign_name_filter')
+            $(close_filter_id).hide();
+        else if(filter_id == 'campaign_name_filter')
+            $(close_filter_id).hide();
+        else if(filter_id == 'campaign_name_filter')
+            $(close_filter_id).hide();
+        else if(filter_id == 'campaign_status_filter')
+            $(close_filter_id).hide();
+        else if(filter_id == 'campaign_vendor_filter')
+            $(close_filter_id).hide();
+        else if(filter_id == 'campaign_tc_status_filter')
+            $(close_filter_id).hide();
+        else if(filter_id == 'campaign_geo_filter') 
+            $(close_filter_id).hide();
+    });
+
+    //set data in global variables.
+    function assing_ids(filter_id,id)
+    {
+        if(filter_id == 'campaign_name_filter')
+        {
+            campaign_id=id
+            load_vendor_list(campaign_id);
+            load_campaign_geo(campaign_id);
+        }  
+        else if(filter_id == 'campaign_name_filter')
+            start_date=id
+        else if(filter_id == 'campaign_name_filter')
+            end_date=id
+        else if(filter_id == 'campaign_status_filter')
+            status=id
+        else if(filter_id == 'campaign_vendor_filter')
+            vendor_id=id
+        else if(filter_id == 'campaign_tc_status_filter')
+            tc_status=id
+        else if(filter_id == 'campaign_geo_filter') 
+            geo=id                   
+    }
+
+    //load vendor list according to campaign 
+    function load_vendor_list(campaign_id){
+       if(campaign_id > 0)
+       {
+            token=getCookie('csrftoken');
+			$.ajax({
+						type: 'post',
+						url: '/client/ajax/get_vendor_list_campaign/',
+						data: {'camp_id':campaign_id,csrfmiddlewaretoken: token},
+						success: function(data) {
+							$('#campaign_vendor_filter').html(data);
+						},
+						failure: function(error) {
+								alert("fail");
+						}
+				});
+       } 
+    }
+    //load geo list according to campaign 
+    function load_campaign_geo(campaign_id){
+        if(campaign_id > 0)
+       {
+            token=getCookie('csrftoken');
+			$.ajax({
+						type: 'post',
+						url: '/client/ajax/get_geo_list_campaign/',
+						data: {'camp_id':campaign_id,csrfmiddlewaretoken: token},
+						success: function(data) {
+							$('#campaign_geo_filter').html(data);
+						},
+						failure: function(error) {
+								alert("fail");
+						}
+				});
+       } 
+    }
+    //create CREF token
+    function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+//Set DataTable
+
+    // var table = $('#leadReport_table').DataTable({
+	// 		buttons: [
+	// 				{
+	// 						extend: 'colvis',
+	// 						text: '<i class="icon-three-bars"></i> <span class="caret"></span>',
+	// 						className: 'btn bg-blue btn-icon',
+	// 						collectionLayout: 'fixed two-column'
+	// 				}
+	// 		],
+	// 		 scrollY:        "500px",
+ 	// 		 scrollX:        true,
+ 	// 		 scrollCollapse: true,
+ 	// 		 paging:         true,
+	// 	   fixedColumns:{
+ 	// 					    leftColumns: 1,
+ 	// 						rightColumns: 1
+ 	// 					}
+ 	//      });
+
+    function load_data_table(){
+        if(campaign_id > 0)
+       {
+            token=getCookie('csrftoken');
+			$.ajax({
+						type: 'post',
+						url: '/client/ajax/lead_report_table_data/',
+						data: {'camp_id':campaign_id,'vendor_id':vendor_id,'status':status,'csrfmiddlewaretoken': token},
+						success: function(data) {
+							$('#leadReport_table').DataTable( {
+			                data: data,
+							 "scrollX": true,
+							 fixedColumns:{
+				            leftColumns:0,
+				            rightColumns:1,
+				        }
+			     } );
+						},
+						failure: function(error) {
+								alert("fail");
+						}
+				});
+       }     
+    }      
+});
+
+</script>
+<!-- Intialize multiselectBox -->

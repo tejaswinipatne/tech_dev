@@ -1,0 +1,152 @@
+{% extends "header/cheader.html" %}
+{% block scripts %}
+    {% include "campaign/client_campaignhead.html" %}
+
+{% endblock %}
+{% block content %}
+<!-- Main sidebar -->
+  {% include "side/clientside.html" %}
+
+			<!-- Main content -->
+      <div class="content-wrapper">
+
+
+                <!-- Content area -->
+            <div class="content">
+                  <div class="row">
+
+              <!-- Top Clients List -->
+
+              <div class="panel panel-height panel-flat">
+                  <div class="panel-heading">
+
+                    <p id="font14">
+                     <span class="label label-primary AcceptanceRate">CID : </span>&nbsp&nbsp <span class="label label-info AcceptanceRate" id="clientcpl">#{{campdata.userid}} </span>
+                     <span class="label label-primary AcceptanceRate spanleft">Client-Name: </span>&nbsp&nbsp<span class="label label-info AcceptanceRate" id="clienttarget">{{campdata.username}}</span>
+                   </p>
+<p id="font14">
+ <span class="label label-primary AcceptanceRate">C-CPL </span>&nbsp&nbsp <span class="label label-info AcceptanceRate" id="clientcpl">${{ campdata.cpl|floatformat:2 }}</span>
+ <span class="label label-primary AcceptanceRate spanleft">Target Quantity </span>&nbsp&nbsp<span class="label label-info AcceptanceRate" id="clienttarget">{{campdata.targat_quantity}}</span>
+
+ <span class="label label-primary AcceptanceRate1">Remaining Quantity </span>&nbsp&nbsp<span class="label label-info AcceptanceRate1" id="target_quantitylead">{{campdata.ramaining_quantity}}</span>
+ <span class="label label-primary AcceptanceRate1 spanleft">Approved Leads </span>&nbsp&nbsp<span class="label label-info AcceptanceRate1" >{{campdata.approveleads}}</span>
+</p>
+
+                  </div>
+
+  <div class="panel-body">
+                           <div class="row">
+                              <div class="col-lg-12 col-sm-12">
+                                       <div class="row">
+
+                           <div class="table-responsive-sm">
+                      <table  class="table  datatable-column-search-inputs DataTables">
+                          <thead>
+                            <tr>
+                                     <th>sr.no</th>
+                                     <th>Vendor Name</th>
+                                     <!-- <th>Select Commision Mode</th> -->
+                                     <th>V-CPL</th>
+                                     <!-- <th>Calculation</th> -->
+                                     <th>Lead</th>
+                                     <th class="text-center">Actions</th>
+                                 </tr>
+                          </thead>
+                          <tfoot class='datatfootfilter' style="display:none">
+                              <tr>
+
+                                  <td rowspan="1" colspan="1">
+                                      <input type="text" class="form-control input-sm" placeholder="Search Campaign">
+                                  </td>
+
+
+
+                                  <td rowspan="1" colspan="1">
+                                      <input type="text" class="form-control input-sm" placeholder="Search Type">
+                                  </td>
+
+                                  <!-- <td rowspan="1" colspan="1">
+                                      <input type="text" class="form-control input-sm" placeholder="Search Overall">
+                                  </td> -->
+
+                                  <td rowspan="1" colspan="1">
+                                      <input type="text" class="form-control input-sm" placeholder="Search Vendors">
+                                  </td>
+
+                                  <!-- <td rowspan="1" colspan="1">
+                                      <input type="text" class="form-control input-sm" placeholder="Search Start Date">
+                                  </td> -->
+
+                                  <td rowspan="1" colspan="1">
+                                      <input type="text" class="form-control input-sm" placeholder="Search Start Date">
+                                  </td>
+
+                                  <td rowspan="1" colspan="1"></td>
+
+                              </tr>
+                          </tfoot>
+                          <tbody>
+                                	{% for row in vendor_data %}
+                                  <tr class="checktr">
+                                   <td>
+                                     <input type="checkbox" id="" {{row.checked}} />
+                                  </td>
+                                   <td>{{ row.vendor_name }}</td>
+                                   <!-- <td>
+                                            <input type="radio" name="mode{{row.vendor_id}}" class="radiobutton" data="{{row.vendor_id}}" id="radiobutton{{row.vendor_id}}" value="1" />Percentage
+                                            <input type="radio" name="mode{{row.vendor_id}}" class="radiobutton" data="{{row.vendor_id}}" id="radiobutton{{row.vendor_id}}"  value="2"/>Amount
+                                   </td> -->
+                                   <td>
+                                         <input type="number" min="0" name="cpl"   placeholder="V-CPL" id="cpl{{row.vendor_id}}"  value="{{row.cpl}}" class="form-control" >
+                                   </td>
+                                   <!-- <td>
+                                       <span class="label label-primary AcceptanceRate1 showPricing" style="display:none" id="showPricing{{row.vendor_id}}"> </span>
+                                   </td> -->
+                                   <td><input type="number" min="0" name="cpl"  placeholder="Leads" id="lead{{row.vendor_id}}" value="{{row.lead}}" class="form-control" ></td>
+                                   <td>
+                                     <button type="button" id="{{row.vendor_id}}" cid="{{row.camp_id}}" class="btn btn-info client_data_allocate">Add</button>
+                                   </td>
+                                  </tr>
+								                {% endfor %}
+                                </tbody>
+                            </table>
+
+                  </div>
+                                      </div>
+                                  </div>
+                                  </div>
+                          </div>
+                        </div>
+                  </div>
+          </div>
+          </div>
+			<!-- /main content -->
+		</div>
+		<!-- /page content -->
+    <style>
+    #campaign>ul{
+      font-size: 12px;
+      font-weight: normal;
+    }
+    #campaign>ul>li:hover{
+      font-size: 12px;
+      font-weight: bold;
+    }
+  .AcceptanceRate{
+    border: 1px solid #3f70ba6e!important;
+    background: #eae4e4!important;
+    color: #919394!important;
+  }
+  .AcceptanceRate1{
+    border: 1px solid #3f70ba6e!important;
+    background: #eae4e4!important;
+    color: #919394!important;
+  }
+.label-info{
+  background: #00BCD4!important;
+  color: #fff!important;
+}</style>
+	</div>
+	<!-- /page container -->
+	{% include "campaign/vendor_allocationjs.html" %}
+					{% endblock %}

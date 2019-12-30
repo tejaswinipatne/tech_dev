@@ -1,0 +1,275 @@
+{% extends "header/cheader.html" %}
+
+
+{% block scripts1 %}
+{% include "campaign/manage_campaign.css" %}
+{% endblock %}
+{% block content %}
+<!-- Main sidebar -->
+{% include "side/clientside.html" %}
+{% load static %}
+<style>
+ul{
+    list-style: none;
+}
+</style>
+<!-- Main content -->
+<div class="content-wrapper">
+    <!-- Content area -->
+    <div class="content" style="margin-top: 4px;">
+        <div class="row">
+                <div class="col-md-12 ">
+            <!-- Top Clients List -->
+            <div class="panel panel-height panel-flat">
+                <div class="panel-heading">
+                  <div class="col-md-12">
+                    <div class="col-md-6">
+                      <h1 class="panel-title">Users And Groups
+                          <!-- <button type="button" id="databtn" class="btn btn-filter-tb btn-labeled pull-right" style="display:none">
+                              <b><span id="filter_icon" class="glyphicon glyphicon-filter"></span></b>
+                              Filter
+                          </button> -->
+                      </h1>
+                    </div>
+                      <div class="col-md-6">
+                        <span class="pull-right">
+                          <button class="btn btn-primary" data-toggle="modal" data-target="#lead_header" camp_id="{{camp}}"><span
+                                  class="glyphicon glyphicon-plus"></span> Add Group</button>
+                          <button class="btn btn-primary" data-toggle="modal" data-target="#add_users_modal" camp_id="{{camp}}"><span
+                                  class="glyphicon glyphicon-plus"></span> Add User</button>
+                        </span>
+                      </div>
+                  </div>
+
+                </div>
+                <div class="table-responsive-sm">
+                    <table id="client_group_table" class="table datatable-column-search-inputs DataTables">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Group Name</th>
+                                <th>Users Count</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tfoot id="datatfootfilter" style="display:none">
+                            <tr>
+
+                                <!-- <td rowspan="1" colspan="1">
+                                    <input type="text" class="form-control input-sm" placeholder="Search Company">
+                                </td>
+                                <td rowspan="1" colspan="1">
+                                    <input type="text" class="form-control input-sm" placeholder="Search Category">
+                                </td> -->
+                                <!--
+                                           <td rowspan="1" colspan="1">
+                                               <input type="text" class="form-control input-sm" placeholder="Search Type">
+                                           </td>
+
+                                           <td rowspan="1" colspan="1">
+                                               <input type="text" class="form-control input-sm" placeholder="Search Billing">
+                                           </td>
+
+                                        <td rowspan="1" colspan="1">
+                                          <input type="text" class="form-control input-sm" placeholder="Status">
+                                        </td>-->
+                                <td rowspan="1" colspan="1"></td>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            {% for group in groups%}
+                            <tr>
+                                <td style="width:1%;">
+                                        <i class="supericon fas fa-plus-circle more" data-id="{{group.id}}"></i>
+                                        <div class="hidden more_details" data-group-id="{{group.id}}">
+                                            <div class="div_loader"></div>
+                                            <i class="supericon_close fas fa-times-circle close_div pull-right"></i>
+                                            <div class="campaign_info">
+                                                <!-- <div class="div_list"></div> -->
+                                                <div class="col-md-12">
+                                                    <table id="Group_user_{{group.id}}" class="table group_user_table vendor_table datatable-show-all">
+                                                        <thead >
+                                                            <tr>
+                                                                <th>ID</th>
+                                                                <th>Username</th>
+                                                                <th>Email</th>
+                                                                <th>Status</th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </td>
+                                <td><a href="#">{{ group.group_name}}</a></td>
+                                <td>{{ group.group_users.count}}</td>
+                                <td class="text-center">
+                                    <button type="button" class="btn btn-sm btn-success edit_group" data-group-id="{{group.id}}" data-toggle="modal" data-target="#lead_header">Edit</button>
+                                    <button type="button" class="btn btn-sm btn-warning delete_group" data-group-id="{{group.id}}">Delete</button>
+                                    <button type="button" class="btn btn-sm btn-primary group_access" data-group-id="{{group.id}}" data-toggle="modal" data-target="#access_modal">Group Access</button>
+                                </td>
+                            </tr>
+                            {%endfor%}
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- /highlighting rows and columns -->
+        </div>
+    </div>
+    <!-- /content area -->
+
+</div>
+<!-- /main content -->
+</div>
+</div>
+<!-- /page content -->
+
+</div>
+<!-- Add Group Modal -->
+<div class="modal fade" id="lead_header" role="dialog">
+    <div class="modal-dialog modal-sm">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Add Group </h4>
+            </div>
+            <div class="modal-body">
+
+                    {% csrf_token %}
+                    <div class="col-sm-12">
+                        <label class="control-label col-lg-3">
+                            <h5>Group</h5>
+                        </label>
+                        <div class="col-lg-9">
+                            <input type="text" name="group" class="form-control group_name" placeholder="Group Name" required>
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <img src="{% static 'assets/images/lg.circle-slack-loading-icon.gif'%}" style="height:50px;display:none"
+                    id="loader">
+                <button type="button" id="add_group" class="btn btn-success" data-dismiss="modal">submit</button>
+                <button type="button" id="update_group" class="btn btn-success hidden" data-dismiss="modal">Update</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add User Modal -->
+<div class="modal fade" id="add_users_modal" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Add User </h4>
+            </div>
+            <div class="modal-body">
+
+                {% csrf_token %}
+                <div class="col-sm-12">
+                    <label class="control-label col-lg-3">
+                        <h5>User Name</h5>
+                    </label>
+                    <div class="col-lg-9">
+                        <input type="text" id="username" class="form-control user_field username" placeholder="Username"
+                            required>
+                        <span class="help-block"></span>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <label class="control-label col-lg-3">
+                        <h5>Email</h5>
+                    </label>
+                    <div class="col-lg-9">
+                        <input type="email" id="email" class="form-control user_field" placeholder="Email" required>
+                        <span class="help-block"></span>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <label class="control-label col-lg-3">
+                        <h5>Password</h5>
+                    </label>
+                    <div class="col-lg-9">
+                        <input type="password" id="password" class="form-control user_field" placeholder="Password" required>
+                        <span class="help-block"></span>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <label class="control-label col-lg-3">
+                        <h5>Group</h5>
+                    </label>
+                    <div class="col-lg-9">
+                        <select class="form-control " id="group_selector" >
+                            <option class="form-control " selected value='select_group'>Select Group</option>
+                            {% for group in groups %}
+                                <option class="form-control " value={{group.id}} >{{group.group_name}}</option>
+                            {%endfor%}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <img src="{% static 'assets/images/lg.circle-slack-loading-icon.gif'%}" style="height:50px;display:none"
+                id="loader1">
+                <button type="button" id="add_user" class="btn btn-success" >Submit</button>
+                <button type="button" class="btn btn-default close_modal" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Group access modal -->
+<div class="modal fade" id="access_modal" role="dialog">
+    <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Group Access </h4>
+            </div>
+            <div class="modal-body ">
+                    <div class="col-md-12 group_access_div">
+
+                    </div>
+                <!-- {% for access in roles %}
+
+                <div class="custom-control  main_menu custom-checkbox">
+                        <label class="custom-control-label" >
+                        <input type="checkbox" class="custom-control-input styled" name="{{access.name}}" id="{{access.id}}">
+                        {{access.name}}</label>
+                        <ul>
+
+                        </ul>
+                    </div>
+                {% endfor %} -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- /page container -->
+{% include "vendor1/vendorjs.html" %}
+<script>
+    $(function () {
+        $("#ManageUsers").addClass("active");
+        // $("#explore_vendors").find("ul").first().css({ 'display': 'block' })
+        // $("#Vendor_list").addClass("active");
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,91 @@
+
+  {% load staticfiles %}
+
+	<!-- Core JS files -->
+	<script type="text/javascript" src="{% static 'assets/js/plugins/loaders/pace.min.js' %}"></script>
+	<!-- commented due select al lcheckbox not working second time -->
+  <script type="text/javascript" src="{% static 'assets/js/core/libraries/jquery.min.js' %}"></script>
+  <!-- <script type="text/javascript" src="{% static 'assets/js/core/libraries/jquery-3.3.1.min.js' %}"></script> -->
+
+  <script type="text/javascript" src="{% static 'assets/js/core/libraries/bootstrap.min.js' %}"></script>
+ 
+	
+  <script type="text/javascript" src="{% static 'assets/js/plugins/loaders/blockui.min.js' %}"></script>
+	<!-- /core JS files -->
+
+
+	<!-- Theme JS files -->
+	<script type="text/javascript" src="{% static 'assets/js/plugins/forms/selects/select2.min.js' %}"></script>
+
+	<!-- /theme JS files -->
+  <!-- datetime picker libs and script -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" integrity="sha256-DOS9W6NR+NFe1fUhEE0PGKY/fubbUCnOfTje2JMDw3Y=" crossorigin="anonymous" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha256-FEqEelWI3WouFOo2VWP/uJfs1y8KJ++FLh2Lbqc8SJk=" crossorigin="anonymous"></script>
+
+  <script type="text/javascript" src="{% static 'assets/js/pages/extension_blockui.js' %}"></script>
+
+
+  <!-- notification read -->
+  <script type="text/javascript" src="{% static 'assets/js/plugins/extensions/cookie.js' %}"></script>
+  <script>
+    var newexp = ''
+
+
+      // using jQuery
+     function getCookie(name) {
+         var cookieValue = null;
+         if (document.cookie && document.cookie !== '') {
+             var cookies = document.cookie.split(';');
+             for (var i = 0; i < cookies.length; i++) {
+                 var cookie = jQuery.trim(cookies[i]);
+                 // Does this cookie string begin with the name we want?
+                 if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                     break;
+                 }
+             }
+         }
+         return cookieValue;
+       }
+
+     $(document).ready(function(){
+
+         $(".read").click(function(e){
+
+            e.preventDefault();
+            var id=$(this).attr('href');
+            $(this).parentsUntil("ul").hide();
+            var csrftoken = getCookie('csrftoken');
+            $.ajax({
+             type: "POST",
+             url: "/superadmin/ReadNotification/", //Relative or absolute path to response.php file
+             data: {'id':id,'csrfmiddlewaretoken':csrftoken}
+           });
+
+         });
+       });
+  </script>
+  <!-- /notification read -->
+
+  <!-- datepicker jquery code -->
+  <script>
+    $(function () {
+      // $("#id_rfq_timer").datetimepicker({
+      //   minDate:0,
+      //   dateFormat: "yy-mm-dd",
+      //   maxDate:$('.start_date_selector').val(),
+      // });
+
+
+    });
+  </script>
+
+  <!-- alerts and confirmations -->
+  <!-- notifications -->
+  <script type="text/javascript" src="{% static 'assets/js/plugins/notifications/pnotify.min.js' %}?ver=1.1"></script>
+  <!-- /notifications -->
+
+  <!-- confirm js -->
+  <link rel="stylesheet" href="{% static 'assets/js/plugins/jquery-confirm/jquery-confirm.min.css' %}">
+  <script src="{% static 'assets/js/plugins/jquery-confirm/jquery-confirm.min.js' %}"></script>
+  <!-- /alerts and confirmations -->

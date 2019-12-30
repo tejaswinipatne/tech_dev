@@ -1,0 +1,1398 @@
+{% extends "header/cheader.html" %}
+{% load static %}
+{% block scripts %}{% include "campaign/createcampaignhead.html" %} {% endblock %}
+{% block scripts1 %} {% include "campaign/css/createcampaign.css" %} {% endblock%}
+{% block content %}
+{% load widget_tweaks %}
+<!-- Main sidebar -->
+{% include "side/clientside.html" %}
+<!-- /main sidebar -->
+<!-- Main content -->
+<div class="content-wrapper">
+  <div class="content">
+    <!-- Main charts -->
+    <div class="row">
+      <!-- global ---->
+      <div class="panel panel-height panel-flat">
+        <div class="panel-heading text-center">
+          <h1 class="panel-title">
+            {{ title_of_panel }}
+          </h1>
+        </div>
+        <!-- tab head options -->
+        <ul style="margin-left: 10px;" class="nav nav-tabs nav-pills  vnav">
+          <li>
+            <a data-toggle="tab" href="#create_campaign">Create
+            </a>
+          </li>
+          <li class="active">
+            <a data-toggle="tab" href="#specification" id="seond_tab">Specs
+            </a>
+          </li>
+          <li >
+            <a data-toggle="tab" href="#menu1">Mapping
+            </a>
+          </li>
+          <li>
+            <a data-toggle="tab" href="#menu2">Terms
+            </a>
+          </li>
+          <li>
+            <a data-toggle="tab" href="#menu3">Delivery
+            </a>
+          </li>
+        </ul>
+        <!-- /tab head options -->
+        <div class="tab-content ml-10">
+
+          <!-- tab 1 -->
+          <div id="create_campaign" class="tab-pane fade in">
+            <form id="form_save_campaign" action="{% url 'createcampaign' %}" method="post" class="form-horizontal">
+              {% csrf_token %}
+              <div class='row'>
+                <div class='col-sm-8 col-md-8'>
+                  <div class='row createcampaign'>
+                    <div class='col-md-12 col-sm-12'>
+                      <div class="form-group">
+                        <label class="control-label col-lg-3">Campaign Name:
+                        </label>
+                        <div class="col-lg-6">
+                          {% render_field campaignform.name value=campaign.name class="form-control"  placeholder='Campaign Name' %}
+                        </div>
+                      </div>
+                    </div>
+                    <div class='col-md-12 col-sm-12'>
+                      <div class="form-group">
+                        <label class="control-label col-lg-3">Campaign Description
+                        </label>
+                        <div class="col-lg-6">
+                          <textarea name="description" id="id_description" rows="2" cols="20" class="form-control">{{ campaign.name }}
+                          </textarea>
+                        </div>
+                      </div>
+                    </div>
+                    <div class='col-md-12 col-sm-12'>
+                      <div class="form-group">
+                        <label class="control-label col-lg-3">Techconnectr IO Number:
+                        </label>
+                        <div class="col-lg-6">
+                          {% render_field campaignform.io_number value=campaign.io_number class="form-control"  placeholder='Techconnectr IO Number' %}
+                        </div>
+                      </div>
+                    </div>
+                    <div class='col-md-12 col-sm-12'>
+                      <div class="form-group">
+                        <label class="control-label col-lg-3">Client PO Number:
+                        </label>
+                        <div class="col-lg-6">
+                          {% render_field campaignform.po_number value=campaign.po_number class="form-control"  placeholder='Techconnectr PO Number' %}
+                        </div>
+                      </div>
+                    </div>
+                    <div class='col-md-12 col-sm-12'>
+                      <div class="form-group">
+                        <label class="control-label col-lg-3">CPL
+                        </label>
+                        <div class="col-lg-6">
+                          <div class="input-group">
+                            <span class="input-group-addon">$
+                            </span>
+                            {% render_field campaignform.cpl value=campaign.cpl class="form-control"  placeholder='Enter amount' %}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class='col-md-12 col-sm-12'>
+                      <div class="form-group">
+                        <label class="control-label col-lg-3">Start Date:
+                        </label>
+                        <div class="col-lg-6">
+                          {% render_field campaignform.start_date value=campaign.start_date class="form-control datepicker"  type="date" placeholder='Pick date' %}
+                        </div>
+                      </div>
+                    </div>
+                    <div class='col-md-12 col-sm-12'>
+                      <div class="form-group">
+                        <label class="control-label col-lg-3">End Date:
+                        </label>
+                        <div class="col-lg-6">
+                          {% render_field campaignform.end_date value=campaign.end_date class="form-control datepicker"  type="date" placeholder='Pick a last data' %}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class='col-md-12 col-sm-12'>
+                    <div class="form-group">
+                      <div class="col-lg-9">
+                        <button type="submit" id='create_campaign' class="btn btn-primary pull-right btn-ladda btn-ladda-progress" data-style="slide-right">
+                          <span class="ladda-label">Save Campaign
+                          </span>
+                        </button>
+                        <button style="display:none;" class="btn btn-secondary pull-right form-control-inline">
+                          <a>Previous
+                          </a>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class='col-sm-12 col-md-4' style="padding-right:20px;">
+                  <div class="panel panel-primary">
+                    <div class="panel-heading headfont">Getting Started Tips
+                    </div>
+                    <div class="panel-body">
+                      <strong>All The Fields Are Mandatory
+                      </strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <!-- /tab 1 -->
+
+          <!-- tab 2 -->
+          <div id="specification" class="tab-pane fade in active">
+            <div class='row'>
+              <div class='col-sm-8 col-md-8'>
+                <form class="form_campaign_parts" data-action="{% url 'save_specifications' %}" method="post" class="form-horizontal">
+                  {% csrf_token %}
+                  <input type="hidden" name="campaign" id="id_camapaign" value="{{ camapaign_id }}" />
+                  <div class='row'>
+                    <div class='col-md-9 col-sm-12'>
+                      <div class="panel-group panel-group-control content-group-lg" id="accordion-control">
+                        <div class="panel">
+                          <div class="panel-heading">
+                            <h6 class="panel-title">
+                              <a data-toggle="collapse" id="accordion" data-parent="#accordion-control" href="#accordion-control-group1">Select Product/ category
+                              </a>
+                            </h6>
+                          </div>
+                          <div id="accordion-control-group1" class="panel-collapse collapse ">
+                            <div class="panel-body">
+                              <div class=''>
+                                <label>
+                                  <input id='chk4' type='checkbox'/>Use As Text
+                                </label>
+                              </div>
+                              <div class="form-group checkbox_container">
+                                <!-- Leads,Survey,Appointment,Data -->
+                                <!--{ specificationform }} -->
+                                {% with  field_name='campaign_category' default_checked_value=specification.campaign_category %}
+                                <input type="hidden" name="campaign_category" id="id_campaign_category" value="{{default_checked_value}}"/>
+                                {% for name in campaign_category %}
+                                {%  if name != "---------" %}
+                                <div class="radio">
+                                  <label>
+                                    <input type="checkbox" name="{{ field_name }}[]" value="{{ name }}"
+                                           {% if name|lower in default_checked_value|lower %}
+                                           checked {% endif %}>
+                                    {{name}}
+                                  </label>
+                                  <input type='text' class='tb3 form-control-inline hidden pull-right tb10' value='{{ name }}'>
+                                </div>
+                                {% endif %}
+                                {% endfor %}
+                                {% endwith %}
+                                {{ form.campaign_category.errors }}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class='col-md-9 col-sm-12'>
+                      <div class="panel-group panel-group-control content-group-lg" id="accordion-control1">
+                        <div class="panel">
+                          <div class="panel-heading">
+                            <h6 class="panel-title">
+                              <a data-toggle="collapse" data-parent="#accordion-control1" href="#accordion-control-group2">Select Your Target Quantity
+                              </a>
+                            </h6>
+                          </div>
+                          <div id="accordion-control-group2" class="panel-collapse collapse ">
+                            <div class="panel-body">
+                              <div class="form-group">
+                                <div class="col-lg-6">
+                                  {% render_field specificationform.campaign_quantity value=specification.campaign_quantity type="number" class="form-control" %}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class='col-md-9 col-sm-12'>
+                      <div class="panel-group panel-group-control content-group-lg" id="accordion-control2">
+                        <div class="panel">
+                          <div class="panel-heading">
+                            <h6 class="panel-title">
+                              <a data-toggle="collapse" data-parent="#accordion-control2" href="#accordion-control-group3">Select Pacing
+                              </a>
+                            </h6>
+                          </div>
+                          <div id="accordion-control-group3" class="panel-collapse collapse">
+                            <div class="panel-body">
+                              <div class=''>
+                                <label>
+                                  <input id='chk5' type='checkbox'/>Use As Text
+                                </label>
+                              </div>
+                              <div class="form-group checkbox_container">
+                                <!-- Leads,Survey,Appointment,Data -->
+                                <!--{ specificationform }} -->
+                                {% with  field_name='campaign_pacing' default_checked_value=specification.campaign_pacing %}
+                                <input type="hidden" name="campaign_pacing" id="id_campaign_pacing" value="{{default_checked_value}}"/>
+                                {% for name in campaign_pacing %}
+                                {%  if name != "---------" %}
+                                <div class="radio">
+                                  <label>
+                                    <input type="checkbox" name="{{ field_name }}[]" value="{{ name }}"
+                                           {% if name|lower in default_checked_value|lower %}
+                                           checked {% endif %}>
+                                    {{name}}
+                                  </label>
+                                  <input type='text' class='tb3 form-control-inline hidden pull-right tb10' value='{{ name }}'>
+                                </div>
+                                {% endif %}
+                                {% endfor %}
+                                {% endwith %}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class='col-md-9 col-sm-12'>
+                      <div class="panel-group panel-group-control content-group-lg" id="accordion-control4">
+                        <div class="panel">
+                          <div class="panel-heading">
+                            <h6 class="panel-title">
+                              <a data-toggle="collapse" data-parent="#accordion-control4" href="#accordion-control-group4">Select Touchbase Meeting
+                              </a>
+                            </h6>
+                          </div>
+                          <div id="accordion-control-group4" class="panel-collapse collapse ">
+                            <div class="panel-body">
+                              <div>
+                                <label>
+                                  <input id='chk6' type='checkbox'/>Use As Text
+                                </label>
+                              </div>
+                              <div class="form-group checkbox_container">
+                                {% with  field_name='touchbase_meeting' default_checked_value=specification.touchbase_meeting %}
+                                <input type="hidden" name="touchbase_meeting" id="id_touchbase_meetingg" value="{{default_checked_value}}"/>
+                                {% for name in days %}
+                                {%  if name != "---------" %}
+                                <div class="radio">
+                                  <label>
+                                    <input type="checkbox" name="{{ field_name }}[]" value="{{ name }}"
+                                           {% if name|lower in default_checked_value|lower %}
+                                           checked {% endif %}>
+                                    {{name}}
+                                  </label>
+                                  <input type='text' class='tb3 form-control-inline hidden pull-right tb10' value='{{ name }}'>
+                                </div>
+                                {% endif %}
+                                {% endfor %}
+                                {% endwith %}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- account based marketing-->
+                    <div class='col-md-9 col-sm-12'>
+                      <div class="panel-group panel-group-control content-group-lg" id="accordion-control5">
+                        <div class="panel">
+                          <div class="panel-heading">
+                            <h6 class="panel-title">
+                              <a data-toggle="collapse"
+                                 data-parent="#accordion-control5" href="#accordion-control-group5">
+                                Account Based Marketing
+                              </a>
+                            </h6>
+                          </div>
+                          <div id="accordion-control-group5" class="panel-collapse collapse ">
+                            <div class="panel-body">
+                              <p>Note: The target account list must contain 5x the number of leads you want to generate. By uploading a target account list, you will not be able to select a company size or industry filter.
+                              </p>
+                              <label>Upload Your ABM List:
+                              </label>
+                              <label class="radio-inline">
+                                <input type="checkbox" id="radio_abm_yes" name="radio-abm-list">
+                                Yes
+                              </label>
+                              <label class="radio-inline">
+                                <input type="checkbox" id="radio_abm_no" name="radio-abm-list">
+                                No
+                              </label>
+                              <button type="button" id="button_abm_upload" class="btn btn-info btn-xs legitRipple">Upload
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- /account based marketing-->
+                    <!-- account supression-->
+                    <div class='col-md-9 col-sm-12'>
+                      <div class="panel-group panel-group-control content-group-lg" id="accordion-control6">
+                        <div class="panel">
+                          <div class="panel-heading">
+                            <h6 class="panel-title">
+                              <a data-toggle="collapse"
+                                 data-parent="#accordion-control6" href="#accordion-control-group6">
+                                Account Supression
+                              </a>
+                            </h6>
+                          </div>
+                          <div id="accordion-control-group6" class="panel-collapse collapse ">
+                            <div class="panel-body">
+                              <p>Note: The account suppression list may contain a maximum of 100 companies.
+                              </p>
+                              <label>Upload Your Account Suppression List:
+                              </label>
+                              <label class="radio-inline">
+                                <input type="checkbox" id="radio_acc_suppression_yes" name="radio-supression_list">
+                                Yes
+                              </label>
+                              <label class="radio-inline">
+                                <input type="checkbox" id="radio_acc_suppression_no" name="radio-supression_list">
+                                No
+                              </label>
+                              <button type="button" id="button_acc_supression" class="btn btn-info btn-xs legitRipple">Upload
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- /account supression-->
+                    <div class='col-md-12 col-sm-12'>
+                      <div class="form-group">
+                        <div class="col-lg-9">
+                          <button type="submit" class="btn btn-primary pull-right form-control-inline" >Save Specification
+                          </button>
+                          <!--<a id='next2' class="btn btn-primary pull-right form-control-inline" href="#home1">Next</a>-->
+                          <a id="prev2" class="btn btn-secondary pull-right form-control-inline" href="#home">Previous
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div class='col-sm-12 col-md-4' style="padding-right:20px;">
+                <div class="panel panel-primary">
+                  <div class="panel-heading headfont">Getting Started Tips
+                  </div>
+                  <div class="panel-body">
+                    <strong>All The Fields Are Mandatory
+                    </strong>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-4">
+              </div>
+            </div>
+          </div>
+          <!-- /tab 2 -->
+
+          <!-- /tab 3 -->
+          <div id="menu1" class="tab-pane fade in ">
+           <div class="row">
+            <div class="col-sm-8 col-md-8">
+              <div class="row">
+                <form class="form_campaign_parts" data-action="{% url 'save_mapping' %}" method="post" class="form-horizontal">
+                 {% csrf_token %}
+                 <input type="hidden" name="campaign" id="id_camapaign" value="{{ camapaign_id }}" />
+
+                  <div class="col-md-9 col-sm-12">
+                    <div class="panel-group panel-group-control content-group-lg" id="accordion-control7">
+                      <div class="panel">
+                        <div class="panel-heading">
+                          <h6 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion-control7" href="#accordion-control-group77" class="collapsed" aria-expanded="false">Select Industry Type
+                            </a>
+                          </h6>
+                        </div>
+                        <div id="accordion-control-group77" class="panel-collapse collapse " aria-expanded="false">
+                          <div class="panel-body">
+                            <div class="pull-right">
+                              <label>
+                                <input type="checkbox" id="selecttxt">Use As Text
+                              </label>
+                            </div>
+                            <ul class="scroll " id="treeview">
+                              <li>
+                                <ul class="treelist">
+                                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <label>
+                                      <input type="checkbox"> Select All
+                                    </label>
+
+                                    <ul class='chkboxlist checkbox_container'>
+                                      {% with  field_name='industry_type' default_checked_value=mapping.industry_type %}
+                                      <input type="hidden" name="{{field_name}}" id="id_{{field_name}}" value="{{default_checked_value}}"/>
+                                      {% for name in industry_types %}
+                                      {%  if name != "---------" %}
+                                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <label>
+                                          <input class="hummingbirdNoParent check1" name="{{ field_name }}[]" value="{{ name }}" type="checkbox"
+                                                 {% if name|lower in default_checked_value|lower %}
+                                                 checked {% endif %}/>
+                                          {{name}}
+                                        </label>
+                                        <input type='text' value='{{name}}' class='form-control-inline hidden pull-right textbox tb10'>
+                                      </li>
+                                      {% endif %}
+                                      {% endfor %}
+                                      {% endwith %}
+                                    </ul>
+
+                                  </li>
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-9 col-sm-12">
+                    <div class="panel-group panel-group-control content-group-lg" id="accordion-control111">
+                      <div class="panel">
+                        <div class="panel-heading">
+                          <h6 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion-control111" href="#accordion-control-group222">Select Job Title
+                            </a>
+                          </h6>
+                        </div>
+                        <div id="accordion-control-group222" class="panel-collapse collapse ">
+                          <div class="panel-body">
+                            <div class="form-group">
+                              <div class="col-lg-6">
+                                {% render_field mappingform.job_title value=mapping.job_title  class="form-control" %}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-9 col-sm-12">
+                    <div class="panel-group panel-group-control content-group-lg" id="accordion-control00">
+                      <div class="panel">
+                        <div class="panel-heading">
+                          <h6 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion-control00" href="#accordion-control-group00" aria-expanded="false"class="collapsed" >Select Job Level
+                            </a>
+                          </h6>
+                        </div>
+                        <div id="accordion-control-group00" class="panel-collapse collapse in" aria-expanded="false" style="">
+                          <div class="panel-body ">
+                            <div class="pull-right">
+                              <label>
+                                <input type="checkbox" id="check1" class="form-control-inline">Use As Text
+                              </label>
+                            </div>
+                            <ul id="treeview8" class="scroll treeview">
+                              <li>
+                                <ul class="treelist">
+
+                                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <label>
+                                      <input type="checkbox"> Select All
+                                    </label>
+                                    <ul class="checkbox_container">
+                                      {% with  field_name='job_level' default_checked_value=mapping.job_level %}
+                                      <input type="hidden" name="{{field_name}}" id="id_{{field_name}}" value="{{default_checked_value}}"/>
+                                      {% for name in job_levels %}
+                                      {%  if name != "---------" %}
+                                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <label>
+                                          <input class="hummingbirdNoParent check1" name="{{ field_name }}[]" value="{{ name }}" type="checkbox"
+                                                 {% if name|lower in default_checked_value|lower %}
+                                                 checked {% endif %}/>
+                                          {{name}}
+                                        </label>
+                                        <input type='text' value='{{name}}' class='form-control-inline hidden pull-right textbox tb10'>
+                                      </li>
+                                      {% endif %}
+                                      {% endfor %}
+                                      {% endwith %}
+                                    </ul>
+
+                                  </li>
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-9 col-sm-12">
+                    <div class="panel-group panel-group-control content-group-lg" id="accordion-control7">
+                      <div class="panel">
+                        <div class="panel-heading">
+                          <h6 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion-control7" href="#accordion-control-group7" aria-expanded="false" class="collapsed">Select Country
+                            </a>
+                          </h6>
+                        </div>
+                        <div id="accordion-control-group7" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+                          <div class="panel-body">
+                            <div class="pull-right">
+                              <label>
+                                <input type="checkbox" class="chk" name="chk">Use As Text
+                              </label>
+                            </div>
+                            <ul id="treeview1" class="scroll treelist">
+                              <li>
+                                <label>
+                                  <input type="checkbox"> Select All
+                                </label>
+                                <ul class="checkbox_container">
+                                  {% with  field_name='country' default_checked_value=mapping.country %}
+                                  <input type="hidden" name="{{field_name}}" id="id_{{field_name}}" value="{{default_checked_value}}"/>
+                                  {% for country in countries %}
+                                  {%  if country != "---------" %}
+                                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <label>
+                                      <input class="hummingbirdNoParent check1" name="{{ field_name }}[]" value="{{ country.name }}" type="checkbox"
+                                             {% if country.name|lower in default_checked_value|lower %}
+                                             checked {% endif %}/>
+                                      {{country.name}}
+                                    </label>
+                                    <input type='text' value='{{country.name}}' class='form-control-inline hidden pull-right textbox tb10'>
+                                  </li>
+                                  {% endif %}
+                                  {% endfor %}
+                                  {% endwith %}
+                                </ul>
+
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-9 col-sm-12">
+                    <div class="panel-group panel-group-control content-group-lg" id="accordion-control10">
+                      <div class="panel">
+                        <div class="panel-heading">
+                          <h6 class="panel-title">
+                            <a data-toggle="collapse" id="accordion" data-parent="#accordion-control10" href="#accordion-control-group10" class="collapsed" aria-expanded="false">Select Company Size
+                            </a>
+                          </h6>
+                        </div>
+                        <div id="accordion-control-group10" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+                          <div class="panel-body ">
+                            <div class="pull-right">
+                              <label>
+                                <input class="checkbx_toggle_use_as_txt" type="checkbox">Use As Text
+                              </label>
+                            </div>
+                            <ul id="treeview4" class="treelist scroll">
+                              <li>
+                                <label>
+                                  <input type="checkbox"> Select All
+                                </label>
+
+                                <ul class="checkbox_container">
+                                  {% with  field_name='company_size' default_checked_value=mapping.company_size %}
+                                  <input type="hidden" name="{{field_name}}" id="id_{{field_name}}" value="{{default_checked_value}}"/>
+                                  {% for name in company_sizes %}
+                                  {%  if name != "---------" %}
+                                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <label>
+                                      <input class="hummingbirdNoParent check1" name="{{ field_name }}[]" value="{{ name }}" type="checkbox"
+                                             {% if name|lower in default_checked_value|lower %}
+                                             checked {% endif %}/>
+                                      {{name}}
+                                    </label>
+                                    <input type='text' value='{{name}}' class='form-control-inline hidden pull-right use_as_txt hidden'>
+                                  </li>
+                                  {% endif %}
+                                  {% endfor %}
+                                  {% endwith %}
+                                </ul>
+
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-9 col-sm-12">
+                    <div class="panel-group panel-group-control content-group-lg" id="accordion-control000">
+                      <div class="panel">
+                        <div class="panel-heading">
+                          <h6 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion-control000" href="#accordion-control-group000" class="collapsed" aria-expanded="false">Select Job Function
+                            </a>
+                          </h6>
+                        </div>
+                        <div id="accordion-control-group000" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+                          <div class="panel-body">
+                            <div class="pull-right">
+                              <label>
+                                <input type="checkbox" id="check2">Use As Text
+                              </label>
+                            </div>
+                            <ul class="scroll treeview" id="treeview9">
+                              <li>
+                                <ul class="treelist">
+                                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <label>
+                                      <input type="checkbox"> Select All
+                                    </label>
+                                    <ul class="checkbox_container">
+                                      {% with  field_name='job_function' default_checked_value=mapping.job_function %}
+                                      <input type="hidden" name="{{field_name}}" id="id_{{field_name}}" value="{{default_checked_value}}"/>
+                                      {% for name in job_functions %}
+                                      {%  if name != "---------" %}
+                                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <label>
+                                          <input class="hummingbirdNoParent check1" name="{{ field_name }}[]" value="{{ name }}" type="checkbox"
+                                                 {% if name|lower in default_checked_value|lower %}
+                                                 checked {% endif %}/>
+                                          {{name}}
+                                        </label>
+                                        <input type='text' value='{{name}}' class='form-control-inline hidden pull-right textbox tb10'>
+                                        {% endif %}
+                                        {% endfor %}
+                                        {% endwith %}
+                                      </li>
+                                    </ul>
+
+                                  </li>
+                                </ul>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12 col-sm-12">
+                    <div class="form-group">
+                      <div class="col-lg-9">
+                        <button type="submit" class="btn btn-primary pull-right form-control-inline legitRipple">Save Campaign Mapping
+                        </button>
+                        <!--<a id='next2' class="btn btn-primary pull-right form-control-inline" href="#home1">Next</a>-->
+                        <a id="prev2" class="btn btn-secondary pull-right form-control-inline legitRipple" href="#home">Previous
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-4" style="padding-right:20px;">
+              <div class="panel panel-primary">
+                <div class="panel-heading headfont">Getting Started Tips
+                </div>
+                <div class="panel-body">
+                  <strong>All The Fields Are Mandatory
+                  </strong>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+          <!-- /tab 3 -->
+
+          <!-- tab 4 -->
+          <div id="menu2" class="tab-pane fade in">
+            <form class="form_campaign_parts" data-action="{% url 'save_terms' %}" method="post" class="form-horizontal">
+              {% csrf_token %}
+              <input type="hidden" name="campaign" id="id_camapaign" value="{{ camapaign_id }}" />
+              <div class='row'>
+                <div class='col-sm-8 col-md-8'>
+                  <div class='row'>
+                    <div class='col-md-9 col-sm-12'>
+                      <div class="panel-group panel-group-control content-group-lg" id="accordion-control12">
+                        <div class="panel">
+                          <div class="panel-heading">
+                            <h6 class="panel-title">
+                              <a data-toggle="collapse" data-parent="#accordion-control12" href="#accordion-control-group12">Select Source In Touches
+                              </a>
+                            </h6>
+                          </div>
+                          <div id="accordion-control-group12" class="panel-collapse collapse ">
+                            <div class="panel-body">
+                              <div class='pull-right'>
+                                <label>
+                                  <input type='checkbox' id='check3'>Use As Text
+                                </label>
+                              </div>
+                              <ul class='scroll' id="treeview3">
+                                <li>
+                                  <ul class='treelist'>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                      <label>
+                                        <input type="checkbox" /> Select All
+                                      </label>
+                                      <ul>
+                                        <li>
+                                          <label>
+                                            <input class="hummingbirdNoParent check6" type="checkbox" /> Email
+                                          </label>
+                                          <input type='text' class='form-control-inline hidden pull-right tb10 txtb3' value='Email'>
+                                        </li>
+                                        <li>
+                                          <label>
+                                            <input class="hummingbirdNoParent check6" type="checkbox" /> Tele
+                                          </label>
+                                          <input type='text' class='form-control-inline hidden pull-right tb10 txtb3' value='Tele'>
+                                        </li>
+                                        <li>
+                                          <label>
+                                            <input class="hummingbirdNoParent check6" type="checkbox" /> Social
+                                          </label>
+                                          <input type='text' class='form-control-inline hidden pull-right tb10 txtb3' value='Social'>
+                                        </li>
+                                        <li>
+                                          <label>
+                                            <input class="hummingbirdNoParent check6" type="checkbox" /> Digital
+                                          </label>
+                                          <input type='text' class='form-control-inline hidden pull-right tb10 txtb3' value='Digital'>
+                                        </li>
+                                        <li>
+                                          <label>
+                                            <input class="hummingbirdNoParent check6" type="checkbox" /> Hybrid
+                                          </label>
+                                          <input type='text' class='form-control-inline hidden pull-right tb10 txtb3' value='Hybrid'>
+                                        </li>
+                                      </ul>
+                                    </li>
+                                  </ul>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class='col-md-9 col-sm-12'>
+                      <div class="panel-group panel-group-control content-group-lg" id="accordion-control13">
+                        <div class="panel">
+                          <div class="panel-heading">
+                            <h6 class="panel-title">
+                              <a data-toggle="collapse" data-parent="#accordion-control13" href="#accordion-control-group13"> Level Of Intent
+                              </a>
+                            </h6>
+                          </div>
+                          <div id="accordion-control-group13" class="panel-collapse collapse ">
+                            <div class="panel-body">
+                              <div class='pull-right'>
+                                <label>
+                                  <input id='check4' type='checkbox'>Use As Text
+                                </label>
+                              </div>
+                              <ul class='scroll' id="treeview5">
+                                <li>
+                                  <ul class='treelist'>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                      <label>
+                                        <input type="checkbox" /> Select All
+                                      </label>
+                                      <ul>
+                                        <li>
+                                          <label>
+                                            <input class="hummingbirdNoParent check7" type="checkbox" /> Verified Data
+                                          </label>
+                                          <input type='text' value='Verified Data' class='txtb4 pull-right tb10 text-center' />
+                                        </li>
+                                        <li>
+                                          <label>
+                                            <input class="hummingbirdNoParent check7" type="checkbox" /> MQL
+                                          </label>
+                                          <input type='text' value='MQL' class='txtb4 pull-right tb10 text-center' />
+                                        </li>
+                                        <li>
+                                          <label>
+                                            <input class="hummingbirdNoParent check7" type="checkbox" /> HQL
+                                          </label>
+                                          <input type='text' value='HQL' class='txtb4 pull-right tb10 text-center' />
+                                        </li>
+                                        <li>
+                                          <label>
+                                            <input class="hummingbirdNoParent check7" type="checkbox" /> SQL
+                                          </label>
+                                          <input type='text' value='SQL' class='txtb4 pull-right tb10 text-center' />
+                                        </li>
+                                        <li>
+                                          <label>
+                                            <input class="hummingbirdNoParent check7" type="checkbox" /> Appointment
+                                          </label>
+                                          <input type='text' value='Appointment' class='txtb4 pull-right tb10 text-center' />
+                                        </li>
+                                      </ul>
+                                    </li>
+                                  </ul>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class='col-md-9 col-sm-12'>
+                      <div class="panel-group panel-group-control content-group-lg" id="accordion-control14">
+                        <div class="panel">
+                          <div class="panel-heading">
+                            <h6 class="panel-title">
+                              <a data-toggle="collapse" data-parent="#accordion-control14" href="#accordion-control-group14">
+                                Waterfall
+                              </a>
+                              <div class="pull-right">
+                                <input type='checkbox' id='watercheck' class='form-control-inline'>
+                              </div>
+                            </h6>
+                          </div>
+                          <div id="accordion-control-group14" class="panel-collapse collapse ">
+                            <div class="panel-body">
+                              <div class="form-group">
+                              </div>
+                              <table class='table' id="waterfalltable">
+                                <thead>
+                                  <tr>
+                                    <th>Level
+                                    </th>
+                                    <th>Volume
+                                    </th>
+                                    <th>CPL
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td>Verified Data
+                                    </td>
+                                    <td>
+                                      <input type='number' value="" id="w1" class='form-control' placeholder='Volume'>
+                                    </td>
+                                    <td>
+                                      <input type='number' value="" id="w2" class='form-control' placeholder='CPL'>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class='col-md-9 col-sm-12'>
+                      <div class="panel-group panel-group-control content-group-lg" id="accordion-control15">
+                        <div class="panel">
+                          <div class="panel-heading">
+                            <h6 class="panel-title">
+                              <a data-toggle="collapse" data-parent="#accordion-control15" href="#accordion-control-group15">Assets
+                              </a>
+                            </h6>
+                          </div>
+                          <div id="accordion-control-group15" class="panel-collapse collapse ">
+                            <div class="panel-body">
+                              <div class=''>
+                                <label>
+                                  <input type='checkbox' id='chk7' />Use As Text
+                                </label>
+                              </div>
+                              <div class="form-group">
+                                <div class="radio">
+                                  <label>
+                                    <input type="checkbox" class="check8" name="weekdays"> E-books
+                                  </label>
+                                  <input type='text' class='pull-right textbox3 tb10' value='E-books'>
+                                </div>
+                                <div class="radio">
+                                  <label>
+                                    <input type="checkbox" class="check8" name="weekdays"> White Paper
+                                  </label>
+                                  <input type='text' class='pull-right textbox3 tb10' value='White Paper'>
+                                </div>
+                                <div class="radio">
+                                  <label>
+                                    <input type="checkbox" class="check8" name="weekdays"> NewsLetter
+                                  </label>
+                                  <input type='text' class='pull-right textbox3 tb10' value='NewsLetter'>
+                                </div>
+                                <div class="radio">
+                                  <label>
+                                    <input type="checkbox" class="check8" name="weekdays"> Guides
+                                  </label>
+                                  <input type='text' class='pull-right textbox3 tb10' value='Guides'>
+                                </div>
+                                <div class="radio">
+                                  <label>
+                                    <input type="checkbox" class="check8" name="weekdays"> Reports
+                                  </label>
+                                  <input type='text' class='pull-right textbox3 tb10' value='Reports'>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class='col-md-12 col-sm-12'>
+                      <div class="form-group">
+                        <div class="col-lg-9">
+                          <button type="submit" class="btn btn-primary pull-right form-control-inline" >Save Campaign Terms
+                          </button>
+                          <a id="prev4" class="btn btn-secondary pull-right form-control-inline" href="#home">Previous
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class='col-sm-12 col-md-4' style="padding-right:20px;">
+                  <div class="panel panel-primary">
+                    <div class="panel-heading headfont">Getting Started Tips
+                    </div>
+                    <div class="panel-body">
+                      <strong>All The Fields Are Mandatory
+                      </strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <!-- /tab 4 -->
+
+
+          <!-- tab 5 -->
+          <div id="menu3" class="tab-pane fade in">
+            <form class="form_campaign_parts" data-action="{% url 'save_terms' %}" data-route-to="{% url 'editcampaign' %}" method="post" class="form-horizontal">
+              {% csrf_token %}
+              <input type="hidden" name="campaign" id="id_camapaign" value="{{ camapaign_id }}" />
+              <div class='row'>
+                <div class='col-sm-8 col-md-8'>
+                  <div class='row'>
+                    <!-- Data Header -->
+                    <div class='col-md-9 col-sm-12'>
+                      <div class="panel-group panel-group-control content-group-lg" id="accordion-control18">
+                        <div class="panel">
+                          <div class="panel-heading">
+                            <h6 class="panel-title">
+                              <a data-toggle="collapse" data-parent="#accordion-control18" href="#accordion-control-group18">Data Header
+                              </a>
+                            </h6>
+                          </div>
+                          <div id="accordion-control-group18" class="panel-collapse collapse ">
+                            <div class="panel-body">
+                              <!-- data header chooser -->
+                              <div class='row'>
+                                <ol data-draggable="target">
+                                  <li data-draggable="item">Email
+                                  </li>
+                                  <li data-draggable="item">Tele
+                                  </li>
+                                  <li data-draggable="item">Hybrid
+                                  </li>
+                                  <li data-draggable="item">Digital
+                                  </li>
+                                  <li data-draggable="item">Social
+                                  </li>
+                                </ol>
+                                <ol data-draggable="target" id='myUL'>
+                                </ol>
+                              </div>
+                              <!-- /data header chooser -->
+                              <!-- selected header -->
+                              <div class='row'>
+                                <table class='table table-light table-striped' border="1">
+                                  <caption>
+                                    <label class='label label-primary'>Selected Header
+                                    </label>
+                                  </caption>
+                                  <thead>
+                                    <tr id='dynamic'>
+                                    </tr>
+                                  </thead>
+                                </table>
+                              </div>
+                              <!-- /selected header -->
+                              <hr>
+                              <!-- select file table -->
+                              <table>
+                                <thead class='table'>
+                                  <th>
+                                    <label class='label label-primary'>
+                                      Select File
+                                    </label>
+                                  </th>
+                                </thead>
+                                <tbody>
+                                  <td>
+                                    <input type="file" class="file-input" data-show-caption="false" data-show-upload="false" data-browse-class="btn btn-primary btn-lg" data-remove-class="btn btn-default btn-lg">
+                                  </td>
+                                </tbody>
+                              </table>
+                              <!--/ select file table -->
+                              <hr>
+                              <!-- Add New Data Header -->
+                              <table class='table'>
+                                <thead>
+                                  <th>Add New Data Header
+                                  </th>
+                                  <th>Action
+                                  </th>
+                                </thead>
+                                <tbody>
+                                  <td>
+                                    <input type='text' class='form-control'>
+                                  </td>
+                                  <td>
+                                    <button class='btn btn-primary'>ADD
+                                    </button>
+                                  </td>
+                                </tbody>
+                              </table>
+                              <!-- /Add New Data Header -->
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- /Data Header -->
+                    <!-- Custom Field -->
+                    <div class='col-md-9 col-sm-12'>
+                      <div class="panel-group panel-group-control content-group-lg" id="accordion-control19">
+                        <div class="panel">
+                          <div class="panel-heading">
+                            <h6 class="panel-title">
+                              <a data-toggle="collapse" data-parent="#accordion-control19" href="#accordion-control-group19">Custom Field
+                              </a>
+                            </h6>
+                          </div>
+                          <div id="accordion-control-group19" class="panel-collapse collapse">
+                            <div class="panel-body">
+                              <div class="form-group">
+                                <div class="col-lg-10">
+                                  <textarea id="dropdiv" class="form-control" type="text" placeholder="Select the Question or Type your own" />
+                                  </textarea>
+                                <div id="dragdiv">
+                                  <ul id="allItems" class="list-group">
+                                    <li class="list-group-item" id="node" runat="server">
+                                      <label class='label label-primary pull-left'>What is your country?
+                                      </label>
+                                    </li>
+                                    <li class="list-group-item" id="node" runat="server">
+                                      <label class='label label-primary pull-left'>What area best describes your job in your company?
+                                      </label>
+                                    </li>
+                                    <li class="list-group-item" id="node" runat="server">
+                                      <label class='label label-primary pull-left'>What is your job level in your company?
+                                      </label>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>-
+                  <!-- /Custom Field -->
+                  <div class='col-md-9 col-sm-12'>
+                    <div class="panel-group panel-group-control content-group-lg" id="accordion-control20">
+                      <div class="panel">
+                        <div class="panel-heading">
+                          <h6 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion-control20" href="#accordion-control-group20"> Delivery Method
+                            </a>
+                          </h6>
+                        </div>
+                        <div id="accordion-control-group20" class="panel-collapse collapse ">
+                          <div class="panel-body">
+                            <div class=''>
+                              <label>
+                                <input id='chk2' type='checkbox'>Use As Text
+                              </label>
+                            </div>
+                            <div class="form-group">
+                              <div class="radio">
+                                <label>
+                                  <input type="checkbox" class="check9" name="weekdays"> Excel
+                                </label>
+                                <input type='text' class='pull-right tb1 tb10' value='Excel'>
+                              </div>
+                              <div class="radio">
+                                <label>
+                                  <input type="checkbox" class="check9" name="weekdays"> API Transfer
+                                </label>
+                                <input type='text' class='pull-right tb1 tb10' value='API Transfer'>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Delivery Method -->
+                  <div class='col-md-9 col-sm-12'>
+                    <div class="panel-group panel-group-control content-group-lg" id="accordion-control21">
+                      <div class="panel">
+                        <div class="panel-heading">
+                          <h6 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion-control21" href="#accordion-control-group21">
+                              Delivery Timing
+                            </a>
+                          </h6>
+                        </div>
+                        <div id="accordion-control-group21" class="panel-collapse collapse ">
+                          <div class="panel-body">
+                            <div class=''>
+                              <label>
+                                <input id='chk3' type='checkbox'>Use As Text
+                              </label>
+                            </div>
+                            <div class="form-group">
+                              <div class="radio">
+                                <label>
+                                  <input class='delivery_timing check10' value='Real Time' type="checkbox" name="delivery_timing"> Real Time
+                                </label>
+                                <input type='text' class='pull-right tb2 tb10' value='Real Time'>
+                              </div>
+                              <div class="radio">
+                                <label>
+                                  <input class='delivery_timing check10' value='Batch' type="checkbox" name="delivery_timing"> Batch
+                                </label>
+                                <input type='text' class='pull-right tb2 tb10' value='Batch'>
+                              </div>
+                            </div>
+                            <table class='table table-light table-striped tbl'>
+                              <thead>
+                                <th>Select Day
+                                </th>
+                                <th>Select Time
+                                </th>
+                                <th>Select TimeZone
+                                </th>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <td>
+                                    <select class='form-control'>
+                                      <option>Monday
+                                      </option>
+                                      <option>Tuesday
+                                      </option>
+                                      <option>Wednesday
+                                      </option>
+                                      <option>Friday
+                                      </option>
+                                      <option>Saturday
+                                      </option>
+                                      <option>Sunday
+                                      </option>
+                                    </select>
+                                  </td>
+                                  <td>
+                                    <input type='time' value="" id="time" class='form-control'>
+                                  </td>
+                                  <td>
+                                    <select class='from-control'>
+                                      <option>EST
+                                      </option>
+                                      <option>CST
+                                      </option>
+                                      <option>MST
+                                      </option>
+                                      <option>PST
+                                      </option>
+                                    </select>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class='col-md-12 col-sm-12'>
+                    <div class="form-group">
+                      <div class="col-lg-9">
+                        <a style="display:none;" id='next4' class="btn btn-primary pull-right form-control-inline" href="#home1">Next
+                        </a>
+                        <button class='btn btn-primary pull-right'>Submit
+                        </button>
+                        <a id="prev5" class="btn btn-secondary pull-right form-control-inline" href="#home">Previous
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class='col-sm-12 col-md-4' style="padding-right:20px;">
+                <div class="panel panel-primary">
+                  <div class="panel-heading headfont">Getting Started Tips
+                  </div>
+                  <div class="panel-body">
+                    <strong>All The Fields Are Mandatory
+                    </strong>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <!-- /tab 5 -->
+
+        </div>
+        <!-- /row -->
+      </div>
+      <!-- /main content -->
+    </div>
+  </div>
+  <!-- /page content -->
+</div>
+<!-- /page container -->
+{% include "campaign/js/createcampaignjs.html" %}
+
+
+<script type="text/javascript" src="{% static 'assets/js/plugins/notifications/pnotify.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/velocity/velocity.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/velocity/velocity.ui.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/buttons/spin.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/js/plugins/buttons/ladda.min.js' %}"></script>
+
+<script type="text/javascript" src="assets/js/pages/components_buttons.js' %}"></script>
+
+<script type="text/javascript">
+  // global form variable
+  $(function(){
+    //alert("");
+    $("#seond_tab").trigger("click");
+  }
+   );
+  $(function(){
+    // form submit actions
+    $(document).on("submit", ".form_campaign_parts", function(e){
+      //alert("submiting routine form");
+      // make ajax call
+      var form = this;
+      ajax_submit_form(form);
+      e.preventDefault();
+      // dont perform actual form submit
+    }
+                  );
+  }
+   );
+  function ajax_submit_form(form)
+  {
+    //get url stored in data href attributes
+    var url = $(form).data("action");
+    console.dir(url);
+    //alert("url" + url);
+    console.dir( $(form).serializeArray() );
+    if(url)
+    {
+      $.ajax({
+        url: url, //'/ajax/validate_username/',
+        type: "POST",
+        data: $(form).serializeArray(),
+        dataType: 'json',
+        success: function (response) {
+          console.dir("response :" + JSON.stringify(response));
+          show_notification(response);
+        }
+        ,
+        error: function (request, status, error) {
+          //alert(request.responseText);
+          console.dir("Error :" + request.responseText);
+        }
+      }
+            );
+      //ajax end
+    }
+    else
+    {
+      console.log("Url to save routine not found in data-action attribute of form-action");
+    }
+  }
+  function show_notification(message)
+  {
+    message.type = message.title || 'error';
+    // store it in type if not null before modification
+    message.title = message.title || 'error';
+    message.title = message.title.charAt(0).toUpperCase() + message.title.substr(1);
+    //uppercase first char
+    message.message = message.message || 'Error while connecting Server';
+    new PNotify({
+      title: message.title,//'success',
+      text: message.message,
+      //addclass: 'alert alert-success alert-styled-left alert-arrow-left',
+      addclass: 'alert alert-' +message.type +' alert-styled-left alert-arrow-left',
+      type: message.type,//'success',
+      delay: 3500  // 3.5 seconds
+    }
+               );
+  }
+</script>
+<script>
+  $(function(){
+    $(document).on('change','input[type="checkbox"]', function() {
+      //$('input[name="' + this.name + '"]').not(this).prop('checked', false);
+      var current_checkbox = this;
+      var checkbox_name = this.name;
+      var selected_values = [];
+      // iterate in all chckbox with same name to get clicked values
+      $('input[name="' + checkbox_name + '"]').each(function(){
+        console.dir("this.value : " + this.value);
+        if ($(this).is(':checked')) {
+          console.dir("Checked");
+          console.dir(this.value);
+          selected_values.push(this.value);
+          // push values into array
+        }
+      }
+                                                   );
+      // each end
+      console.dir(selected_values);
+      var concatcated_str = selected_values.join();
+      console.dir("concatcated_str");
+      console.dir(concatcated_str);
+      //store it in input hidden element
+      var closet_checkbox_container = $(current_checkbox).closest('.checkbox_container');
+      //.find('input[type="hidden"]').value=
+      console.dir("closet_checkbox_container : ");
+      console.dir(closet_checkbox_container);
+      var input_element = $(closet_checkbox_container).find('input[type="hidden"]');
+      console.dir("input_element : ");
+      console.dir(input_element);
+      //set value
+      $(input_element).val(concatcated_str);
+      //check inserted value
+      console.log(" Input element value : " + $(input_element).val() );
+    });
+  });
+  function getCheckedItems(treeview){
+    var node;
+    var checkedNodes = [];
+    var nodes = treeview.dataSource.view();
+    for (var i = 0; i < nodes.length; i++) {
+      node = nodes[i];
+      if (node.checked) {
+        checkedNodes.push(node);
+      }
+    }
+    return checkedNodes;
+  }
+</script>
+{% endblock %}

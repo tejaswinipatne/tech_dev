@@ -1,0 +1,1250 @@
+<script type="text/javascript">
+    var start_date_change = 0;
+    var load_chat_flag = 0;
+    var msg_count=0;
+
+    $(document).ready(function () {
+        $(".slide-toggle").click(function () {
+            $(".box").animate({
+                width: "toggle"
+            });
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+<script>
+
+
+
+
+
+
+
+    $(function () {
+
+        $("#datepicker2").datepicker({
+            dateFormat: 'yy-mm-dd',
+            beforeShowDay: $.datepicker.noWeekends,
+            onSelect: function (date, instance) {
+                swal({
+                    title: "Are you sure? ",
+                    text: "You Really want to change End Date?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                    .then((willDelete) => {
+                        if (willDelete) {
+                            token = getCookie('csrftoken');
+                            $.ajax
+                                ({
+                                    type: "Post",
+                                    url: "/client/update-campaign-end-date/",
+                                    data: { "date": date, 'camp_id': $('#camp_id').val(), csrfmiddlewaretoken: token },
+                                    success: function (result) {
+                                        console.log(result)
+                                        $('#datepicker2').val('End' + date);
+                                        swal("Campaign End Date Updated Successfully..!!");
+                                    }
+                                });
+                        }
+                        else {
+                            swal("Campaign end date is unchanged!");
+                        }
+                    });
+
+            }
+        });
+    }
+    );
+
+    $(function () {
+
+        $("#expiry_date").datetimepicker({
+            minDate: 0,
+            dateFormat: 'yyyy-mm-ddThh:mm:ss',
+
+            onChangeDateTime: function (dp, $input) {
+
+                swal({
+                    title: "Are you sure? ",
+                    text: "You Really want to change countdown time?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                    .then((willDelete) => {
+                        if (willDelete) {
+                            token = getCookie('csrftoken');
+                            $.ajax
+                                ({
+                                    type: "Post",
+                                    url: "/client/update-campaign-expiry-date/",
+                                    data: { "date": $input.val(), 'camp_id': $('#camp_id').val(), csrfmiddlewaretoken: token },
+                                    success: function (result) {
+                                        console.log(result)
+                                        $('#expiry_date').text('Expiry ' + $input.val());
+                                        swal("Campaign Countdown Timer Updated Successfully..!!");
+                                    }
+                                });
+                        }
+                        else {
+                            swal("Campaign Countdown Timer is unchanged!");
+                        }
+                    });
+
+            }
+        });
+    }
+    );
+
+    // <!-- input file JS -->
+    $(document).on('change', '.file-field input:file', function () {
+
+        if ($(this)[0].files[0].size > 26214400) {
+            alert("File is too big!");
+            $(this)[0].value = "";
+            // console.log($(this)[0].value,$(this)[0].files)
+            $(this).siblings('span').text("Choose File")
+        } else {
+            $(this).siblings('span').text($(this).val().replace(/C:\\fakepath\\/i, ''))
+        };
+    })
+
+    $('.file-field input:file').on('change', function (e) {
+        // console.log(this)
+        $('.file-field span').text($(this).val().replace(/C:\\fakepath\\/i, ''))
+    })
+    // <!--  -->
+</script>
+<script>
+
+    var prevcamp_id = 0;
+    $(document).ready(function () {
+
+        $(document).on("click", ".show_camp", function () {
+
+            $(".first").hide();
+            $(".notebook").show();
+            prevcamp_id = '#show_camp' + prevcamp_id;
+            $(prevcamp_id).removeClass("activetr");
+            var camp_id = $(this).attr('camp_id');
+            $('#get_asset').attr('camp_asset_id', camp_id);
+            $('#get_scripts').attr('camp_script_id', camp_id)
+            prevcamp_id = camp_id;
+            var addclass = '#show_camp' + camp_id;
+            $(addclass).addClass("activetr");
+            token = getCookie('csrftoken');
+            $.ajax({
+                type: 'post',
+                url: '/client/ajax/get_camp_data/',
+                data: { 'id': camp_id, csrfmiddlewaretoken: token },
+                success: function (data) {
+                    $('#camp_name').text(data['name']);
+                    if (data['cpl'] === -1) { $('#camp_cpl').text('0'); }
+                    else { $('#camp_cpl').text(data['cpl']); }
+                    // $('#camp_cpl').text(data['cpl']);
+                    (data['volume'] != null) ? $('#camp_volume').text(data['volume']) : $('#camp_volume').text(0)
+
+                    if (data['rfq'] == 1) {
+                        $('#exp').show();
+                        $('#expiry_date').text('Expiry ' + data['rfq_timer']);
+                    }
+                    else {
+                        $('#exp').hide();
+                    }
+                    (data['camp_io'] == null) ? $('#camp_io').text(0) : $('#camp_io').text(data['camp_io'])
+
+                    $("#start_date").datepicker("option", "minDate", new Date(data['start_date']));
+                    $("#datepicker2").datepicker("option", "minDate", new Date(data['start_date']));
+                    $('#start_date').val('Start ' + data['start_date']);
+                    $('#datepicker2').val('End ' + data['end_date']);
+                    $('#camp_desc').val(data['desc']);
+                    $('#camp_intructions').val(data.special_instr);
+                    $('#specs_data').val(data.camp_id);
+                    $('#camp_id').val(data.camp_id);
+                    $('#chat_camp_id').val(data.camp_id);
+                    $('#sender_id').val(data.sender_id);
+                    if (data['nda'] == 1) {
+                        $('#nda_icon').removeClass('label bg-danger text-semibold');
+                      $('#nda_icon').text('Signed');
+                      $('#nda_icon').addClass('label bg-success text-semibold');
+                    }
+                    if (data['msa'] == 1) {
+
+                        $('#msa_icon').removeClass('label bg-danger text-semibold');
+                      $('#msa_icon').text('Signed');
+                      $('#msa_icon').addClass('label bg-success text-semibold');
+                    }
+                    if (data['gdpr'] == 1) {
+
+                        $('#gdpr_icon').removeClass('label bg-danger text-semibold');
+                      $('#gdpr_icon').text('Signed');
+                      $('#gdpr_icon').addClass('label bg-success text-semibold');
+                    }
+                    if (data['dpa'] == 1) {
+
+                        $('#dpa_icon').removeClass('label bg-danger text-semibold');
+                      $('#dpa_icon').text('Signed');
+                      $('#dpa_icon').addClass('label bg-success text-semibold');
+                    }
+                    if (data['io'] == 1) {
+
+                        $('#io_icon').removeClass('label bg-danger text-semibold');
+                      $('#io_icon').text('Signed');
+                      $('#io_icon').addClass('label bg-success text-semibold');
+                    }
+                    console.log(data.special_instr)
+                    //console.log(data.status)
+                    // if (load_chat_flag ==1)
+                    // {
+                    //     load_chat(data.camp_id)
+                    // }
+                    // else{
+                    //     load_chat_flag=1;
+                    // }
+                    load_chat(data.camp_id)
+                    append_vendors(data.camp_id)
+                },
+                failure: function (error) {
+                    alert("fail");
+                }
+            });
+            // $('#chat_box').empty()
+
+        });
+
+        $("#start_date").datepicker({
+            dateFormat: 'yy-mm-dd',
+            beforeShowDay: $.datepicker.noWeekends,
+            onSelect: function (date, instance) {
+
+
+                swal({
+                    title: "Are you sure? ",
+                    text: "You Really want to change Start Date?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                    .then((willDelete) => {
+                        if (willDelete) {
+                            //alert(start_date_change);
+
+                            token = getCookie('csrftoken');
+                            $.ajax
+                                ({
+                                    type: "Post",
+                                    url: "/client/update-campaign-start-date/",
+                                    data: { "date": date, 'camp_id': $('#camp_id').val(), csrfmiddlewaretoken: token },
+                                    success: function (result) {
+
+                                        console.log(result)
+                                        $('#start_date').val('Start ' + date);
+                                        swal("Campaign Start Date Updated Successfully..!!");
+                                    }
+                                });
+                        }
+                        else {
+                            swal("Campaign start date is unchanged!");
+                        }
+                    });
+
+            }
+        });
+        //appending vendor_list for chat box
+        function vendor_list() {
+
+        }
+        $("#specs_data").click(function () {
+            var camp_id = $(this).val();
+            token = getCookie('csrftoken');
+            $.ajax({
+                type: 'post',
+                url: '/client/ajax/get_camp_specs/',
+                data: { 'id': camp_id, csrfmiddlewaretoken: token },
+                success: function (data) {
+                    /*
+                        $('#target_quantity').val(data.target_quantity);
+                        $('#campaign_type').val(data.campaign_type);
+                        $('#outrich_method').val(data.outrich_method);
+                        $('#indursty_type').val(data.indursty_type);
+                        $('#job_title').val(data.job_title);
+                        $('#job_level').val(data.job_level);
+                        $('#assets').val(data.assets);
+                        $('#delivery_method').val(data.delivery_method);
+                        $('#country').val(data.country);
+                        $('#company_size').val(data.company_size);
+                        $('#data_field').val(data.data_field);
+                        $('#pacing').val(data.pacing)
+                        $('#instructions').text(data.instructions)
+                        $('#camp_spec_edit_id').attr('href', `/client/add_campaign_spec/${data.id}`)
+                    */
+                    console.log(data);
+
+                    // append to modal
+                    $("#modal_large").find(".modal-content").html(data);
+
+                },
+                failure: function (error) {
+                    alert("fail");
+                }
+            });
+
+
+        });
+        function dateDiff(date) {
+            start_date_change = 2;
+        }
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    });
+
+
+    //following code is use for fetch the assets data
+
+    $(document).on("click", "#get_asset", function () {
+
+        var camp_id = $(this).attr('camp_asset_id');
+        $("#campid").val(camp_id);
+        token = getCookie('csrftoken');
+        $.ajax({
+            type: 'post',
+            url: '/client/ajax/get_asset_specs/',
+            data: { 'id': camp_id, csrfmiddlewaretoken: token },
+            success: function (data) {
+                // console.log(data)
+                $('#campaign_name').text(data.name)
+                if (data.assets_name != 'None') {
+                    $('#assets_name').val(data.assets_name)
+                }
+                if (data.sponsers != 'None') {
+                    $('#sponsers').val(data.sponsers)
+                }
+                if (data.asset_distributor != 'None') {
+                    $('#asset_distributor').val(data.asset_distributor)
+                }
+                if (data.add_assetslink != 'None') {
+                    $('#add_assetslink').val(data.add_assetslink)
+                }
+                // printing assets file fields
+                $('#assets_holder').empty();
+
+                arr = data.assets.trim().split(',');
+                link_dict = data.assets_type
+                if (arr != 'None') {
+                    for (i = 0; i < arr.length; i++) {
+                        if (link_dict == 'None') {
+                            file_field(arr[i])
+                        }
+                        else {
+                            if (arr[i] in link_dict) {
+                                display_files_link(arr[i], link_dict)
+                            }
+                            else {
+                                file_field(arr[i])
+                            }
+                        }
+                    }
+                }
+                else {
+                    $('#assets_holder').append(`No assests found`)
+                }
+
+            },
+            failure: function (error) {
+                alert("fail");
+            }
+        });
+    });
+
+    $('#submit_assets').click(function (e) {
+        e.preventDefault()
+        token = getCookie('csrftoken');
+        let formData = new FormData($('#asset_form')[0])
+
+
+        $.ajax({
+            url: "/client/asset_submit/",
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                if (data.status_code == 1) {
+                    // $('#asset_modal').find('.close').click()
+                    $('#get_asset').trigger('click')
+                    swal("Assets Uploaded!", "", "success")
+                }
+                else {
+                    // $('#asset_modal').find('.close').click()
+                    $('#get_asset').trigger('click')
+                    swal("Oops!", "Something went wrong..!", "success")
+                }
+            }
+        });
+
+    })
+
+    function file_field(asset) {
+        $('#assets_holder').append(`
+            <div class="row">
+                <div class="col-sm-2">
+                    <label class="txt_asset label1" name="txt_asset">${asset}</label>
+                </div>
+                <div class="col-sm-4 choose">
+                    <div class="file-field file_div${asset}">
+                        <div class=" col-sm-10 btn btn-primary btn-sm file_btn float-left">
+                            <span>Choose file</span>
+                            <input class="file_asset"  type="file" name="${asset}" id="${asset}">
+                        </div>
+                    </div>
+                    <a href="#" class="col-sm-1" onclick="add_more_files($(this))" data-parent="${asset}"><i class="fa fa-plus"></i></a>
+                </div>
+                <div class="col-sm-1">
+                    <label class="label1">Link</label>
+                </div>
+                <div class="col-sm-4">
+                    <div class="link_div${asset} ">
+                        <input type="url" name="${asset}" class="link_field col-sm-10" id="${asset}" pattern="https://.*" placeholder="https://example.com" >
+                    </div>
+                    <a href="#" class="col-sm-1" onclick="add_more_link($(this))" data-parent="${asset}"><i class="fa fa-plus"></i></a>
+                </div>
+            </div>
+        `)
+    }
+
+    function display_files_link(asset, asset_dict) {
+        if (asset_dict[asset].link != undefined && asset_dict[asset].files != undefined) {
+            $('#assets_holder').append(`
+                <div class="row">
+                    <div class="col-sm-2">
+                        <label class="txt_asset label1" name="txt_asset">${asset}</label>
+                    </div>
+                    <div class="col-sm-4 ">
+                        ${print_files(asset_dict[asset].files, `file_div${asset}`, asset)}
+                        <div class="file-field file_div${asset}">
+                            <div class=" col-sm-10 btn btn-primary btn-sm file_btn float-left">
+                                <span>Choose file</span>
+                                <input class="file_asset"  type="file" name="${asset}" id="${asset}">
+                            </div>
+                        </div>
+                    <a href="#" class="col-sm-1" onclick="add_more_files($(this))" data-parent="${asset}"><i class="fa fa-plus"></i></a>
+                    </div>
+                    <div class="col-sm-1">
+                        <label class="label1">Link</label>
+                    </div>
+                    <div class="col-sm-4 ">
+                        ${print_links(asset_dict[asset].link, `link_div${asset}`, asset)}
+                        <div class="link_div${asset}">
+                            <input type="url" name="${asset}" class="link_field col-sm-10" id="${asset}" pattern="https://.*" placeholder="https://example.com" >
+                        </div>
+                        <a href="#" class="col-sm-1" onclick="add_more_link($(this))" data-parent="${asset}"><i class="fa fa-plus"></i></a>
+                    </div>
+                </div>
+            `)
+        }
+        else if (asset_dict[asset].link) {
+            $('#assets_holder').append(`
+                <div class="row">
+                    <div class="col-sm-2">
+                        <label class="txt_asset label1" name="txt_asset">${asset}</label>
+                    </div>
+                    <div class="col-sm-4 ">
+                        <div class="file-field file_div${asset}">
+                            <div class="col-sm-10 btn btn-primary btn-sm file_btn float-left">
+                                <span>Choose file</span>
+                                <input class=" file_asset" type="file" name="${asset}" id="${asset}">
+                            </div>
+                        </div>
+                        <a href="#" class="col-sm-1" onclick="add_more_files($(this))" data-parent="${asset}"><i class="fa fa-plus"></i></a>
+                    </div>
+                    <div class="col-sm-1">
+                        <label class="label1">Link</label>
+                    </div>
+                    <div class="col-sm-4">
+                        ${print_links(asset_dict[asset].link, `link_div${asset}`, asset)}
+                        <div class="link_div${asset}">
+                            <input type="url" name="${asset}" class="link_field col-sm-10" id="${asset}" pattern="https://.*" placeholder="https://example.com" >
+                        </div>
+                        <a href="#" class="col-sm-1" onclick="add_more_link($(this))" data-parent="${asset}"><i class="fa fa-plus"></i></a>
+                    </div>
+                </div>
+            `)
+        }
+        else if (asset_dict[asset].files) {
+            $('#assets_holder').append(`
+                <div class="row">
+                    <div class="col-sm-2">
+                        <label class="txt_asset label1" name="txt_asset">${asset}</label>
+                    </div>
+                    <div class="col-sm-4 file-field">
+                        ${print_files(asset_dict[asset].files, `file_div${asset}`, asset)}
+                        <div class="file-field file_div${asset}">
+                        <div class=" col-sm-10 btn btn-primary btn-sm file_btn float-left">
+                            <span>Choose file</span>
+                            <input class="file_asset"  type="file" name="${asset}" id="${asset}">
+                        </div>
+                    </div>
+                        <a href="#" class="col-sm-1"  onclick="add_more_files($(this))" data-parent="${asset}"><i class="fa fa-plus"></i></a>
+                    </div>
+                    <div class="col-sm-1">
+                        <label class="label1">Link</label>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="link_div${asset}">
+                            <input type="url" name="${asset}" class="link_field col-sm-10" id="${asset}" pattern="https://.*" placeholder="https://example.com" >
+                        </div>
+                        <a href="#" class="col-sm-1" onclick="add_more_link($(this))" data-parent="${asset}"><i class="fa fa-plus"></i></a>
+                    </div>
+                </div>
+            `)
+        }
+        else {
+            file_field(asset)
+        }
+    }
+    //
+
+    function add_more_link(obj) {
+        parent_div = obj.prev(`.link_div${obj.data('parent')}`)
+        parent_div.prepend(`<input type="url" name="${obj.data('parent')}" class="col-sm-10 link_field" id="${obj.data('parent')}" pattern="https://.*" placeholder="https://example.com" >
+        <a href="#" class="col-sm-1 remove_asset pull-right" data-url="" data-asset="${obj.data('parent')}"><i class="fa fa-close"></i></a>`)
+    }
+
+    function add_more_files(obj) {
+        parent_div = obj.prev(`.file_div${obj.data('parent')}`)
+        parent_div.prepend(`<div class="col-sm-10 btn btn-primary btn-sm file_btn float-left">
+                        <span>Choose file</span>
+                        <input class="file_asset" type="file" name="${obj.data('parent')}" id="${obj.data('parent')}">
+                    </div>
+                    <a href="#" class="col-sm-1 remove_file_asset" data-url="" data-asset="${obj.data('parent')}"><i class="fa fa-close"></i></a>`)
+    }
+
+    function print_links(links, container, asset) {
+        if (links.length == 1) {
+            return `<a href="${links[0]}" class="btn btn-primary file_btn" target="_blank">${links[0]}</a>
+            <a href="#" class="remove_asset pull-right" data-url="${links[0]}" data-asset=${asset}><i class="fa fa-close"></i></a>`
+        } else {
+            $div_ = $(`<div />`)
+            links.forEach(function (link) {
+                $div_.append(`<a href="${link}" class="btn btn-primary file_btn" target="_blank">${link}</a>
+                    <a href="#" class="remove_asset pull-right" data-url="${link}" data-asset=${asset}><i class="fa fa-close"></i></a>
+                                `)
+            })
+            return $div_.html()
+        }
+
+    }
+
+    function print_files(files, container, asset) {
+        if (files.length == 1) {
+            return `<a href="${files[0].url}" class="btn btn-primary file_btn" download>
+                    ${files[0].filename}</a>
+            <a href="#" class="remove_file_asset pull-right" data-url="${files[0].url}" data-asset=${asset}>
+            <i class="fa fa-close"></i></a>`
+        } else {
+            $div_ = $(`<div />`)
+            files.forEach(function (file) {
+                $div_.append(`<a href="${file.url}" class="btn btn-primary file_btn set" download>
+                    ${file.filename}</a>
+                    <a href="#" class="remove_file_asset pull-right" data-url="${file.url}" data-asset=${asset}>
+                        <i class="fa fa-close"></i></a>`)
+            })
+            return $div_.html()
+        }
+    }
+
+    $(document).on("click", ".remove_asset", function () {
+        console.log($(this).data('url'))
+        asset_type = $(this).data('asset')
+        camp_id = $('#campid').val()
+        token = getCookie('csrftoken');
+        if ($(this).data('url') != "") {
+            $.ajax({
+                url: "/client/remove_asset/",
+                type: "POST",
+                data: { 'camp_id': camp_id, 'asset': $(this).data('url'), 'asset_type': asset_type, 'csrfmiddlewaretoken': token },
+                success: function (data) {
+                    if (data.status_code == 1) {
+                        $('#get_asset').trigger('click')
+                        // $('#asset_modal').find('.close').click()
+                        swal("Assets Updated!", `${data.message}`, "success")
+                    }
+                    else {
+                        $('#get_asset').trigger('click')
+                        // $('#asset_modal').find('.close').click()
+                        swal("Oops!", "Something went wrong..!", "error")
+                    }
+                }
+            })
+        }
+        else {
+            $(this).prev('input').remove()
+            $(this).remove()
+        }
+    })
+
+    $(document).on("click", ".remove_file_asset", function () {
+        console.log($(this).data('url'))
+        asset_type = $(this).data('asset')
+        camp_id = $('#campid').val()
+        token = getCookie('csrftoken');
+        if ($(this).data('url') != "") {
+            $.ajax({
+                url: "/client/remove_file_asset/",
+                type: "POST",
+                data: { 'camp_id': camp_id, 'asset': $(this).data('url'), 'asset_type': asset_type, 'csrfmiddlewaretoken': token },
+                success: function (data) {
+                    if (data.status_code == 1) {
+                        $('#get_asset').trigger('click')
+                        // $('#asset_modal').find('.close').click()
+                        swal("Assets Updated!", `${data.message}`, "success")
+                    }
+                    else {
+                        $('#get_asset').trigger('click')
+                        // $('#asset_modal').find('.close').click()
+                        swal("Oops!", "Something went wrong..!", "error")
+                    }
+                }
+            })
+        }
+        else {
+            $(this).prev('div').remove()
+            $(this).remove()
+        }
+    })
+
+</script>
+
+
+<script>
+
+    function myFunction() {
+        $(".first").hide();
+        $(".notebook").show();
+        $("body").css("overflow", "hidden");
+    }
+    function myFunctionClose() {
+        $(".first").show();
+        $(".notebook").hide();
+    }
+    function myFunction1() {
+        $(".chat").hide();
+        $(".chat1").show();
+    }
+    function myFunction2() {
+        $(".chat1").hide();
+        $(".chat").show();
+    }
+
+    // $('#message').focus(function(){
+    //     $('#chat_box').removeClass('hidden')
+    // })
+
+    //loading chat into notebook
+    function load_chat(new_camp_id) {
+        var camp_id = new_camp_id
+        var sender_id = $('#sender_id').val();
+        // var msg_count = 0;
+        token = getCookie('csrftoken');
+        $.ajax({
+            url: "/client/get-campaign-chat/",
+            type: "POST",
+            data: { 'camp_id': camp_id, 'csrfmiddlewaretoken': token },
+            success: function (data) {
+                var chat_data = "";
+                if ($('#chat_box').children().length > 0) {
+                    $('#chat_box').html(`No Chat Records Found..!!`)
+                }
+                msg_count = data.length;
+                // console.log(msg_count)
+                for (var i = 0; i < data.length; i++) {
+                    if (sender_id != data[i].sender_id) {
+
+                        if (data[i].message != '0') {
+                            chat_data += '<li class="media"><div class="media-left"><a href="' + data[i].profilepic + '"><img src="' + data[i].profilepic + '" class="img-circle img-md" title="' + data[i].sender_name + '" alt=""></a></div><div class="media-body"><div class="media-content bg-slate">' + data[i].message + '</div><span class="media-annotation display-block mt-10">' + data[i].time + ' <a href="#"><i class="icon-pin-alt position-right text-muted"></i></a></span></div></li>';
+                        } else {
+                            chat_data += '<li class="media"><div class="media-left"><a href="' + data[i].profilepic + '"><img src="' + data[i].profilepic + '" class="img-circle img-md" title="' + data[i].sender_name + '" alt=""></a></div><div class="media-body"><div class="media-content bg-slate"><a href="/' + data[i].media + '" ><img src="/static/assets/images/download.png" width="145" height="125" alt=""><br>' + data[i].title + '</a></div><span class="media-annotation display-block mt-10">' + data[i].time + ' <a href="#"><i class="icon-pin-alt position-right text-muted"></i></a></span></div></li>';
+                        }
+
+                    }
+                    else {
+
+                        if (data[i].message != '0') {
+                            chat_data += '<li class="media reversed"><div class="media-body"><div class="media-content">' + data[i].message + '</div><span class="media-annotation display-block mt-10">' + data[i].time + ' <a href="#"><i class="icon-pin-alt position-right text-muted"></i></a></span></div><div class="media-right"><a href="' + data[i].profilepic + '"><img src="' + data[i].profilepic + '"  class="img-circle img-md" alt="" title="' + data[i].sender_name + '"></a></div></li>';
+                        } else {
+
+                            chat_data += '<li class="media reversed"><div class="media-body"><div class="media-content"><a href="/' + data[i].media + '" download><img src="/static/assets/images/download.png" width="145" height="125" alt=""><br>' + data[i].title + '</a></div><span class="media-annotation display-block mt-10">' + data[i].time + ' <a href="#"><i class="icon-pin-alt position-right text-muted"></i></a></span></div><div class="media-right"><a href="' + data[i].profilepic + '"><img src="' + data[i].profilepic + '" class="img-circle img-md" title="' + data[i].sender_name + '" alt=""></a></div></li>';
+                        }
+
+                    }
+                    $('#chat_box').animate({ scrollTop: $('#chat_box').prop("scrollHeight") }, 50);
+                    $('#chat_box').html(chat_data);
+                    $('#chat_camp_id').val(camp_id);
+                }
+            }
+        });
+    }
+
+    //send attachment js
+    $('#chat_attach_form').submit(function (e) {
+        e.preventDefault()
+        token = getCookie('csrftoken');
+        var formData = new FormData($('#chat_attach_form')[0])
+        if ($('#chat_vendor_list').val() != null){
+        $('#load').empty();
+        $('#load').append("<i class='fa fa-spinner fa-spin '></i> Processing");
+        $("#load").attr("disabled", true);
+        $.ajax({
+            url: "/client/ajax/send_attchment/",
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                alert("Attachment sent!...");
+                $('#chat_file_name').text('Browse');
+                $('#chat_attach_form')[0].reset();
+                $('#chat_attach_modal .close').click();
+                $('.multiselect-select-all').multiselect('refresh');
+                $('#load').empty();
+                $('#load').append("SEND");
+                $("#load").attr("disabled", false);
+            }
+        })
+      }else{
+        alert("Please select receiver!")
+      }
+    });
+
+    // appending vendor list
+    function append_vendors(camp_id) {
+
+        token = getCookie('csrftoken');
+        $.ajax({
+            url: "/client/get-vendor-list/",
+            type: "POST",
+            data: { 'camp_id': camp_id, 'csrfmiddlewaretoken': token },
+            success: function (data) {
+                $('#assigend_vendors').empty()
+                if (data.length) {
+                    $list = $('<ul />');
+                    if (data.length == 1) {
+                        $('#assigend_vendors').append(data[0].vendor_name)
+                    }
+                    else {
+                        $('#assigend_vendors').append('Multiple')
+                    }
+                    var $select = $('.multiselect-select-all').empty();
+                    
+                    if ($('#vendor_list').children().length == 2) {
+                        $select.append(`<option value="3">Superadmin</option>`);
+                        data.forEach(function (vendor) {
+                            $('#vendor_list').append(`<li>
+                            <a href="#"><input type="checkbox" name="vendor_names" class="vendor_names" value="${vendor.id}" data-vendor-name="${vendor.vendor_name}"/>
+                                                                                        ${vendor.vendor_name}</a></li>`)
+                            $select.append(`<option value="${vendor.id}">${vendor.vendor_name}</option>`);
+                            $list.append(`<li style="text-transform: capitalize;">${vendor.vendor_name}</li>`)
+                        })
+                        $('.multiselect-select-all').multiselect('rebuild');
+
+                    } else {
+
+                        $('#vendor_list').empty()
+                        $('.Assigned_list').empty()
+                        $list.empty()
+                        $select.empty()
+                        $select.append(`<option value="3">Superadmin</option>`);
+                        $('#vendor_list').append(`<li><a href="#"><input type="checkbox" id="allcheck" class="default" value="0" />All</a></li>`)
+                        $('#vendor_list').append(`<li><a href="#"><input type="checkbox" name="vendor_names" class="default" value="3" />Superadmin</a></li>`)
+                        data.forEach(function (vendor) {
+                            // console.log(vendor)
+                            $select.append(`<option value="${vendor.id}">${vendor.vendor_name}</option>`);
+                            $('#vendor_list').append(`<li>
+                            <a href="#"><input type="checkbox" name="vendor_names" class="vendor_names" value="${vendor.id}" data-vendor-name="${vendor.vendor_name}"/>
+                                                                                        ${vendor.vendor_name}</a></li>`)
+                            $list.append(`<li style="text-transform: capitalize;">${vendor.vendor_name}</li>`)
+                        })
+                        $('.multiselect-select-all').multiselect('rebuild');
+                    }
+                    $('.Assigned_list').append($list)
+                } else {
+                    // $('#vendor_list').empty()
+                    $('.Assigned_list').empty()
+                    $('.Assigned_list').append('No Vendors connections')
+                    $('#assigend_vendors').append('No Vendors')
+                }
+
+            }
+
+        });
+    }
+    //
+    // <!-- select vendor -->
+    $(document).on('change', 'input[name="vendor_names"]', function () {
+        console.log(this)
+        if (this.checked) {
+            if ($('#message').val() == '@') {
+                $('#message').val(`${$(this).attr('data-vendor-name')}:`)
+                $('#message').focus()
+            }
+            else {
+                vendor = `${$(this).attr('data-vendor-name')}`
+                $('#message').val(function (index, val) {
+                    return val.replace('@', `${vendor}:`);
+                })
+                $('#message').focus()
+
+            }
+
+        }
+    });
+    //
+    // <!-- datatables -->
+    $('#Client_live_campaign_table').DataTable({
+        // "paging": false,
+        "ordering": false,
+        // "lengthMenu": [[5,10]],
+        // "info": false,
+        "scrollX": false,
+        //"searching": false,
+        "columnDefs": [
+            { "width": "1%", "targets": 0 },
+            { "width": "19%", "targets": 1 },
+            { "width": "55%", "targets": 2 },
+            { "width": "25%", "targets": 3 },
+
+        ]
+    });
+    $('#side_tabel_campaign_notebook').DataTable({
+        // "paging": false,
+        "ordering": false,
+        // "lengthMenu": [[5,10]],
+        // "info": false,
+        "scrollX": false,
+        //"searching": false,
+
+    });
+    //
+    $('[data-toggle=tooltip]').tooltip();
+</script>
+<!--this script use to Date Pick-->
+
+<!-- script modal js -->
+<script>
+
+
+    $("#get_scripts").click(function () {
+        var camp_id = $(this).attr('camp_script_id');
+        $("#camp_script_id").val(camp_id)
+        token = getCookie('csrftoken');
+        $.ajax({
+            type: 'post',
+            url: '/client/ajax/get_scripts/',
+            data: { 'id': camp_id, csrfmiddlewaretoken: token },
+            success: function (data) {
+                console.log(data.url)
+                if (data.url != undefined) {
+
+                    $('#script_form').css('display', 'none')
+                    $('#script_link').removeClass('hidden')
+                    $('#script_link').attr('href', data.url)
+                    // alert(jQuery.type(data.url))
+                }
+                else {
+                    $('#script_form').css('display', 'block')
+                    $('#script_link').addClass('hidden')
+                    $('#script_link').removeAttr('href')
+                    $('.file-field .file-path').val('')
+                }
+            },
+            failure: function (error) {
+                alert("fail");
+            }
+        });
+    });
+    $('#script_form').submit(function (e) {
+        e.preventDefault()
+        token = getCookie('csrftoken');
+        var formData = new FormData($('#script_form')[0])
+        $.ajax({
+            url: "/client/script_submit/",
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                if (data.status == 1) {
+                    $('#scripts_modal').find('.close').click()
+                    swal("Script Uploaded!", "", "success")
+                }
+                else {
+                    $('#scripts_modal').find('.close').click()
+                    swal("Oops!", "Something went wrong..! Please upload a valid file.", "error")
+                }
+            }
+        })
+    })
+    var table
+    $('#Client_live_campaign_table').on('click', '.more', function () {
+        if ($(this).parent().find('.more_details').hasClass('hidden')) {
+            $(document).find('.more_details').addClass('hidden')
+            $(this).parent().find('.more_details').removeClass('hidden')
+            table = $(this).parent().find('.more_details').find('#vendor_table_' + $(this).data('id'))
+            campaign_id = $(this).data('id')
+
+            // getting expiry time
+            // rfq_timer = $(this).data('rftime')
+            $.ajax({
+                type: 'get',
+                url: '/client/get_cpl_list/',
+                data: { camp_id: $(this).data('id') },
+                success: function (data) {
+                    det = data.details[0]
+                    // console.log(data)
+                    // alert(data.rfq_timer)
+                    // calling rfq timer
+                    timer(campaign_id, data.rfq_timer)
+
+                    $(`#instruction_${campaign_id}`).text(det.special_instructions)
+                    $(`#jod_title_${campaign_id}`).text(det.job_title_function)
+                    $(`#industry_${campaign_id}`).text(det.industry_type)
+                    if (det.abm == 1) {
+                        $(`#abm_status_${campaign_id}`).html(`<input class="styled-checkbox" id="styled-checkbox-1" type="checkbox" disabled checked>
+                                                                <label for="styled-checkbox-1"></label>`)
+                    } else {
+                        $(`#abm_status_${campaign_id}`).html(`<input class="styled-checkbox" id="styled-checkbox-1" type="checkbox" disabled >
+                                                                <label for="styled-checkbox-1"></label>`)
+
+                    }
+                    if (det.suppression == 1) {
+                        $(`#suppression_${campaign_id}`).html(`<input class="styled-checkbox" id="styled-checkbox-1" type="checkbox" disabled checked>
+                                                                <label for="styled-checkbox-1"></label>`)
+                    } else {
+                        $(`#suppression_${campaign_id}`).html(`<input class="styled-checkbox" id="styled-checkbox-1" type="checkbox" disabled >
+                                                                <label for="styled-checkbox-1"></label>`)
+
+                    }
+                    update_vendor_list(data.ext_vendor_list, table, data.tc_quote, data.vendor_data)
+
+                    $(".div_loader").fadeOut("slow");
+                },
+                failure: function (error) {
+                }
+            });
+        } else {
+            $(this).parent().find('.more_details').addClass('hidden')
+        }
+    })
+
+    $('.close_div').click(function () {
+        $(this).parents('.more_details').addClass('hidden')
+    })
+
+    function hover() {
+        if (event.type == 'mouseover') {
+            $(".div_list").css("visibility", "visible");
+            $(".div_list").css("z-index", "1");
+        }
+        if (event.type == 'mouseout') {
+            $(".div_list").css("visibility", "hidden");
+            // $(".div_list").css("z-index", "1");
+
+        }
+    };
+
+    function update_vendor_list(data, table, tc_quote, vendor_data) {
+        if (data != "[]") {
+            var dataTab = $.parseJSON(JSON.stringify(data));
+            var tabindex
+            outterArray = [];
+            if (vendor_data.length > 0) {
+                var VendorData = $.parseJSON(JSON.stringify(vendor_data));
+                $('.div_list').empty()
+                $QVlist = $('<ul class="qvlist" />');
+                $.each(VendorData, function (index, value) {
+                    $QVlist.append(`<li style='text-transform: capitalize;'>${value.vendor_name}</li>`)
+                })
+                $('.div_list').append($QVlist)
+                // console.log($QVlist.html())
+            }
+            if (tc_quote.length > 0) {
+                var TCdata = $.parseJSON(JSON.stringify(tc_quote));
+                $.each(TCdata, function (index, value) {
+                    tabindex = index + 1
+                    let id = tabindex
+                    let name = ` <label class="tc_team_list" onMouseOver=hover($(this)) onMouseOut=hover($(this))>${value.name}</label>
+                                    `
+                    let cpl = `$<label class="edit_block" id="cpl_${value.id}">${value.cpl}</label>`
+                    let volume = `<label class="edit_block" id="volume_${value.id}">${value.volume}</label>`
+                    let action = `<div>
+                                    <button class="btn btn-xs btn-success main" id="1" onclick="rfqcpl($(this))" data-id="${value.id}">Accept</button>
+                                    <button class="btn btn-xs btn-primary main"  onclick="update($(this))" data-id="${value.id}">Counter</button>
+                                    <button class="btn btn-xs btn-danger main" id="3" onclick="rfqcpl($(this))" data-id="${value.id}">Reject</button>
+                                    <button class="btn btn-xs btn-success second hidden" id="2" onclick="rfqcpl($(this))" data-id="${value.id}">Submit</button>
+                                    <button class="btn btn-xs btn-default second hidden" onclick="cancel($(this))">Close</button>
+                                </div>`
+                    let innerArray = [id, name, cpl, volume, action];
+                    outterArray.push(innerArray);
+                })
+            }
+
+            $.each(dataTab, function (index, value) {
+                tabindex = tabindex + 1
+                let id = tabindex > 0 ? tabindex : index + 1
+                let name = value.name
+                let cpl
+                if (value.cpl == null) {
+                    cpl = `<label class="">Pending</label>`
+                } else {
+                    cpl = `$<label class="edit_block" id="cpl_${value.id}">${value.cpl}</label>`
+                }
+                let volume
+                if (value.volume == null) {
+                    volume = `<label class="">Pending</label>`
+                } else {
+                    volume = `<label class="edit_block" id="volume_${value.id}">${value.volume}</label>`
+                }
+
+                let action = `<div>
+                                <button class="btn btn-xs btn-warning main " onclick="update($(this))">Update</button>
+                                <button class="btn btn-xs btn-success main" onclick="allocate($(this))" data-id="${value.id}">Assign</button>
+                                <button class="btn btn-xs btn-success second hidden" onclick="allocate($(this))" data-id="${value.id}">Submit</button>
+                                <button class="btn btn-xs btn-default second hidden" onclick="cancel($(this))">Close</button>
+                            </div>`
+                let innerArray = [id, name, cpl, volume, action];
+                outterArray.push(innerArray);
+            });
+
+            table.dataTable({
+                "destroy": true,
+                // "bProcessing": true,
+                "aaData": outterArray,
+                "aoColumns": [
+                    { "sTitle": "ID" },
+                    { "sTitle": "Vendor Name" },
+                    { "sTitle": "V-CPL" },
+                    { "sTitle": "Volume" },
+                    { "sTitle": "Action" },
+                ],
+                "bPaginate": false,
+                "bFilter": false,
+                "bInfo": false,
+                // "columnDefs": [
+                //     { "width": "10%", "targets": 0 },
+                // ],
+            })
+        }
+
+    }
+    // to update values of cpl and volumes
+    function update(data) {
+        data.closest('tr').find('.edit_block').each(function () {
+            $(this).hide()
+            $(this).parent().append(`<span class="edit_box" contenteditable=true> ${$(this).text()} </span>`)
+        })
+        data.closest('tr').find('.main').each(function () {
+            $(this).addClass('hidden')
+        })
+        data.closest('tr').find('.second').each(function () {
+            $(this).removeClass('hidden')
+        })
+    }
+
+    // to close the update process
+    function cancel(data) {
+        data.closest('tr').find('.edit_block').each(function () {
+            text = $(this).parent().find('span').text().trim(' ')
+            $(this).text(`${text}`)
+            $(this).parent().find('span').remove()
+            $(this).show()
+        })
+        data.closest('tr').find('.second').each(function () {
+            $(this).addClass('hidden')
+        })
+        data.closest('tr').find('.main').each(function () {
+            $(this).removeClass('hidden')
+        })
+    }
+
+    // to allocate leads to vendor
+    function allocate(obj) {
+        obj.closest('tr').find('.edit_block').each(function () {
+            if ($(this).is(':hidden')) {
+                text = $(this).parent().find('span').text().trim(' ')
+                $(this).text(`${text}`)
+                $(this).parent().find('span').remove()
+                $(this).show()
+            }
+        })
+        var vendor_id = obj.data('id')
+        var camp_id = obj.parents('.more_details').data('camp_id')
+        var cpl = parseInt($(`#cpl_${vendor_id}`).text().split(' ')[1])
+        var volume = parseInt($(`#volume_${vendor_id}`).text());
+        var remaininglead = parseInt(obj.parents('.more_details').find(`#campaign_remaining_leads_${camp_id}`).text())
+        // var client_cpl = parseInt(obj.parents('.more_details').find(`#campaign_cpl_${camp_id}`).text())
+        var target_quantity = parseInt(obj.parents('.more_details').find(`#campaign_target_${camp_id}`).text())
+        // var admincpl = client_cpl - (cpl-(client_cpl*25/100));
+        token = getCookie('csrftoken');
+        if (remaininglead >= volume) {
+            remaininglead = remaininglead - volume
+            if (volume <= target_quantity && remaininglead <= target_quantity) {
+                $.ajax({
+                    type: 'post',
+                    url: '/superadmin/rfq_cpl_LeadAllocation_external/',
+                    data: {
+                        'remaininglead': remaininglead, 'vendorlead': volume, 'vendorcpl': cpl,
+                        'camp_id': camp_id, 'vendor_id': vendor_id, csrfmiddlewaretoken: token
+                    },
+                    success: function (data) {
+                        if (data.success == 1) {
+                            swal({
+                                title: "Lead Allocation", text: "CPL and Lead successfully allocated to vendor", type:
+                                    "success"
+                            }).then(function () {
+                                location.reload();
+                            });
+
+                        }
+                    },
+                    failure: function (error) {
+
+                        swal({
+                            title: "Vendor Allocation",
+                            text: "Data not found!",
+                            icon: "warning",
+                        });
+
+                    }
+                });
+            }
+            else {
+                swal({
+                    title: "Vendor Allocation",
+                    text: "Please check cpl and lead!",
+                    icon: "warning",
+                });
+            }
+
+        } else {
+            swal({
+                title: "Vendor Allocation",
+                text: "Volume is greater than leads..!!",
+                icon: "warning",
+            });
+        }
+
+    }
+
+    function rfqcpl(obj) {
+        obj.closest('tr').find('.edit_block').each(function () {
+            if ($(this).is(':hidden')) {
+                text = $(this).parent().find('span').text().trim(' ')
+                $(this).text(`${text}`)
+                $(this).parent().find('span').remove()
+                $(this).show()
+            }
+        })
+        var vendor_id = obj.data('id')
+        var choose = parseInt(obj.attr('id'));
+        var camp_id = obj.data('id')
+        var cpl = parseInt($(`#cpl_${vendor_id}`).text())
+        var volume = parseInt($(`#volume_${vendor_id}`).text());
+        var remark = ''
+        token = getCookie('csrftoken');
+        if (choose == 2) {
+            swal({
+                // content: "input",
+                // showCancelButton: true,
+                title: "Remark !",
+                text: "Enter reason for counter.",
+                content: "input",
+                buttons: true,
+                inputPlaceholder: "Write something"
+            })
+                .then((inputValue) => {
+                    if (inputValue) {
+                        $.ajax({
+                            type: 'post',
+                            url: '/client/update_status_rfq/',
+                            data: { csrfmiddlewaretoken: token, 'camp_id': camp_id, 'volume': volume, 'cpl': cpl, 'choose': choose, 'remark': inputValue },
+                            success: function (data) {
+                                if (data.success == 1) {
+
+                                    swal({
+                                        title: "RFQ CPL", text: data.msg, type:
+                                            "success", icon: "success"
+                                    }).then(function () {
+                                        location.reload();
+                                    });
+                                }
+                            },
+                            failure: function (error) {
+
+                            }
+                        });
+
+                    } else {
+                        swal("Please Enter Remark..!!");
+                    }
+                });
+        } else {
+            swal({
+                title: "Are you sure?",
+                text: "Once Submit Actions,Data will save successfully!..",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        $.ajax({
+                            type: 'post',
+                            url: '/client/update_status_rfq/',
+                            data: { csrfmiddlewaretoken: token, 'camp_id': camp_id, 'volume': volume, 'cpl': cpl, 'choose': choose, 'remark': remark },
+                            success: function (data) {
+                                if (data.success == 1) {
+
+                                    swal({
+                                        title: "RFQ CPL", text: data.msg, type:
+                                            "success", icon: "success"
+                                    }).then(function () {
+                                        location.reload();
+                                    });
+                                }
+                            },
+                            failure: function (error) {
+
+                            }
+                        });
+
+                    } else {
+                        swal("Data Keep as it is ...!");
+                    }
+                });
+        }
+
+
+    };
+
+
+</script>

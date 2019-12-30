@@ -1,0 +1,74 @@
+#kaban {
+  float:left;position:relative;width:100%;ax-width:100%;height:auto;
+}
+#scroller {float:left;position:relative;width:100%;max-width:100%;height:auto;overflow:auto;}
+#boards {/* float:left; *//* position:relative; *//* width:auto; *//* height:auto; *//* margin-bottom:30px; */}
+
+.board {float:left;position:relative;width: 100%;height:auto;/* min-height: 96px; *//* margin:8px; */background-color: #f3f3f3;border-radius:3px;border: 1px solid #4eb6c3b3;box-shadow: 0px 2px 3px #ddd;}
+.board header {float:left;width:100%;padding:.5em;background-color:lightgray;text-transform:uppercase;border-radius:3px 3px 0 0;}
+
+#board1 header {background-color:#BC3425;color:white}
+#board2 header {background-color: #32c1e3;color:white;}
+#board3 header {background-color: #32c1e3;color:white;}
+
+#board3
+{
+  border: 1px dashed #4eb6c3b3;
+}
+
+.cards {list-style-type:none;float:left;width:100%;padding: 8px 12px;/* min-height: 474px; */min-height: calc(75vh);}
+.card {border: 1px solid #80808017;float:left;width:100%;height:auto;background-color:white;padding:10px;margin:4px 0;border-radius:3px;box-shadow:1px 1px 1px rgba(0,0,0,.2);cursor:move;cursor:-webkit-grab;cursor:-moz-grab;cursor:grab;}
+.cardtitle {float:left;width:100%;}
+.cards .is-moving {background-color:white;color:black}
+
+
+.noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+
+.gu-mirror {
+  cursor:move; cursor:-webkit-grabbing; cursor:-moz-grabbing; cursor:grabbing;
+  position: fixed !important;
+  margin: 0 !important;
+  z-index: 9999 !important;
+  opacity: 1;
+  -webkit-transform: rotate(5deg);
+  transform: rotate(5deg);
+}
+.gu-hide {
+  display: none !important;
+}
+.gu-unselectable {
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+}
+.gu-transit {
+  opacity: 0.4;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
+  filter: alpha(opacity=20);
+}
+
+#board3 .card {
+  border: 1px solid #32c1e380;
+  float: left;
+  width: 100%;
+  height: auto;
+  background-color: white;
+  padding: 4px;
+  /* margin: 4px 10px; */
+  border-radius: 3px;
+  box-shadow: 1px 2px 2px #dddddd94;
+}
+
+#board3 .beefup
+{
+  border:none;
+}

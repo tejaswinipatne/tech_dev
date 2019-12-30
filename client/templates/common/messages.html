@@ -1,0 +1,15 @@
+<script>
+{% for message in messages %}
+$(document).ready(function() {
+    $.pnotify({
+        title: '{{ message.tags|upper }}',
+        text: '{{ message }}.',
+        type: '{{ message.tags }}',
+        hide: false,
+        styling: 'bootstrap',
+        closer_hover: false,
+        sticker_hover: false
+    });
+});
+{% endfor %}
+</script>

@@ -1,0 +1,419 @@
+{% extends "header/header.html" %}
+
+{% block content %}
+<!-- Main sidebar -->
+{% include "side/clientside.html" %}
+{% load static %}
+<style>
+.modules_div li{
+    list-style-type: none;
+}
+.panel {
+    margin:10px!important;
+    padding: 1px!important;
+}
+.content {
+    margin:10px!important;
+    padding: 1px!important;
+}
+.panel-group{
+    margin:0px!important;
+    padding: 1px!important;
+}
+.panel-group div{
+    padding: 5px!important;
+}
+.usertype_panel{
+    background-color: #dddddd4d !important;
+
+}
+.panel-heading{
+    background-color: #dddddd4d !important;
+}
+</style>
+
+
+<!-- Main content -->
+<div class="content-wrapper">
+    <!-- Content area -->
+    <div class="panel content" style="margin:10px;">
+        <div class="panel-group" id="accordion">
+                {% for usertype in type %}
+                    {% if usertype.type != 'client_vendor' and usertype.type != 'superadmin' %}
+                    {% if users|length != 0 %}
+                    <div class="panel panel-default usertype_panel">
+                        <div class="panel-heading " id="{{usertype.type}}_access" data-toggle="collapse" data-target="#{{usertype.type}}"
+                            aria-expanded="true" aria-controls="{{usertype.type}}">
+                            <h6 class="panel-title">
+
+                                {{usertype.type|title}}
+                            </h6>
+                        </div>
+                        <div id="{{usertype.type}}" class="collapse " aria-labelledby="{{usertype.type}}_access" data-parent="#accordion">
+                            <div class="panel-body">
+                                <div class="col-md-12">
+                                    <div class="col-md-6"> {{usertype.type|title}} Modules</div>
+                                    <div class="col-md--6 pull-right">
+                                        <select class="browser-default user_selector custom-select" id="{{usertype.type}}_selector">
+                                            <option selected>Select User</option>
+                                            {% for user in users %}
+                                            {% if user.usertype.type == usertype.type %}
+                                            <option value="{{user.id}}" data-usertype-id="{{user.usertype.id}}" data-usertype="{{user.usertype.type}}">{{user.user_name}}</option>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 modules_div {{usertype.type}}_div">
+                                    <!-- <ul>
+                                            {% for module in roles %}
+
+                                                    {% if module.parent == None  and module.user_type.type == usertype%}
+                                                    <li>{{module.name}}</li>
+                                                    <ul>
+                                                    {% for sub in roles %}
+                                                            {% if module.id == sub.parent.id %}
+                                                            <li>{{sub.name}}</li>
+                                                            {% endif %}
+                                                    {% endfor %}
+                                                    </ul>
+                                                    {% endif %}
+                                            {% endfor %}
+                                            </ul> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {% endif %}
+                    {% endif %}
+                {% endfor %}
+                {% for group in groups %}
+                {% if group.group_users.all|length != 0 %}
+                <div class="panel panel-default usertype_panel">
+                        <div class="panel-heading " id="{{group.id}}_access" data-toggle="collapse" data-target="#{{group.id}}"
+                            aria-expanded="true" aria-controls="{{group.id}}">
+                            <h6 class="panel-title">
+
+                                {{group.group_name|title}}
+                            </h6>
+                        </div>
+                        <div id="{{group.id}}" class="collapse " aria-labelledby="{{group.id}}_access" data-parent="#accordion">
+                            <div class="panel-body">
+                                <div class="col-md-12">
+                                    <div class="col-md-6"> {{group.group_name|title}} Group</div>
+                                    <div class="col-md--6 pull-right">
+                                        <select class="browser-default user_selector custom-select" id="{{group.id}}_selector" data-group-id="{{group.id}}">
+                                            <option selected>Select User</option>
+                                            {% for user in group.group_users.all %}
+                                            <option value="{{user.id}}" data-usertype-id="{{user.usertype.id}}"  data-usertype="{{user.usertype.type}}">{{user.user_name}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 modules_div {{group.id}}_div">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                {% endfor %}       
+        </div>
+    </div>
+    <!-- /content area -->
+
+</div>
+<!-- /main content -->
+
+</div>
+<!-- /page content -->
+
+</div>
+<!-- /page container -->
+<script>
+    $("#user_access").addClass("active");
+
+    $(document).ready(function(){
+        if($('#accordion').find('.panel-default').length == 0){
+            $('#accordion').append(`<div class="panel panel-default">
+                <h6 class="panel-title"> No Users to manage</h6>
+            </div>`)
+        }
+    })
+
+    $('.user_selector').change(function(){
+        console.log($(this).val())
+        userid = $(this).val()
+        type = $(this).find(':selected').data('usertype')
+        groupid = $(this).data('group-id')
+        token=getCookie('csrftoken');
+        $.ajax({
+            type: "POST",
+            url: "/client/get_user_access/",
+            data: {'userid':userid,'groupid':groupid,'usertype_id':$(this).find(':selected').data('usertype-id'),csrfmiddlewaretoken: token},
+            success: function (result) {
+                console.log(result.user_roles)
+                dataTab = result.user_roles
+                $main_menu = $('<ul />')
+                $(`.${type}_div`).empty()
+                $(`.${groupid}_div`).empty()
+                if (type){
+                    dataTab.forEach(main => {
+                        // console.log(main)
+                        if(main.parent == null && main.usertype == type){
+                            $main_menu.append(`<li class="parent_${main.id}" id="${main.id}"> ${set_checkbox(main)}</li>`)
+                            $sub_menu = $('<ul />')
+                            dataTab.forEach(sub => {
+                                if (main.id == sub.parent){
+                                    $sub_menu.append(`<li class="child_${main.id}" id="${sub.id}"> ${set_checkbox(sub)}</li>`)
+                                } 
+                            });
+                            $main_menu.append($sub_menu)
+                        }
+                    });
+                    $(`.${type}_div`).html($main_menu)
+                    $(`.${type}_div`).append(`<label id> `)
+                }
+                if (groupid){
+                    dataTab.forEach(main => {
+                        // console.log(main)
+                        if(main.parent == null && main.groupid == groupid){
+                            $main_menu.append(`<li class="parent_${main.id}" id="${main.id}"> ${set_checkbox(main)}</li>`)
+                            $sub_menu = $('<ul class="col-md-12" />')                            
+                            dataTab.forEach(sub => {
+                                if (main.id == sub.parent){
+                                    child_ids = []
+                                    $sub_child_list = $('<ul  />')
+                                    dataTab.forEach(sub_child => {
+                                        if(sub.id == sub_child.parent){
+                                            $sub_child_list.append(`<li class="sub_child_${sub.id}" data-parent-id="${sub.id}" id="sub_child_id_${sub_child.id}"> ${set_grand_child_checkbox(sub_child)}</li>`)
+                                            child_ids.push(sub_child.id)
+                                        }
+                                    });
+                                    if (child_ids.includes(sub.id) == false){
+                                        $sub_menu.append(`<li class="child_${main.id}" id="${sub.id}"> ${set_checkbox(sub)}</li>`)
+                                    }
+                                    if ($sub_child_list.find('li').length > 0){
+                                        $sub_menu.find(`#${sub.id}`).append($sub_child_list)
+                                        $sub_menu.find(`#${sub.id}`).attr('data-child-id',`${child_ids}`)
+                                    }
+                                }
+                            });
+                            $main_menu.append($sub_menu)
+                        }
+                    });
+                    $(`.${groupid}_div`).html($main_menu)
+                    $(`.${groupid}_div`).append(`<label id> `)
+                }
+            }
+        });
+
+    })
+
+    function set_checkbox(data){
+        if(data.checked == '1'){
+            if (data.parent == null){
+                checkbox = `<div class="custom-control  main_menu custom-checkbox">
+                    <label class="custom-control-label" >
+                    <input type="checkbox" class="parent custom-control-input" name="grant_access" id="${data.id}" checked>
+                    ${data.name}</label>
+                </div>`
+            } else {
+                checkbox = `<div class="custom-control  main_menu custom-checkbox">
+                    <label class="custom-control-label" >
+                    <input type="checkbox" class="custom-control-input" name="child_grant_access" id="${data.id}" checked>
+                    ${data.name}</label>
+                </div>`
+            }
+        } else {
+            if (data.parent == null){
+                checkbox = `<div class="custom-control  main_menu custom-checkbox">
+                    <label class="custom-control-label" >
+                    <input type="checkbox" class="parent custom-control-input" name="grant_access" id="${data.id}">
+                    ${data.name}</label>
+                </div>`
+            } else {
+                checkbox = `<div class="custom-control  main_menu custom-checkbox">
+                    <label class="custom-control-label" >
+                    <input type="checkbox" class="custom-control-input" name="child_grant_access" id="${data.id}">
+                    ${data.name}</label>
+                </div>`
+            }
+        }
+        return checkbox
+    }
+
+    function set_grand_child_checkbox(data){
+        if(data.checked == '1'){
+            if (data.parent == null){
+                checkbox = `<div class="custom-control  main_menu custom-checkbox">
+                    <label class="custom-control-label" >
+                    <input type="checkbox" class="parent custom-control-input" name="" id="${data.id}" checked>
+                    ${data.name}</label>
+                </div>`
+            } else {
+                checkbox = `<div class="custom-control  main_menu custom-checkbox">
+                    <label class="custom-control-label" >
+                    <input type="checkbox" class="custom-control-input" name="grand_child_grant_access"  data-parent="${data.parent}" id="${data.id}" checked>
+                    ${data.name}</label>
+                </div>`
+            }
+        } else {
+            if (data.parent == null){
+                checkbox = `<div class="custom-control  main_menu custom-checkbox">
+                    <label class="custom-control-label" >
+                    <input type="checkbox" class="parent custom-control-input" name="" id="${data.id}">
+                    ${data.name}</label>
+                </div>`
+            } else {
+                checkbox = `<div class="custom-control  main_menu custom-checkbox">
+                    <label class="custom-control-label" >
+                    <input type="checkbox" class="custom-control-input" name="grand_child_grant_access"  data-parent="${data.parent}" id="${data.id}">
+                    ${data.name}</label>
+                </div>`
+            }
+        }
+        return checkbox
+    }
+    
+    //entire module access
+    $(document).on('change',"input[name='grant_access']",function(){
+        // console.log($(this))
+        userid = $(this).parents('.panel-body').find('select :selected').val()
+        access_id = []
+        if ($(this).hasClass('parent')){
+            access_id.push($(this).attr('id'))
+            parent_value = $(this).is(':checked')
+            $(`.child_${$(this).attr('id')}`).each(function(){
+                $(this).find('input').prop('checked', parent_value);
+                if($(this).data('child-id') != undefined){
+					if ($(this).data('child-id').length == 1){
+						$(`#${$(this).data('child-id')}`).prop('checked', parent_value)
+					} else{
+						child_ids = $(this).data('child-id').split(',')	
+						child_ids.forEach(id =>{						
+							$(`#sub_child_id_${id} input`).prop('checked', parent_value)
+							access_id.push(id)
+						})
+					}
+				}
+                access_id.push($(this).attr('id'))
+            })
+            console.log(access_id)
+            Access_call(userid,access_id,parent_value)
+        }
+    });
+
+    //single access
+    $(document).on('change',"input[name='child_grant_access']",function(){
+        // console.log($(this))
+        userid = $(this).parents('.panel-body').find('select :selected').val()
+        access_id = []
+        access_id.push($(this).attr('id'))
+        if($(this).data('child-id') != undefined){
+			parent_value = $(this).is(':checked')
+			// $(`.parent_${$(this).parents('li').attr('class').split('_')[1]}`).find('input').prop('checked', parent_value)
+			if ($(this).data('child-id').split(',').length == 1){
+				$(`#${$(this).data('child-id')}`).prop('checked', parent_value)
+			} else{
+				child_ids = $(this).data('child-id').split(',')	
+				child_ids.forEach(id =>{						
+					$(`#sub_child_id_${id} input`).prop('checked', parent_value)
+					access_id.push(id)
+				})
+			}
+			if ($(this).closest('ul').find('input:checked').length == 0) {
+				$(`.parent_${$(this).parents('li').attr('class').split('_')[1]}`).find('input').prop('checked', false)
+			} else {
+				$(`.parent_${$(this).parents('li').attr('class').split('_')[1]}`).find('input').prop('checked', true)
+			}
+		} else {
+			if ($(this).closest('ul').find('input:checked').length == 0) {
+				$(`.parent_${$(this).parents('li').attr('class').split('_')[1]}`).find('input').prop('checked', false)
+			} else {
+				$(`.parent_${$(this).parents('li').attr('class').split('_')[1]}`).find('input').prop('checked', true)
+			}
+		}
+		access_id.push($(`.parent_${$(this).parents('li').attr('class').split('_')[1]}`).find('input').attr('id'))
+        console.log(access_id)        
+        child_access_call(userid,access_id)
+    });
+
+    //grand module child access
+    $(document).on('change',"input[name='grand_child_grant_access']",function(){
+        // console.log($(this))
+        userid = $(this).parents('.panel-body').find('select :selected').val()
+        access_id = []
+        access_id.push($(this).attr('id'))
+        if ($(this).closest('ul').find('input:checked').length == 0) {
+			$(`#${$(this).data('parent')}`).find(`#${$(this).data('parent')}`).prop('checked', false)
+			$(`.parent_${$(`#${$(this).data('parent')}`).attr('class').split('_')[1]}`).find('input').prop('checked',false)
+		} else {			
+			$(`#${$(this).data('parent')}`).find(`#${$(this).data('parent')}`).prop('checked',true)
+			$(`.parent_${$(`#${$(this).data('parent')}`).attr('class').split('_')[1]}`).find('input').prop('checked',true)
+		}
+		access_id.push($(`#${$(this).data('parent')}`).find(`#${$(this).data('parent')}`).attr('id'))
+		access_id.push($(`.parent_${$(`#${$(this).data('parent')}`).attr('class').split('_')[1]}`).find('input').attr('id'))
+		console.log(access_id)
+		grand_child_access_call(userid, access_id)
+    });
+
+    //Entire module access ajax call
+    function Access_call(userid,access_id,parent_value){
+        token=getCookie('csrftoken');
+
+        $.ajax({
+                type: "POST",
+                url: "/superadmin/grant_access/",
+                data: {'userid':userid,'access_id':access_id,'parent_value':parent_value,csrfmiddlewaretoken: token},
+                success: function (data) {
+                    if(data.success==1)
+                    {
+                        swal({title: "Access Permission", text:data.msg, icon:
+                            "success",});
+                    }
+                }
+            });
+    }
+
+    //single access ajax call
+    function child_access_call(userid,access_id){
+        token=getCookie('csrftoken');
+        $.ajax({
+                type: "POST",
+                url: "/superadmin/child_grant_access/",
+                data: {'userid':userid,'access_id':access_id,csrfmiddlewaretoken: token},
+                success: function (data) {
+                    if(data.success==1)
+                    {
+                        swal({title: "Access Permission", text:data.msg, icon:
+                            "success",});
+                    }
+                }
+            });
+    }
+
+    //grand child access ajax call
+    function grand_child_access_call(userid, access_id) {
+        token = getCookie('csrftoken');
+        $.ajax({
+            type: "POST",
+            url: "/superadmin/grand_child_grant_access/",
+            data: { 'userid': userid, 'access_id': access_id, csrfmiddlewaretoken: token },
+            success: function (data) {
+                if (data.success == 1) {
+                    swal({
+                        title: "Access Permission", text: data.msg, icon:
+                            "success",
+                    });
+                }
+            }
+        });
+    }
+    </script>
+
+
+
+
+{% endblock %}

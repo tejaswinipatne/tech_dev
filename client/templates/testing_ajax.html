@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script
+  src="https://code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous"></script>
+  
+<script>
+$(window).on('load', function(){
+    $("button").on('click', function(){
+	    var ajaxTime= new Date().getTime();
+  
+		
+		var url = "http://127.0.0.1:8000/client/save_selected_components/";
+		
+		 $.ajax({
+			 url: url,
+			 type: "POST",
+			 //dataType: "json",
+			 
+			 data: {
+				id_campaign: "34",
+				id_selected_component: "1",
+			 },
+
+			 /**
+			  * A function to be called if the request succeeds.
+			  */
+			 success: function(data) {
+				var totalTime_in_ms = new Date().getTime()-ajaxTime;
+				//console.log("Total time to complete ajax call : ", totalTime_in_ms ,' ms');
+				var seconds = (totalTime_in_ms / 1000);
+				console.log("Total time to complete ajax call : ", seconds ,' seconds');
+				
+				console.dir(data);
+				alert("Data: " + data + "\nStatus: " + status);
+			},
+			
+			/**
+			  * A function to be called if the request fails. 
+			  */
+			error: function(jqXHR, textStatus, errorThrown) {
+				//alert('An error occurred... Look at the console (F12 or Ctrl+Shift+I, Console tab) for more information!');
+				
+				console.log('jqXHR:');
+				console.log(jqXHR);
+				
+				if (jqXHR.status == 500) 
+				{
+				  // Server side error
+				  console.log("Server side Error");
+				} 
+				else if (jqXHR.status == 404) 
+				{
+				  // Not found
+				  console.log("Requested URL (page) not found");
+				}
+				else if (jqXHR.status == 403) 
+				{
+				  // Forbidden
+				  console.log("The request is for something forbidden. Authorization will not help.");
+				}
+				else
+				{
+				 console.log("jqXHR.status : " + (jqXHR.status).toString() +  " and errorThrown : " + errorThrown);
+				}
+			},
+
+		 });
+    
+	});
+
+});
+
+	
+</script>
+</head>
+<body>
+
+<button>Send an HTTP POST request to a page and get the result back</button>
+
+</body>
+</html>

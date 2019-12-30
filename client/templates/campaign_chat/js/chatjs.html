@@ -1,0 +1,187 @@
+<script>
+	$(document).ready(function () {
+		var camp_id = $('#camp_id').val();
+		var sender_id = $('#sender_id').val();
+		// var msg_count = 0;
+		token = getCookie('csrftoken');
+		$.ajax({
+			url: "/client/get-campaign-chat/",
+			type: "POST",
+			data: { 'camp_id': camp_id, 'csrfmiddlewaretoken': token },
+			success: function (data) {
+
+				var chat_data = "";
+				msg_count = data.length;
+				for (var i = 0; i < data.length; i++) {
+					if (sender_id != data[i].sender_id) {
+						chat_data += `<li class="media">
+                            <div class="media-left">
+                            <a href="${data[i].profilepic}">
+                                <img src="${data[i].profilepic}" class="img-circle img-md" alt="">
+                            </a>
+                            </div>
+                            <div class="media-body">
+                            <div class="media-content bg-slate">${ data[i].message}</div>
+                            <span class="media-annotation display-block mt-10">${ data[i].time}
+                            <a href="#"><i class="icon-pin-alt position-right text-muted"></i></a>
+                            </span>
+                            </div>
+                        </li>`;
+					}
+					else {
+						chat_data += `<li class="media reversed">
+                        <div class="media-body">
+                        <div class="media-content">${data[i].message}</div>
+                        <span class="media-annotation display-block mt-10">${data[i].time}
+                        <a href="#"><i class="icon-pin-alt position-right text-muted"></i></a>
+                        </span>
+                        </div>
+                        <div class="media-right">
+                        <a href="${data[i].profilepic}">
+                        <img src="${data[i].profilepic}" class="img-circle img-md" alt=""></a></div>
+                        </li>`;
+					}
+					$('#chat_box').animate({ scrollTop: $('#chat_box').prop("scrollHeight") }, 50);
+					$('#chat_box').html(chat_data);
+				}
+			}
+		});
+		$("#send_msg").submit(function (e) {
+			e.preventDefault();
+			console.log($("#send_msg").serialize())
+			$.ajax({
+				type: "POST",
+				url: "/client/chat-app/send-msg/",
+				data: $("#send_msg").serialize(),
+				cache: false,
+				success: function (data) {
+					$('#message').val("");
+					$("#allcheck").prop("checked", false);
+					$(".vendor_names").prop("checked", false);
+
+					// console.log(data)
+					if (data.msg != '0') {
+						chat_data = `<li class="media reversed">
+                        <div class="media-body">
+                        <div class="media-content">${data.msg.message}</div>
+                        <span class="media-annotation display-block mt-10">${data.time}
+                        <a href="#"><i class="icon-pin-alt position-right text-muted"></i></a>
+                        </span>
+                        </div>
+                        <div class="media-right">
+                        <a href="/${data.profilepic}" \>
+                        <img src="/${data.profilepic}" class="img-circle img-md" title="${data.sender_name}" alt=""></a></div>
+                        </li>`;
+						$('#chat_box').animate({ scrollTop: $('#chat_box').prop("scrollHeight") }, 50);
+						$('#chat_box').append(chat_data);
+
+					}
+
+				}
+			});
+		});
+		var intercal = setInterval(function () {
+			var camp_id = $('#camp_id').val();
+			var sender_id = $('#sender_id').val();
+			token = getCookie('csrftoken');
+			if (camp_id > 0) {
+				$.ajax({
+					url: "/client/get-campaign-chat/",
+					type: "POST",
+					data: { 'camp_id': camp_id, 'csrfmiddlewaretoken': token },
+					success: function (data) {
+						var latest_count = data.length;
+						console.log(latest_count)
+						if (latest_count > msg_count && latest_count > 0) {
+							for (var i = msg_count; i < data.length; i++) {
+
+								if (sender_id != data[i].sender_id) {
+
+									if (data[i].message != '0') {
+
+										$('#chat_box').append('<li class="media"><div class="media-left"><a href="' + data[i].profilepic + '" ><img src="' + data[i].profilepic + '" class="img-circle img-md" title="' + data[i].sender_name + '" alt=""></a></div><div class="media-body"><div class="media-content bg-slate">' + data[i].message + '</div><span class="media-annotation display-block mt-10">' + data[i].time + ' <a href="#"><i class="icon-pin-alt position-right text-muted"></i></a></span></div></li>');
+										$('#chat_box').animate({scrollTop: $('#chat_box').prop("scrollHeight")}, 500);
+									} else {
+
+										$('#chat_box').append('<li class="media"><div class="media-left"><a href="' + data[i].profilepic + '" ><img src="' + data[i].profilepic + '" class="img-circle img-md" title="' + data[i].sender_name + '" alt=""></a></div><div class="media-body"><div class="media-content bg-slate">' + data[i].title + ': <a href="/' + data[i].media + '" download><i class="fa fa-download" aria-hidden="true"></i></a></div><span class="media-annotation display-block mt-10">' + data[i].time + ' <a href="#"><i class="icon-pin-alt position-right text-muted"></i></a></span></div></li>');
+										$('#chat_box').animate({ scrollTop: $('#chat_box').prop("scrollHeight") }, 500);
+									}
+								} else {
+									if (data[i].message == '0') {
+
+										$('#chat_box').append(`<li class="media reversed">
+                        <div class="media-body">
+                        <div class="media-content download_box"><a href="/${data[i].media}" download><img src="/static/assets/images/download.png" width="145" height="125" alt=""><br>${data[i].title} </a><br>
+                        </div>
+                        <span class="media-annotation display-block mt-10">${data[i].time}
+                        <a href="#"><i class="icon-pin-alt position-right text-muted"></i></a>
+                        </span>
+                        </div>
+                        <div class="media-right">
+                        <a href="${data[i].profilepic}" \>
+                        <img src="${data[i].profilepic}" class="img-circle img-md" title="${data[i].sender_name}"alt=""></a></div>
+                        </li>`);
+									}
+									$('#chat_box').animate({ scrollTop: $('#chat_box').prop("scrollHeight") }, 500);
+								}
+							}
+							msg_count = latest_count;
+						}
+					}
+				});
+			}
+
+		}, 1000);
+
+		//get uniqe id for ajax to request
+		function getCookie(name) {
+			var cookieValue = null;
+			if (document.cookie && document.cookie !== '') {
+				var cookies = document.cookie.split(';');
+				for (var i = 0; i < cookies.length; i++) {
+					var cookie = jQuery.trim(cookies[i]);
+					// Does this cookie string begin with the name we want?
+					if (cookie.substring(0, name.length + 1) === (name + '=')) {
+						cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+						break;
+					}
+				}
+			}
+			return cookieValue;
+		}
+		//if click on all check then check automatecally check all vendor
+		$('#allcheck').click(function () {
+			if ($(this).prop("checked")) {
+				$(".vendor_names").prop("checked", true);
+				var $myInput = $('#message');
+				$myInput.val($myInput.val().slice(0, -1));
+			} else {
+				$(".vendor_names").prop("checked", false);
+			}
+		});
+		$('.vendor_names').click(function () {
+			var $myInput = $('#message');
+			$myInput.val($myInput.val().slice(0, -1));
+			if ($(".vendor_names").length == $(".vendor_names:checked").length) {
+				$("#allcheck").prop("checked", true);
+			} else {
+				$("#allcheck").prop("checked", false);
+			}
+		});
+	});
+	//check all keyup charecter and if @ occure then display all vendor list
+	$("#message").on('keypress', function (e) {
+		if (e.which !== 0) {
+			if (String.fromCharCode(e.which) == '@') {
+				$('#vendor_list').show();
+			}
+			else
+				$('#vendor_list').hide();
+		}
+	});
+	$(window).click(function (e) {
+		$('#vendor_list').hide();
+	})
+
+
+</script>

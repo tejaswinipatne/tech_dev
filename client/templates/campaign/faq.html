@@ -1,0 +1,130 @@
+{% extends "header/cheader.html" %}
+{% load static %}
+{% block scripts %}
+  
+{% endblock %}
+
+{% block scripts1 %}
+        
+        {% include "campaign/css/faq.css" %}
+         
+    {% endblock %}
+        
+{% block content %}
+
+<!-- Main sidebar -->
+  {% include "side/clientside.html" %}
+<!-- /main sidebar -->
+
+<!-- Main content -->
+			<div class="content-wrapper">
+				<div class="content" style="margin-top: 4px;">
+				<!-- Main charts -->
+				<div class="row">
+                        <div class="col-md-12 ">
+						<!-- Traffic sources -->
+						<div class="panel panel-height panel-flat">
+							<div class="panel-heading text-center">
+							</div>
+							
+							<div class="page-header text-center">
+    
+</div>
+
+<!-- Bootstrap FAQ - START -->
+<div class="">
+    <div class="panel-group" id="accordion">
+        <div class="faqHeader">FAQ General questions</div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">Is account registration required?</a>
+                </h4>
+            </div>
+            <div id="collapseOne" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    Account registration at <strong>Techconnectr</strong> is only required. 
+                    This ensures a valid communication channel for all parties involved in any transactions. 
+                </div>
+            </div>
+        </div>
+        
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseEleven">What is the currency used for all transactions?</a>
+                </h4>
+            </div>
+            <div id="collapseEleven" class="panel-collapse collapse">
+                <div class="panel-body">
+                    All prices for themes, templates and other items, including each seller's or buyer's account balance are in <strong>USD</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="faqHeader">Lead</div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">The Techconnectr Portal offers two self-service campaign types</a>
+                </h4>
+            </div>
+            <div id="collapseTwo" class="panel-collapse collapse">
+                <div class="panel-body">
+                     LeadFlow: Content Syndication with Lead Generation, starting at $9 per lead.
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">How does Techconnectr guarantee the quality of my leads?</a>
+                </h4>
+            </div>
+            <div id="collapseThree" class="panel-collapse collapse">
+                <div class="panel-body">
+                    All leads are processed by Techconnector's dynamic lead quality and integrity evaluation. To ensure all Techconnector Portal LeadFlow campaigns receive the requested volume of quality leads, Techconnector delivers an additional 10% of leads with each campaign to account for any potential data concerns once the campaign reaches the lead goal.
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFive">Can agencies use the Techconnectr Portal on behalf of their clients?</a>
+                </h4>
+            </div>
+            <div id="collapseFive" class="panel-collapse collapse">
+                <div class="panel-body">
+                    Yes, the Techconnectr Portal is available to all professionals and offers an exclusive program for agencies. The Agency Advantage Program rewards agencies for running their clients' content syndication lead generation campaigns with the Techconnectr Portal. Agencies receive an invitation to the program with more detailed information once their account is created.
+                    <br />
+                </div>
+            </div>
+        </div>
+        
+           
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap FAQ - END -->
+
+				<!-- /main charts -->
+
+
+			</div>
+			<!-- /main content -->
+			</div>
+		</div>
+		<!-- /page content -->
+			</div>
+	</div>
+	<!-- /page container -->
+
+    <script>
+        $(function () {
+            $("#support").addClass("active");
+            $("#support").find("ul").first().css({'display':'block'})
+            $("#FAQ").addClass("active");
+        });
+    </script>
+    {% endblock %}

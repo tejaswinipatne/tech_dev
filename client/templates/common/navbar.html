@@ -1,0 +1,213 @@
+  
+  {% load static %}
+  <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
+
+  <!-- Core JS files -->
+  <!-- <script type="text/javascript" src="{% static 'assets/js/plugins/loaders/pace.min.js' %}"></script> -->
+  <!-- <script type="text/javascript" src="{% static 'assets/js/core/libraries/jquery.min.js' %}"></script> -->
+  <!-- <script type="text/javascript" src="{% static 'assets/js/plugins/loaders/blockui.min.js' %}"></script> -->
+  <!-- /core JS files -->
+
+<!-- Main navbar -->
+<div class="navbar navbar-inverse navbar-fixed-top bg-indigo">
+ <div class="navbar-header">
+   <a class="navbar-brand" href="/client/dashboard/">
+     <img src="{% static 'assets/images/logo/tc-logo1.gif' %}" alt="">
+   </a>
+   <ul class="nav navbar-nav visible-xs-block">
+     <li>
+       <a data-toggle="collapse" data-target="#navbar-mobile">
+         <i class="icon-tree5">
+         </i>
+       </a>
+     </li>
+     <li>
+       <a class="sidebar-mobile-main-toggle">
+         <i class="icon-paragraph-justify3">
+         </i>
+       </a>
+     </li>
+   </ul>
+ </div>
+ <div class="navbar-collapse collapse" id="navbar-mobile">
+   <div class="navbar-right">
+     <span class="navbar-text ">Welcome, &nbsp;&nbsp;{{request.session.username}}
+     </span>
+     <ul class="nav navbar-nav">
+       <li class="dropdown">
+         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+           <i class="icon-bell2">
+           </i>
+           <span class="">{{notifycount}}
+           </span>
+           <span class="visible-xs-inline-block position-right">Activity
+           </span>
+           <span class="status-mark border-orange-400">
+           </span>
+         </a>
+         <div class="dropdown-menu dropdown-content">
+           <div class="dropdown-content-heading">
+             Activity
+             <!-- <ul class="icons-list">
+               <li>
+                 <a id='readall'>
+                   <i class="icon-menu7">
+                   </i>
+                 </a>
+               </li>
+             </ul> -->
+           </div>
+           <ul class="media-list dropdown-content-body width-350">
+            {% for row in notify %}
+            {% if row.campaign_id.status == 3 %}
+            <li class="media" id="{{row.id}}">
+
+                <div class="media-left">
+                  <span href="#" class="btn bg-success-400 btn-rounded btn-icon btn-xs"><i class="icon-mention"></i></span>
+                </div>
+                <div class="media-body">
+                  <span class='read' id="{{row.id}}"><i class="fa fa-times pull-right" value='1' aria-hidden="true"></i></span>
+                  <a href="/client/pending-campaign/"><span class="headfont">{{ row.title }}</span>
+                  <br>
+                  {{ row.description }}</a>
+                  <div class="media-annotation">{{row.created}}</div>
+                </div>
+
+            </li>
+            {% elif row.campaign_id.status == 1 %}
+            <li class="media read" id="{{row.id}}">
+
+                <div class="media-left">
+                  <span href="#" class="btn bg-success-400 btn-rounded btn-icon btn-xs"><i class="icon-mention"></i></span>
+                </div>
+                <div class="media-body">
+                  <span class='read' id="{{row.id}}"><i class="fa fa-times pull-right" value='1' aria-hidden="true"></i></span>
+                  <a href="/client/live-campaign/"><span class="headfont">{{ row.title }}</span><br>
+                  {{ row.description }}</a>
+                  <div class="media-annotation">{{row.created}}</div>
+                </div>
+
+            </li>
+            {% elif row.campaign_id.status == 4 %}
+            <li class="media read" id="{{row.id}}">
+
+                <div class="media-left">
+                  <span href="#" class="btn bg-success-400 btn-rounded btn-icon btn-xs"><i class="icon-mention"></i></span>
+                </div>
+                <div class="media-body">
+                  <span class='read' id="{{row.id}}"><i class="fa fa-times pull-right" value='1' aria-hidden="true"></i></span>
+                <a href="/client/completed-campaign/">  <span class="headfont">{{ row.title }}</span><br>
+                  {{ row.description }}  </a>
+                  <div class="media-annotation">{{row.created}}</div>
+                </div>
+            </li>
+            {% elif row.campaign_id.status == 5 %}
+            <li class="media read" id="{{row.id}}">
+
+                <div class="media-left">
+                  <span href="#" class="btn bg-success-400 btn-rounded btn-icon btn-xs"><i class="icon-mention"></i></span>
+                </div>
+                <div class="media-body">
+                  <span class='read' id="{{row.id}}"><i class="fa fa-times pull-right" value='1' aria-hidden="true"></i></span>
+                <a href="/client/assigned-campaign/">  <span class="headfont">{{ row.title }}</span>
+                  <br>
+                  {{ row.description }}  </a>
+                  <div class="media-annotation">{{row.created}}</div>
+                </div>
+
+            </li>
+            {% endif %}
+            {% if row.camp_alloc %}
+            {% if row.camp_alloc.status == 1 %}
+            <li class="media read" id="{{row.id}}">
+
+                <div class="media-left">
+                  <span href="#" class="btn bg-success-400 btn-rounded btn-icon btn-xs"><i class="icon-mention"></i></span>
+                </div>
+                <div class="media-body">
+                  <span class='read' id="{{row.id}}"><i class="fa fa-times pull-right" value='1' aria-hidden="true"></i></span>
+                  <a href="/client/leadlist/{{row.camp_alloc.id}}/{{row.camp_alloc.status}}"><span class="headfont">{{ row.title }}</span>
+                  <br>
+                  {{ row.description }}
+                </a>
+                  <div class="media-annotation">{{row.created}}</div>
+                </div>
+
+            </li>
+            {% endif %}
+            {% else %}
+            <li class="media read" id="{{row.id}}">
+              <a style="color: black" >
+              <div class="media-left">
+                <span href="#" class="btn bg-success-400 btn-rounded btn-icon btn-xs"><i class="icon-mention"></i></span>
+              </div>
+              <div class="media-body">
+                <span class='read' id="{{row.id}}"><i class="fa fa-times pull-right" value='1' aria-hidden="true"></i></span>
+                <span class="headfont">{{ row.title }}</span>
+                <br>
+                {{ row.description }}
+
+                <div class="media-annotation">{{row.created}}</div>
+              </div>
+              </a>
+            </li>
+            {% endif %}
+            {% endfor %}
+           </ul>
+         </div>
+       </li>
+     </ul>
+     <ul class="nav navbar-nav">
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+          <i class="fa fa-comments"></i>
+          <span class="noticount">{{count_chat}}</span>
+          <span class="visible-xs-inline-block position-right">Chat Notification</span>
+          <span class="status-mark border-orange-400"></span>
+
+        </a>
+
+        <div class="dropdown-menu dropdown-content">
+          <div class="dropdown-content-heading">
+            Chat-Notification
+            <!-- <ul class="icons-list">
+              <li><a id='readall'><i class="icon-menu7"></i></a></li>
+            </ul> -->
+          </div>
+
+          <ul class="media-list dropdown-content-body width-350">
+            {% for row in chat_notify %}
+            <li class="media">
+              <div class="media-left">
+                <a href="#" class="btn bg-success-400 btn-rounded btn-icon btn-xs"><i class="icon-mention"></i></a>
+              </div>
+              <div class="media-body">
+                <a class='chat_read' id="{{row.campaign_id}}"><i class="fa fa-times pull-right" value='1'
+                    aria-hidden="true"></i></a>
+                <a href="/client/chat-app/{{row.campaign_id}}/"> <span class="headfont">{{ row.campaign_name }}</span></a>
+                <br>
+                {{ row.msg }}
+                <div class="media-annotation">{{row.created}}</div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </li>
+    </ul>
+
+
+
+
+
+
+     <span class="navbar-text greet">|
+     </span>
+     <span class="navbar-text ">
+       <a href="/logout/">Log Off
+       </a>
+     </span>
+   </div>
+ </div>
+ </div>
+ <!-- /main navbar -->

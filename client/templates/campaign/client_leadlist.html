@@ -1,0 +1,592 @@
+{% extends "header/cheader.html" %}
+
+{% block scripts %}
+{% include "campaign/client_manage_campaignlead.html" %}
+{% endblock %}
+{% block scripts1 %}
+
+{% include "campaign/css/campdesc.css" %}
+{% include "campaign/manage_campaign.css" %}
+{% endblock %}
+
+{% block content %}
+<!-- Main sidebar -->
+{% include "side/clientside.html" %}
+
+{% load static %}
+{% load range %}
+<style media="screen">
+	.col-xs-1,
+	.col-sm-1,
+	.col-md-1,
+	.col-lg-1,
+	.col-xs-2,
+	.col-sm-2,
+	.col-md-2,
+	.col-lg-2,
+	.col-xs-3,
+	.col-sm-3,
+	.col-md-3,
+	.col-lg-3,
+	.col-xs-4,
+	.col-sm-4,
+	.col-md-4,
+	.col-lg-4,
+	.col-xs-5,
+	.col-sm-5,
+	.col-md-5,
+	.col-lg-5,
+	.col-xs-6,
+	.col-sm-6,
+	.col-md-6,
+	.col-lg-6,
+	.col-xs-7,
+	.col-sm-7,
+	.col-md-7,
+	.col-lg-7,
+	.col-xs-8,
+	.col-sm-8,
+	.col-md-8,
+	.col-lg-8,
+	.col-xs-9,
+	.col-sm-9,
+	.col-md-9,
+	.col-lg-9,
+	.col-xs-10,
+	.col-sm-10,
+	.col-md-10,
+	.col-lg-10,
+	.col-xs-11,
+	.col-sm-11,
+	.col-md-11,
+	.col-lg-11,
+	.col-xs-12,
+	.col-sm-12,
+	.col-md-12,
+	.col-lg-12 {
+		padding-left: 0px !important;
+	}
+
+	input[type="text"] {
+		background-color: #ffffff;
+		color: #000;
+		font-size: 13px;
+
+	}
+
+	.datatable-header {
+		display: block;
+	}
+
+	.dataTables_filter {
+		display: block;
+	}
+
+	.dataTables_length {
+		display: none;
+	}
+
+	.panel-default {
+		margin-bottom: 12px;
+		width: 97.7%;
+		margin-left: 20px;
+	}
+
+	body {
+		overflow-x: hidden;
+	}
+</style>
+
+
+
+
+
+
+<!-- /main sidebar -->
+<div class="content-wrapper">
+	<!-- Page header -->
+	<div class=" page-header-default" style="margin-bottom:0px;">
+		<div class="breadcrumb-line">
+			<ul class="breadcrumb">
+				<li><a href="/superadmin/dashboard/"><i class="icon-home2 position-left"></i> Home</a></li>
+				<li class="active">Campaign Details</li>
+			</ul>
+
+		</div>
+	</div>
+	<!-- /page header -->
+
+	<!-- Content area -->
+	<div class="panel panel-height panel-flat">
+		<!-- <div class="content" style="padding:0px">
+ -->
+		<!-- client registration model -->
+
+		<div class=" panel-white ">
+
+			<div class="row ">
+				<div class="row top ">
+					<div class="col-md-12 " style="margin-bottom: 10px;	">
+						<div class="col-md-10 md10">
+							<div class="form-group ">
+								<div>
+									<span class="label label-info1 lbl">CID :</span> <span
+										class="label label-info lbl">#{{campaigns.campaign_id}}</span>
+									<span class="label label-info1 lbl">Campaign Name:</span> <span
+										class="label label-info lbl">{{campaigns.camp_name}}</span>
+									<span class="label label-info1 lbl">Vendor Name:</span> <span
+										class="label label-info lbl  ">{{campaigns.user_name}}</span>
+								</div>
+								<div class="box-left">
+									<span class="label label-info1 lbl">Assign Leads :</span> <span
+										class="label label-info lbl">{{campaigns.lead}}</span>
+									<span class="label label-info1 lbl">Submitted Leads :</span> <span
+										class="label label-info lbl">{{campaigns.submited_lead}}</span>
+									<span class="label label-info1 lbl">Returns Leads :</span> <span
+										class="label label-info lbl  ">{{campaigns.return_lead}}</span>
+								</div>
+								<div>
+									<span>
+										<!-- <button class="btn btn-success checkbtn" status="{{campaigns.status}}" camp_id="{{campaigns.camp_id}}"
+												vendor_id="{{campaigns.vendor_id}}" id="approve">Approve</button>
+								<button class="btn btn-danger checkbtn" status="{{campaigns.status}}" camp_id="{{campaigns.camp_id}}"
+												vendor_id="{{campaigns.vendor_id}}" data-toggle="modal" data-target="#myModal">Reject</button>
+								<button class="btn btn-primary checkbtn" status="{{campaigns.status}}" camp_id="{{campaigns.camp_id}}"
+												vendor_id="{{campaigns.vendor_id}}" data-toggle="modal" data-target="#myModalForRectify">Rectify</button> -->
+									</span>
+									<!-- <span><button class="btn btn-primary " data-toggle="modal" data-target="#lead_header"> Choose Headers</button></span> -->
+									<!-- for action tab on lead -->
+
+									<div class="col-md-12" style="display: none;">
+										<div class="col-md-4 box-btn">
+
+										</div>
+										<div class="col-md-8" style="margin-top: 4px;">
+
+											<div class="col-md-2 box-btn1" id="startFilter">
+												<button type="button" id="filter_btn" class="btn btn-primary"
+													name="button"><span id="filter_icon"
+														class="glyphicon glyphicon-filter"></span>Apply Filter</button>
+											</div>
+											<!--end datefilter-->
+											<div class="datefilter" style="display:none">
+												<div class="col-md-3">
+													<div class="form-group">
+														<div class="input-group">
+															<input type="text" class="form-control daterange-single"
+																id="startDate" value="">
+														</div>
+													</div>
+												</div>
+												<div class="col-md-3">
+													<div class="form-group">
+														<div class="input-group">
+															<input type="text" class="form-control daterange-single"
+																id="endDate" value="">
+														</div>
+													</div>
+												</div>
+												<div class="col-md-2">
+													<button type="button" class="btn btn-default" id="cancel_datefilter"
+														name="button">cancel</button>
+												</div>
+											</div>
+											<!--end datefilter-->
+										</div>
+
+									</div>
+
+
+								</div>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<div class=" btn-group btn-group-animated" style="margin-top: 3px;">
+													<button type="button" class="btn border-slate text-slate-800 btn-flat dropdown-toggle act" data-toggle="dropdown" >Actions<span class="caret"></span></button>
+															<ul class="dropdown-menu" style="margin-top:0px;padding: 8px 10px;">
+																<li><a href="#" class="checkbtn" status="{{campaigns.status}}" camp_id="{{campaigns.camp_id}}" vendor_id="{{campaigns.vendor_id}}" id="approve"><i class="icon-check"></i> Approve</a></li>
+																<li class="divider"></li>
+																<li><a href="#" class="checkbtn" status="{{campaigns.status}}" camp_id="{{campaigns.camp_id}}" vendor_id="{{campaigns.vendor_id}}" data-toggle="modal" data-target="#myModal"><i class="icon-bucket"></i> Reject</a></li>
+																<li class="divider"></li>
+																<li><a href="#" class="checkbtn" status="{{campaigns.status}}" camp_id="{{campaigns.camp_id}}"vendor_id="{{campaigns.vendor_id}}" data-toggle="modal" data-target="#myModalForRectify"><i class="icon-pencil7"></i>Rectify</a></li>
+																<li class="divider"></li>
+																<!-- <li><a href="#"><i class="icon-gear"></i> Separated line</a></li> -->
+															</ul>
+															{% if approve_leads > 0 %}
+															<a href="{{export_file_name}}" class="exp" download>
+																	<button type="button" class="btn bg-teal btn-ladda btn-ladda-progress pull-right" data-style="expand-right" data-spinner-size="20" style="margin-left: 8px;padding-bottom: 10px;"><span class="ladda-label">  Export </span></button>
+															</a>
+															{%else%}
+															<a href="{{export_file_name}}" download>
+																	<button type="button" disabled class="btn bg-teal btn-ladda btn-ladda-progress pull-right" data-style="expand-right" data-spinner-size="20" style="margin-left: 8px;padding-bottom: 10px;"><span class="ladda-label"> Export </span></button>
+															</a>
+															{%endif%}
+												</div>
+												<button type="button" style="display: none;" id="databtn " class="btn btn-filter-tb btn-labeled pull-right btndata" >
+																	<b><span id ="filter_icon" class="glyphicon glyphicon-filter"></span></b>
+																	 Filter
+															</button>
+						</div>
+					</div>
+
+
+
+					<div class="col-md-3 status" style="display:none">
+						<div class="form-group">
+							<label id="campstat">Campaign Status</label><br>
+							{% if status == 1 %}
+							<input type="text" class="form-control" value="Live">
+							{% endif %}
+							{% if status == 4 %}
+							<input type="text" class="form-control" value="Complete">
+							{% endif %}
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+				<div class="">
+					<div class="panel-group" id="accordion">
+						<input type="hidden" id="batch_count" value="{{campaigns.batch}}">
+						{% if batchlist %}
+						{% for batch in batchlist %}
+						<div class="panel panel-default">
+							<div class="panel-heading batch_div" data-batch-id="{{batch}}" data-toggle="collapse"
+								data-parent="#accordion" href="#collapse{{batch}}">
+								<h5 class="panel-title">
+									Batch {{batch}}
+									{% for batch_c in count %}
+										{% for key, value in batch_c.items %} 
+											{% if key == batch %}  
+												<span style="font-size: 14px;">({{value}} leads)</span>
+												<span class="pull-right">{{batch_c.date}}</span>
+											{% endif %}
+									    {% endfor %}
+									{% endfor %}
+								</h5>
+							</div>
+
+							<div id="collapse{{batch}}" class="panel-collapse collapse">
+								<div class="panel-body ">
+									<button type="button"
+										class="btn btn-filter-tb btn-labeled pull-right hidden databtn"
+										data-batch="{{batch}}">
+										<b><span id="filter_icon" class="glyphicon glyphicon-filter"></span></b>
+										Filter
+									</button>
+									<div class="table-responsive-sm">
+										<table class="table" id="batch_{{batch}}" style="width:100%">
+											<thead>
+												<tr style="text-transform: capitalize;">
+													{% for row in all_header %}
+													{% if row == 'id' %}
+													<th>{{row}}
+													</th>
+													{% endif %}
+													{%endfor%}
+													<th><input type="checkbox" class="no-sort allcheck"
+															id="allcheck_{{batch}}" data-table-id="batch_{{batch}}" />
+													</th>
+
+													{% for row in all_header %}
+													{% if row != 'id' and row != 'status' and row != 'TC_lead_status' %}
+													<th>{{row}}</th>
+													{% endif %}
+													{%endfor%}
+
+													<!-- TC status -->
+													{% for row in all_header %}
+													{% if row == 'TC_lead_status' %}
+													<th>{{row}}</th>
+													{% endif %}
+													{%endfor%}
+													<!--End Tc status-->
+
+													{% for row in all_header %}
+													{% if row == 'status' %}
+													<th>{{row}}</th>
+													{% endif %}
+													{%endfor%}
+												</tr>
+											</thead>
+											<tfoot class="datatfootfilter_{{batch}}">
+												<tr>
+													{% for row in all_header %}
+													{% if row == 'id' %}
+													<td rowspan="1" colspan="1">
+														<input type="text" class="form-control input-sm"
+															placeholder="{{row}}">
+													</td>
+													{% endif %}
+													{%endfor%}
+													<td rowspan="1" colspan="1"></td>
+
+													{% for row in all_header %}
+													{% if row != 'id' and row != 'status' and row != 'TC_lead_status' %}
+													<td rowspan="1" colspan="1">
+														<input type="text" class="form-control input-sm"
+															placeholder="{{row}}">
+													</td>
+													{% endif %}
+													{%endfor%}
+
+													<!-- TC status -->
+													{% for row in all_header %}
+													{% if row == 'TC_lead_status' %}
+													<td rowspan="1" colspan="1">
+														<input type="text" class="form-control input-sm"
+															placeholder="{{row}}">
+													</td>
+													{% endif %}
+													{%endfor%}
+													<!--End Tc status-->
+
+													{% for row in all_header %}
+													{% if row == 'status' %}
+													<td rowspan="1" colspan="1">
+														<input type="text" class="form-control input-sm"
+															placeholder="{{row}}">
+													</td>
+													{% endif %}
+													{%endfor%}
+
+												</tr>
+											</tfoot>
+											<tbody>
+												{% for row in leadlist %}
+												{% if row.batch == batch %}
+												<tr>
+
+													{% for data in all_header %}
+													{% if data == 'id' %}
+													<td style="text-align:center">{{row.id}}</td>
+
+
+
+
+
+														{% endif %}
+													{%endfor%}
+													{% if row.status != 1 %}
+													<td><input type="checkbox" class="checkbox"
+															data-table="batch_{{batch}}"
+															data-parent="allcheck_{{batch}}" id={{row.id}} /></td>
+													{% else %}
+													<td></td>
+													{% endif %}
+													{% for data in all_header %}
+													{% if data != 'id' and data != 'status' and data != 'TC_lead_status' %}
+													{% if data == 'Status Code' %}
+													<td>{{'reason'|leadlist:row}}</td>
+													{%else%}
+													<td>{{data|leadlist:row}}</td>
+													{% endif %}
+													{% endif %}
+													{%endfor%}
+
+
+													<!-- start TC Status-->
+													{% for data in all_header %}
+
+													{% if data == 'TC_lead_status' %}
+													<td style="width:100px;">
+														{% if row.TC_lead_status == 'valid lead' %}
+														<span class="label label-success" data-toggle="tooltip"
+															data-placement="bottom" title="Approve Lead From TC">
+															Approved</span>
+														{% else %}
+														<span class="label label-danger" data-toggle="tooltip"
+															data-placement="bottom" title="{{data|leadlist:row}}">
+															Rejected</span>
+														{%endif%}
+													</td>
+													{% endif %}
+													{%endfor%}
+													<!-- End TC Status-->
+													{% for data in all_header %}
+													{% if data == 'status' %}
+													<td>
+														{% if row.status == 0 %}
+														<span class="label label-info"> Approval Pending</span>
+														{% elif row.status == 1 %}
+														<span class="label label-success"> Approved</span>
+														{% elif row.status == 2 %}
+														<span class="label label-danger"> Rejected</span>
+														{% elif row.status == 3 %}
+														<span class="label label-info"
+															style="background-color:#c14a25;border-color:#c14a25;">
+															Rectify</span>
+														{% elif row.status == 4 %}
+														<span class="label label-info"> Rectified</span>
+														<!--chages done by vendor on rectify -->
+														{%endif%}
+													</td>
+													{% endif %}
+													{%endfor%}
+												</tr>
+												{% endif %}
+												{% endfor %}
+
+											</tbody>
+										</table>
+
+									</div>
+								</div>
+							</div>
+						</div>
+						{% endfor %}
+						{% else %}
+							<div class="no_data">No data</div>
+						{% endif %}
+
+					</div>
+
+				</div>
+
+
+		</div>
+		<!-- </div> -->
+	</div>
+	<!--Model for Rejected lead-->
+	<div class="modal fade" id="myModal" role="dialog">
+		<div class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Select Reason</h4>
+				</div>
+				<div class="modal-body">
+					<div class="col-md-12">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-group">
+									<label for="sel1">Select Reason:</label>
+									<select class="form-control" id="leads_rejected_reason">
+										<option value="0" selected>Select Reason</option>
+										{% for reason in global_rejected_reason %}
+										<option value="{{reason.reason}}">{{reason.reason}}</option>
+										{%endfor%}
+										{% for reason in client_rejected_reason %}
+										<option value="{{reason.reason}}">{{reason.reason}}</option>
+										{%endfor%}
+									</select>
+								</div>
+								<div class="form-group">
+									<label for="sel1">Enter Description:</label>
+									<input type="text" style="background-color:#f3f6f9;color:#0a0a0a;font-size: 14px;"
+										class="form-control" id="lead_desc" />
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-success" status="{{campaigns.status}}"
+						camp_id="{{campaigns.camp_id}}" vendor_id="{{campaigns.vendor_id}}"
+						id="Rejected">Submit</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<!--Modal for rectify lead -->
+	<div class="modal fade" id="myModalForRectify" role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Select Reason for Rectify Lead</h4>
+				</div>
+				<div class="modal-body">
+					<div class="col-md-12">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-group">
+									<label for="sel1">Select Reason:</label>
+									<select class="form-control" id="leads_rectify_reason">
+										<option value="0" selected>Select Reason</option>
+										{% for reason in global_rectify_reason %}
+										<option value="{{reason.reason}}">{{reason.reason}}</option>
+										{%endfor%}
+										{% for reason in client_rectify_reason %}
+										<option value="{{reason.reason}}">{{reason.reason}}</option>
+										{%endfor%}
+									</select>
+								</div>
+								<div class="form-group">
+									<label for="sel1">Enter Description:</label>
+									<input type="text" style="background-color:#f3f6f9;color:#0a0a0a;font-size: 14px;"
+										class="form-control" id="lead_rectify_desc" />
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-success" status="{{campaigns.status}}"
+						camp_id="{{campaigns.camp_id}}" vendor_id="{{campaigns.vendor_id}}" id="Rectify">Submit</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<!-- Modal for select header -->
+	<div class="modal fade" id="lead_header" role="dialog">
+		<div class="modal-dialog modal-lg">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Choose Lead Headers:(Which is you want to see) </h4>
+				</div>
+				<div class="modal-body">
+
+					<section>
+						<h2>Sortable List Group Connected</h2>
+						<div class="row">
+							<div class="col-sm-6">
+								<ul class="list-group list-group-sortable-connected">
+									{% for row in all_lead_header %}
+									{% if row not in header %}
+									{% if row != 'id' and row != 'lead_desc' and row != 'status' %}
+									<li class="list-group-item list-group-item-info">{{row}}</li>
+									{%endif%}
+									{%endif%}
+									{%endfor%}
+								</ul>
+							</div>
+							<div class="col-sm-6">
+								<ul class="list-group list-group-sortable-connected" id="selected">
+									{% for row in header %}
+									{% if row != 'id' and row != 'reason'%}
+									<li class="list-group-item list-group-item-info">{{row}}</li>
+									{%endif%}
+									{%endfor%}
+								</ul>
+							</div>
+						</div>
+						<input type="hidden" id="camp_id_lead" value="{{campaigns.campaign_id}}" />
+					</section>
+
+
+				</div>
+				<div class="modal-footer">
+					<input class="btn btn-sm btn-primary" type="button" id="submit123" value="submit">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+
+				</div>
+			</div>
+
+		</div>
+	</div>
+	{% include "campaign/js/leadsjs.html" %}
+	{% endblock %}

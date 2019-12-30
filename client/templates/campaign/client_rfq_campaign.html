@@ -1,0 +1,167 @@
+{% extends "header/cheader.html" %}
+{% block scripts %}
+    {% include "campaign/client_campaignhead.html" %}
+
+{% endblock %}
+{% block content %}
+<!-- Main sidebar -->
+  {% include "side/clientside.html" %}
+
+			<!-- Main content -->
+      <div class="content-wrapper">
+
+
+                <!-- Content area -->
+            <div class="content">
+                  <div class="row">
+
+              <!-- Top Clients List -->
+
+              <div class="panel panel-height panel-flat">
+                <div class="panel-heading">
+                  <h1 class="panel-title"> CID :#<span id="camp_id">{{data.camp_id}}</span>Client-Name:{{data.client_name}}</h1>
+       <p id="font14">
+         <span><button class="btn btn-primary" id="btnSubmit" value="">submit</button></span>
+         {% if cpl_counter > 0 %}
+          <span><button class="btn btn-primary"  data-toggle="modal" data-target="#rfqcpllist" value="">CPL LIST</button></span>
+        {% endif %}
+       </p>
+    </h5>
+    </div>
+
+  <div class="panel-body">
+                           <div class="row">
+                              <div class="col-lg-12 col-sm-12">
+                                       <div class="row">
+
+                           <div class="table-responsive-sm">
+                      <table  class="table" id="DataTables">
+                          <thead>
+                            <tr>
+                              <th>Sr.no</th>
+                              <th>Vendor Name</th>
+                              <th>Email</th>
+
+                           </tr>
+                          </thead>
+                          <tfoot class='datatfootfilter' style="display:none">
+                              <tr>
+                                  <td rowspan="1" colspan="1">
+                                      <input type="text" class="form-control input-sm" placeholder="Search Campaign">
+                                  </td>
+                                  <td rowspan="1" colspan="1">
+                                      <input type="text" class="form-control input-sm" placeholder="Search Type">
+                                  </td>
+
+                              </tr>
+                          </tfoot>
+                          <tbody>
+                            {% load filter1 %}
+                            {% for rows in vendor_list %}
+                            <tr class="checktr">
+                              <td>
+                                <input type="checkbox" {{ data.camp_id|rfqcpl_exist:rows.userid }}  name="vendor_id_chk" value="{{rows.userid}}"  />
+                              </td>
+                              <td>{{ rows.user_name }}</td>
+                              <td>{{ rows.email }}</td>
+
+                            </tr>
+                          {% endfor %}
+                          </tbody>
+                            </table>
+
+                  </div>
+                                      </div>
+                                  </div>
+                                  </div>
+                          </div>
+                        </div>
+                  </div>
+          </div>
+          </div>
+			<!-- /main content -->
+		</div>
+		<!-- /page content -->
+	</div>
+	<!-- /page container -->
+  <div class="modal fade" id="rfqcpllist">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">RFQ CPL LIST</h4>
+
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+            <div class="row">
+              <div class="col-md-12" style="display: none;">
+                <div class="col-md-2">
+                  <label for="usr">   <h4 class="modal-title">CPL</h4></label>
+                </div>
+                <div class="col-md-6">
+                  <input type="number" min="0" value="{{data.cpl}}" class="form-control" id="cpl" >
+
+                </div>
+                <div class="col-md-3">
+                  <input type="button" class="btn btn-primary" id="update_cpl_client" value="Update"/>
+                </div>
+              </div>
+                <div class="col-md-12">
+
+                  <table class="table datatable-show-all ">
+                      <thead>
+                          <tr>
+                              <th>Sr.no</th>
+                              <th>Vendor Name</th>
+                              <th>CPL</th>
+                              <th>Volume</th>
+
+                          </tr>
+                      </thead>
+                      <tbody>
+
+
+
+                        {% for rows in cpl_list %}
+                          {% if request.session.usertype == 1 %}
+                          {% for values in vendor_list %}
+                              {% if rows.client_vendor.user_name == values.user_name %}
+                              <tr>
+                                  <td>{{forloop.counter}}</td>
+                                  <td>{{rows.client_vendor.user_name}}</td>
+                                  <td>{{rows.rfqcpl}}</td>
+                                  <td>{{rows.rfqvolume}}</td>
+                              </tr>
+                              {% endif %}
+                            {% endfor %}
+                          {% else %}
+                          <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>{{rows.client_vendor.user_name}}</td>
+                            <td>{{rows.rfqcpl}}</td>
+                            <td>{{rows.rfqvolume}}</td>
+                          </tr>
+                          {% endif %}
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                </div>
+
+        </div>
+    </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer" style="display:none">
+           <button type="button" class="btn btn-primary submitrfq">Submit</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+	{% include "campaign/js/client_rfq_campaignjs.html" %}
+					{% endblock %}

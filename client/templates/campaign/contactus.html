@@ -1,0 +1,77 @@
+{% extends "header/cheader.html" %}
+{% load static %}
+{% block scripts %}
+ {% endblock %}
+
+{% block scripts1 %}
+    
+ 
+    {% endblock%}
+
+{% block content %}
+
+<!-- Main sidebar -->
+  {% include "side/clientside.html" %}
+<!-- /main sidebar -->
+
+
+<!-- Main content -->
+			<div class="content-wrapper">
+				<div class="content" style="margin-top: 4px;">
+				<!-- Main charts -->
+				<div class="row">
+                        <div class="col-md-12 ">
+					
+						<!-- Traffic sources -->
+						<div class="panel panel-height panel-flat">
+							<div class="panel-heading ">
+
+                                 <h1 >
+                    Contact us
+                         </h1>
+							</div>
+							
+
+
+<div class="container">
+    <div class="row-fluid">
+        <div class="col-md-8">
+           <iframe width="100%" height="350" frameborder="0" scrolling="no" marginheight="0" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12699.59445866308!2d-122.0238538!3d37.2738312!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x8b703e7908a2b79d!2sTechConnectr!5e0!3m2!1sen!2sin!4v1530623389403" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
+        </div>
+        
+        <div class="col-md-4">
+            <h2>USA Office</h2>
+            <address>
+                <strong>San Jose, CA 95070</strong><br>
+                Email: bob@techconnectr.com
+                <br>
+                
+                
+                Call:   +1 408-206-5858
+            </address>
+        </div>
+    </div>
+</div>
+
+
+
+
+				<!-- /main charts -->
+
+
+			</div>
+			<!-- /main content -->
+			</div>
+		</div>
+		<!-- /page content -->
+    </div>
+	</div>
+	<!-- /page container -->
+<script>
+        $(function () {
+            $("#support").addClass("active");
+            $("#support").find("ul").first().css({'display':'block'})
+            $("#ContactUs").addClass("active");
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,12 @@
+.list-group {
+    list-style: none;
+    margin-bottom: 0;
+    border: 1px solid #186f90;
+    padding: 8px 0;
+    border-radius: 3px;
+}
+.list-group li
+{
+  margin: 5px;
+    border: 1px solid #076f0a;
+}
